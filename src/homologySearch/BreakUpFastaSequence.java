@@ -78,7 +78,7 @@ public class BreakUpFastaSequence implements BioLockJExecutor
 				BioJLockUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
 		File fileToParse = 
 				BioJLockUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
-		int numChunks = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.SPLIT_FASTA_DIR);
+		int numChunks = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_CLUSTERS);
 
 		File logDir = BioJLockUtils.createLogDirectory(
 				outputDir, BreakUpFastaSequence.class.getSimpleName());
