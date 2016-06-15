@@ -59,8 +59,22 @@ public class ConfigReader
 
 		if (obj == null)
 			return null;
+		
+		String val = obj.toString();
 			
-		return obj.toString();
+		// allow statements like thisDir = $someOtherDir to avoid re-typing paths
+		if( val.startsWith("$"))
+		{
+			obj = props.getProperty(val.substring(1));
+			
+			if( obj == null)
+				return null;
+			
+			val = obj.toString();
+			
+		}
+		
+		return val;
 	}
 	
 	
