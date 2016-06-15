@@ -4,5 +4,5 @@ import java.io.File;
 
 public interface BioLockJExecutor
 {
-	public void executeProjectFile(File projectFile);
+	public void executeProjectFile(File projectFile) throws Exception;
 }

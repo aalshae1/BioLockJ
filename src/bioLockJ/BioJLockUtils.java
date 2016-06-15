@@ -1,11 +1,11 @@
 package bioLockJ;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
-
-import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
+import java.util.Date;
 
 import utils.ConfigReader;
 
@@ -34,6 +34,15 @@ public class BioJLockUtils
 		        }
 		    }
 		}
+		
+	public static void logAndRethrow(BufferedWriter logWriter, Exception ex)
+		throws Exception
+	{
+		logWriter.write("Terminating at " + new Date().toString());
+		logWriter.write(ex.toString());
+		logWriter.flush();
+		throw ex;
+	}
 		
 	public static File findProperyFile(String[] args ) throws Exception
 	{
@@ -109,10 +118,10 @@ public class BioJLockUtils
 		return aFile;
 	}
 	
-	public static void copyPropertiesFile( File oldPropsFile, File outputDirectory )
+	public static void copyPropertiesFile( File oldPropsFile, File logDirectory )
 		throws Exception
 	{
-		copyFile(oldPropsFile, new File(outputDirectory.getAbsolutePath() + File.separator + 
+		copyFile(oldPropsFile, new File(logDirectory.getAbsolutePath() + File.separator + 
 						oldPropsFile.getName()));
 	}
 	
