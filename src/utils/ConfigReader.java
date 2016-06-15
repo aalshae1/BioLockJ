@@ -24,6 +24,11 @@ public class ConfigReader
 	private final Properties props;
 	private final File propertiesFile;
 	
+	public File getPropertiesFile()
+	{
+		return propertiesFile;
+	}
+	
 	public static final String TRUE = "TRUE";
 	public static final String YES = "YES";
 
@@ -36,6 +41,7 @@ public class ConfigReader
 	public static final String QUERY_SEQUENCE_PATH = "QUERY_SEQUENCE_PATH";
 	public static final String CARDS_DATABASE_FASTA_PATH = "CARDS_DATABASE_FASTA";
 	public static final String BASE_OUTPUT_DIR = "BASE_OUTPUT_DIR";
+	public static final String CLUSTER_NAME = "CLUSTER_NAME";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{
