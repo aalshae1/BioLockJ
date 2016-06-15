@@ -40,6 +40,7 @@ public class ConfigReader
 	public static final String BLAST_BINARY_DIR= "BLAST_BINARY_DIR";
 	public static final String QUERY_SEQUENCE_PATH = "QUERY_SEQUENCE_PATH";
 	public static final String CARDS_DATABASE_FASTA_PATH = "CARDS_DATABASE_FASTA";
+	public static final String FASTA_TO_CHUNK_PATH = "FASTA_TO_CHUNK_PATH";
 	public static final String BASE_OUTPUT_DIR = "BASE_OUTPUT_DIR";
 	public static final String CLUSTER_NAME = "CLUSTER_NAME";
 	
