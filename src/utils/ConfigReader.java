@@ -14,6 +14,7 @@
 package utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import java.util.Properties;
@@ -26,11 +27,14 @@ public class ConfigReader
 	public static final String TRUE = "TRUE";
 	public static final String YES = "YES";
 
-	public static final String JAVA_BASE_DIR = "JAVA_BASE_DIR";
+	// by convention, directories should contain the string "DIR"
+	// by convention, paths should contain the string "PATH"
+	public static final String BIOLOCKJ_BASE_DIR = "JAVA_BASE_DIR";
 	public static final String SCRIPT_BASE_DIR = "SCRIPT_BASE_DIR";
-	public static final String BLAST_DIR = "BLAST_DIR";
-	public static final String QUERY_SEQUENCE = "QUERY_SEQUENCE";
-	public static final String CARDS_DATABASE_FASTA = "CARDS_DATABASE_FASTA";
+	public static final String BLAST_PRELIMINARY_STRING = "BLAST_PRELIMINARY_STRING";
+	public static final String BLAST_BINARY_DIR= "BLAST_BINARY_DIR";
+	public static final String QUERY_SEQUENCE_PATH = "QUERY_SEQUENCE_PATH";
+	public static final String CARDS_DATABASE_FASTA_PATH = "CARDS_DATABASE_FASTA";
 	public static final String BASE_OUTPUT_DIR = "BASE_OUTPUT_DIR";
 	
 	public boolean isSetToTrue(String namedProperty)
@@ -47,7 +51,7 @@ public class ConfigReader
 		return false;
 	}
 	
-	private String getAProperty(String namedProperty) throws Exception
+	public String getAProperty(String namedProperty) throws Exception
 	{
 		Object obj = props.get(namedProperty);
 
@@ -58,23 +62,11 @@ public class ConfigReader
 		return obj.toString();
 	}
 	
-	public String getBlastDirectory() throws Exception
-	{
-		return getAProperty(BLAST_DIR);
-	}
 	
 	public ConfigReader(File propertiesFile) throws Exception
 	{
 		this.propertiesFile = propertiesFile;
-		
-		Object o = new Object();
-
-		InputStream in = o.getClass().getClassLoader()
-				.getSystemResourceAsStream(propertiesFile.getAbsolutePath());
-
-		if (in == null)
-			throw new Exception("Error!  Could not find " + propertiesFile.getAbsolutePath());
-
+		InputStream in = new FileInputStream(propertiesFile);
 		props = new Properties();
 		props.load(in);
 
