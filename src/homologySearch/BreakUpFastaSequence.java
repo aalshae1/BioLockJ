@@ -52,13 +52,13 @@ public class BreakUpFastaSequence implements BioLockJExecutor
 		for( FastaSequence fs = fsoat.getNextSequence(); fs != null; fs = fsoat.getNextSequence())
 		{
 			
-			index++;
-			
 			BufferedWriter writer = writers.get(index);
 			
 			writer.write(fs.getHeader() + "\n");
 			writer.write(fs.getSequence() + "\n");
 			
+			index++;
+
 			if( index == numClusters)
 				index = 0;
 		}
