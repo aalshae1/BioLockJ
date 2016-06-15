@@ -28,7 +28,31 @@ public class ValidatePropertiesFile
 		
 		for( Field f : cReader.getClass().getFields())
 		{
-			System.out.println(f.getName());
+			String name = f.getName();
+			
+			if( ! name.equals("TRUE") && ! name.equals("YES"))
+			{
+				if( cReader.getAProperty(name)  != null)
+				{
+					System.out.println("Found " + name + " " + cReader.getAProperty(name));
+					
+					if( name.indexOf("PATH") != -1 || name.indexOf("DIR") != -1  )
+					{
+						File bFile = new File(cReader.getAProperty(name));
+						
+						if( ! bFile.exists())
+							System.out.println("Could not find file " + bFile.getAbsolutePath());
+						
+						if( bFile.exists() &&  name.indexOf("DIR") != -1 && ! bFile.isDirectory())
+							System.out.println(bFile.getAbsolutePath() + " is not a directory ");
+					}
+				}
+				else
+				{
+					System.out.println(name + " is not defined in the property file");
+				}
+			}
+			
 		}
 	}
 }

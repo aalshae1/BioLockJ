@@ -56,9 +56,8 @@ public class ConfigReader
 		Object obj = props.get(namedProperty);
 
 		if (obj == null)
-			throw new Exception("Error!  Could not find " + namedProperty
-					+ " in " + this.propertiesFile);
-
+			return null;
+			
 		return obj.toString();
 	}
 	
