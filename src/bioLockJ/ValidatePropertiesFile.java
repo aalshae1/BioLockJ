@@ -26,6 +26,9 @@ public class ValidatePropertiesFile
 		
 		ConfigReader cReader = new ConfigReader(aFile.getAbsoluteFile());
 		
+		StringBuffer found = new StringBuffer();
+		StringBuffer notFound = new StringBuffer();
+		
 		for( Field f : cReader.getClass().getFields())
 		{
 			String name = f.getName();
@@ -34,25 +37,27 @@ public class ValidatePropertiesFile
 			{
 				if( cReader.getAProperty(name)  != null)
 				{
-					System.out.println("Found " + name + " " + cReader.getAProperty(name));
+					found.append(name + " " + cReader.getAProperty(name) + "\n");
 					
 					if( name.indexOf("PATH") != -1 || name.indexOf("DIR") != -1  )
 					{
 						File bFile = new File(cReader.getAProperty(name));
 						
 						if( ! bFile.exists())
-							System.out.println("Could not find file " + bFile.getAbsolutePath());
+							found.append("\tCould not find file " + bFile.getAbsolutePath() + "\n");
 						
 						if( bFile.exists() &&  name.indexOf("DIR") != -1 && ! bFile.isDirectory())
-							System.out.println(bFile.getAbsolutePath() + " is not a directory ");
+							found.append("\t" + bFile.getAbsolutePath() + " is not a directory " + "\n");
 					}
 				}
 				else
 				{
-					System.out.println(name + " is not defined in the property file");
+					notFound.append(name + " \n");
 				}
-			}
-			
+			}	
 		}
+		
+		System.out.println("\nFOUND:\n" + found.toString() + "\n");
+		System.out.println("NOT FOUND:\n" + notFound.toString() + "\n");
 	}
 }
