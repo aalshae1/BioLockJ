@@ -1,4 +1,4 @@
-package blast;
+package homologySearch;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -101,5 +101,6 @@ public class BreakUpFastaSequence implements BioLockJExecutor
 		
 		logWriter.write("successful completion at " + new Date().toString() + "\n"); 
 		logWriter.flush(); logWriter.close();
+		BioJLockUtils.appendSuccessToPropertyFile(projectFile, this.getClass().getName(), logDir);
 	}
 }

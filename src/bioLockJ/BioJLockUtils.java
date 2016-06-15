@@ -4,6 +4,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
 import java.util.Date;
 
@@ -55,6 +57,19 @@ public class BioJLockUtils
 			throw new Exception("Could not find " + aFile.getAbsolutePath());
 		
 		return aFile;
+	}
+	
+	public static void appendSuccessToPropertyFile( File propertyFile, String invokingClass,
+			File logDirectory) throws Exception
+	{
+		FileWriter fWriter = new FileWriter(propertyFile, true);
+		BufferedWriter writer = new BufferedWriter(fWriter);
+		PrintWriter out = new PrintWriter(writer);
+		
+		out.write("# ran " + invokingClass + " log to " + logDirectory.getAbsolutePath() + " " + 
+						new Date().toString());
+		
+		out.flush(); out.close();
 	}
 	
 	public static File requireExistingDirectory(ConfigReader reader, String propertyName) throws Exception
