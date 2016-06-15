@@ -31,6 +31,7 @@ public class ConfigReader
 	public static final String BLAST_DIR = "BLAST_DIR";
 	public static final String QUERY_SEQUENCE = "QUERY_SEQUENCE";
 	public static final String CARDS_DATABASE_FASTA = "CARDS_DATABASE_FASTA";
+	public static final String BASE_OUTPUT_DIR = "BASE_OUTPUT_DIR";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{
@@ -72,8 +73,7 @@ public class ConfigReader
 				.getSystemResourceAsStream(propertiesFile.getAbsolutePath());
 
 		if (in == null)
-			throw new Exception("Error!  Could not find " + propertiesFile.getAbsolutePath()
-					+ " anywhere on the current classpath");
+			throw new Exception("Error!  Could not find " + propertiesFile.getAbsolutePath());
 
 		props = new Properties();
 		props.load(in);
