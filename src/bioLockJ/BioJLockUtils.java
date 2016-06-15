@@ -66,8 +66,8 @@ public class BioJLockUtils
 		BufferedWriter writer = new BufferedWriter(fWriter);
 		PrintWriter out = new PrintWriter(writer);
 		
-		out.write("# ran " + invokingClass + " log to " + logDirectory.getAbsolutePath() + " " + 
-						new Date().toString());
+		out.write("\n# ran " + invokingClass + " log to " + logDirectory.getAbsolutePath() + " " + 
+						new Date().toString() + "\n");
 		
 		out.flush(); out.close();
 	}
