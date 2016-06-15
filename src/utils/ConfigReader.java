@@ -34,15 +34,10 @@ public class ConfigReader
 
 	// by convention, directories should contain the string "DIR"
 	// by convention, paths should contain the string "PATH"
-	public static final String BIOLOCKJ_BASE_DIR = "JAVA_BASE_DIR";
-	public static final String SCRIPT_BASE_DIR = "SCRIPT_BASE_DIR";
-	public static final String BLAST_PRELIMINARY_STRING = "BLAST_PRELIMINARY_STRING";
-	public static final String BLAST_BINARY_DIR= "BLAST_BINARY_DIR";
-	public static final String QUERY_SEQUENCE_PATH = "QUERY_SEQUENCE_PATH";
-	public static final String CARDS_DATABASE_FASTA_PATH = "CARDS_DATABASE_FASTA";
-	public static final String FASTA_TO_CHUNK_PATH = "FASTA_TO_CHUNK_PATH";
-	public static final String BASE_OUTPUT_DIR = "BASE_OUTPUT_DIR";
 	public static final String CLUSTER_NAME = "CLUSTER_NAME";
+	public static final String FASTA_TO_SPLIT_PATH = "FASTA_TO_SPLIT_PATH";
+	public static final String SPLIT_FASTA_DIR = "SPLIT_FASTA_DIR";
+	public static final String NUMBER_CLUSTERS = "NUMBER_CLUSTERS";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{

@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 
+import com.sun.org.apache.xml.internal.resolver.readers.ExtendedXMLCatalogReader;
+
 import utils.ConfigReader;
 
 public class BioJLockUtils
@@ -46,7 +48,7 @@ public class BioJLockUtils
 		return aFile;
 	}
 	
-	public File requireExistingDirectory(ConfigReader reader, String propertyName) throws Exception
+	public static File requireExistingDirectory(ConfigReader reader, String propertyName) throws Exception
 	{
 		String val = reader.getAProperty(propertyName);
 		
@@ -61,6 +63,50 @@ public class BioJLockUtils
 		
 		return aFile;
 		
+	}
+	
+	public static int requirePositiveInteger( ConfigReader reader, String propertyName )
+		throws Exception
+	{
+		String val = reader.getAProperty(propertyName);
+		
+		if( val == null)
+			throw new Exception(propertyName + " is not defined in " 
+								+ reader.getPropertiesFile().getAbsolutePath());
+		
+		Integer aVal = null;
+		
+		try
+		{
+			aVal = Integer.parseInt(val);
+		}
+		catch(Exception ex)
+		{
+			
+		}
+		
+		if( aVal == null  || aVal < 1)
+			throw new Exception(propertyName + " must be a positive integer in " + 
+											reader.getPropertiesFile().getAbsolutePath());
+		
+		return aVal;
+		
+	}
+	
+	public static File requireExistingFile(ConfigReader reader, String propertyName) throws Exception
+	{
+		String val = reader.getAProperty(propertyName);
+		
+		if( val == null)
+			throw new Exception(propertyName + " is not defined in " 
+								+ reader.getPropertiesFile().getAbsolutePath());
+		
+		File aFile = new File(reader.getAProperty(propertyName));
+		
+		if( ! aFile.exists() )
+			throw new Exception(aFile.getAbsolutePath() + " is not an existing file ");
+		
+		return aFile;
 	}
 	
 	public static void copyPropertiesFile( File oldPropsFile, File outputDirectory )
