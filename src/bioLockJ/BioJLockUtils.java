@@ -41,6 +41,15 @@ public class BioJLockUtils
 		    }
 		}
 		
+	public static void writeScriptsAndSpin(ConfigReader cReader, BioLockJExecutor bje) throws Exception
+	{
+		int pollTime = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.POLL_TIME);
+		bje.executeProjectFile(cReader.getPropertiesFile());
+		BioJLockUtils.executeCHMOD_ifDefined(cReader, bje.getRunAllFile());
+		BioJLockUtils.executeFile(bje.getRunAllFile());
+		BioJLockUtils.pollAndSpin(bje.getScriptFiles(), pollTime );
+	}
+		
 	public static void logAndRethrow(BufferedWriter logWriter, Exception ex)
 		throws Exception
 	{
