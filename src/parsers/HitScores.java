@@ -276,7 +276,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 		
 		String nextLine = reader.readLine();
 		
-		int index=0;
+		//int index=0;
 		while( nextLine != null)
 		{
 			String[] splits = nextLine.split("\t");
@@ -297,10 +297,10 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 				
 			nextLine= reader.readLine();
 			
-			if( index % 100000==0)
-				System.out.println(index + " " + map.size());
+			//if( index % 100000==0)
+				//System.out.println(index + " " + map.size());
 			
-			index++;
+			//index++;
 		}
 		
 		reader.close();
@@ -321,7 +321,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 		
 		String nextLine = reader.readLine();
 		
-		int index=0;
+		//int index=0;
 		while( nextLine != null)
 		{
 			HitScores hs = new HitScores(nextLine);
@@ -332,10 +332,10 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 			
 			nextLine= reader.readLine();
 			
-			if( index % 100000==0)
-				System.out.println(index + " " + map.size());
+			//if( index % 100000==0)
+				//System.out.println(index + " " + map.size());
 			
-			index++;
+			//index++;
 		}
 		
 		

@@ -66,7 +66,7 @@ public class GatherBlastHits extends BioLockJExecutor
 		BioJLockUtils.copyPropertiesFile(projectFile, logDir);
 		
 		List<HitScores> hits = getHits(blastOutputDir);
-		writeResults(hits, blastOutputDir);
+		writeResults(hits, topHitsFile);
 		
 		BufferedWriter logWriter = new BufferedWriter(new FileWriter(new File(
 				logDir.getAbsolutePath() + File.separator + BreakUpFastaSequence.class.getSimpleName() 
