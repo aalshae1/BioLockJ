@@ -70,7 +70,7 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 				if( prelimString != null)
 					writer.write(prelimString + "\n");
 				
-				writer.write(blastBinDin + " /makeblastdb -dbtype nucl " + 
+				writer.write(blastBinDin + "/makeblastdb -dbtype nucl " + 
 								"-in " + fastaFile.getAbsolutePath() + "\n");
 				writer.write("echo \"" + FINISHED_STRING + "\"\n");
 				
