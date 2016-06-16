@@ -1,17 +1,16 @@
 BLAST_PRELIMINARY_STRING = module load blast
 
-BLAST_BINARY_DIR= /apps/pkg/ncbi-blast-2.2.29+/rhel6_u5-x86_64/gnu/bin/
+BLAST_BINARY_DIR=/apps/pkg/ncbi-blast-2.2.29+/rhel6_u5-x86_64/gnu/bin/
 
-FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/nucleotide_fasta[protein homolog model].fasta
-
-SPLIT_FASTA_DIR=/nobackup/afodor_research/card/nucleotide_homolog_splits
-FASTA_DIR_TO_FORMAT = $SPLIT_FASTA_DIR
-
-SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts
+SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/formatGenome11ForBlast
 
 CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
 
 NUMBER_CLUSTERS=100
+
+FASTA_FILE_TO_FORMAT_FOR_BLAST_DB = /nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta
+
+
 
 # in seconds
 POLL_TIME = 60

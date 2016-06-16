@@ -32,8 +32,6 @@ public class ConfigReader
 	public static final String TRUE = "TRUE";
 	public static final String YES = "YES";
 
-	// by convention, directories should contain the string "DIR"
-	// by convention, paths should contain the string "PATH"
 	public static final String CLUSTER_NAME = "CLUSTER_NAME";
 	public static final String FASTA_TO_SPLIT_PATH = "FASTA_TO_SPLIT_PATH";
 	public static final String SPLIT_FASTA_DIR = "SPLIT_FASTA_DIR";
@@ -45,6 +43,7 @@ public class ConfigReader
 	public static final String CLUSTER_BATCH_COMMAND = "CLUSTER_BATCH_COMMAND";
 	public static final String CHMOD_STRING = "CHMOD_STRING";
 	public static final String POLL_TIME = "POLL_TIME";
+	public static final String FASTA_FILE_TO_FORMAT_FOR_BLAST_DB = "FASTA_FILE_TO_FORMAT_FOR_BLAST_DB";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{
