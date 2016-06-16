@@ -25,5 +25,7 @@ public class CardsAnnotationToIGV
 		BioJLockUtils.executeFile(fmbd.getRunAllFile());
 		BioJLockUtils.pollAndSpin(fmbd.getScriptFiles(), pollTime );
 		
+		System.out.println("Succesful finish");
+		
 	}
 }
