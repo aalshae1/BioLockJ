@@ -19,6 +19,8 @@ FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/nucleotide_fasta[protein homo
 
 BLAST_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardsToRef11BlastOut
 
+BLAST_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardsToChs11.txt
+
 # in seconds
 POLL_TIME = 10
 

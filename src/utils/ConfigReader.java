@@ -47,6 +47,7 @@ public class ConfigReader
 	public static final String BLAST_QUERY_DIRECTORY = "BLAST_QUERY_DIRECTORY";
 	public static final String SCRIPTS_DIR_FOR_BLAST_QUERY = "SCRIPTS_DIR_FOR_BLAST_QUERY";
 	public static final String BLAST_OUTPUT_DIRECTORY = "BLAST_OUTPUT_DIRECTORY";
+	public static final String BLAST_GATHERED_TOP_HITS_FILE = "BLAST_GATHERED_TOP_HITS_FILE";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{
