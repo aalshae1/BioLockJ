@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import bioLockJ.BioJLockUtils;
@@ -37,6 +38,13 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 		
 		File scriptDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
 	
+
+		File logDir = BioJLockUtils.createLogDirectory(scriptDir, BreakUpFastaSequence.class.getSimpleName());
+		
+		BufferedWriter logWriter = new BufferedWriter(new FileWriter(new File(
+				logDir.getAbsolutePath() + File.separator + BreakUpFastaSequence.class.getSimpleName() 
+				 +"log.txt")));
+		
 		String clusterBatchCommand = BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		
 		int index =1;
@@ -76,6 +84,10 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 		}
 		
 		allWriter.flush();  allWriter.close();
+
+		logWriter.write("successful completion at " + new Date().toString() + "\n"); 
+		logWriter.flush(); logWriter.close();
+		BioJLockUtils.appendSuccessToPropertyFile(projectFile, this.getClass().getName(), logDir);
 	}
 	
 	@Override
