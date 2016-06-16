@@ -73,7 +73,7 @@ public class BioJLockUtils
 	public static void executeFile(File f) throws Exception
 	{
 		String[] cmd = new String[1];
-		cmd[1] = f.getAbsolutePath();
+		cmd[0] = f.getAbsolutePath();
 		new ProcessWrapper(cmd);
 	}
 	
