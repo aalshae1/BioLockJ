@@ -104,7 +104,7 @@ public class BioJLockUtils
 			}
 		}
 		
-		System.out.println("\n\n");
+		System.out.println("\n finished " + numSuccess + " of " + scriptFiles.size() + "\n");
 		
 		return numSuccess == scriptFiles.size();
 	}
