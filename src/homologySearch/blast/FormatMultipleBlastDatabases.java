@@ -32,7 +32,7 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	{
 		this.scripts = new ArrayList<File>();
 		ConfigReader cReader = new ConfigReader(projectFile);
-		String blastBinDin = BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BIN_DIR);
+		String blastBinDin = BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		File fastaDirToFormat = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
 		
 		File scriptDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
