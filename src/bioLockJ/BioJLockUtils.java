@@ -72,6 +72,17 @@ public class BioJLockUtils
 		out.flush(); out.close();
 	}
 	
+	public static String requireString(ConfigReader reader, String propertyName) throws Exception
+	{
+		String val = reader.getAProperty(propertyName);
+		
+		if( val == null)
+			throw new Exception("Could not find " + propertyName + " in " 
+							+ reader.getPropertiesFile().getAbsolutePath());
+		
+		return val;
+	}
+	
 	public static File requireExistingDirectory(ConfigReader reader, String propertyName) throws Exception
 	{
 		String val = reader.getAProperty(propertyName);

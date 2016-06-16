@@ -39,6 +39,10 @@ public class ConfigReader
 	public static final String SPLIT_FASTA_DIR = "SPLIT_FASTA_DIR";
 	public static final String NUMBER_CLUSTERS = "NUMBER_CLUSTERS";
 	public static final String BLAST_BIN_DIR = "BLAST_BIN_DIR";
+	public static final String FASTA_DIR_TO_FORMAT = "FASTA_DIR_TO_FORMAT";
+	public static final String SCRIPTS_DIR_FOR_BLAST_FORMAT="SCRIPTS_DIR_FOR_BLAST_FORMAT";
+	public static final String BLAST_PRELIMINARY_STRING = "BLAST_PRELIMINARY_STRING";
+	public static final String CLUSTER_BATCH_COMMAND = "CLUSTER_BATCH_COMMAND";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{

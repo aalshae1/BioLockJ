@@ -6,6 +6,7 @@ import java.util.List;
 public abstract class BioLockJExecutor
 {
 	public abstract void executeProjectFile(File projectFile) throws Exception;
+	public static final String FINISHED_STRING = "#_JOB_FINISHED";
 	
 	public boolean poll()
 	{

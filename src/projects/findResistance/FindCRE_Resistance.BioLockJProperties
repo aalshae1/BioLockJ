@@ -5,7 +5,10 @@ BLAST_BINARY_DIR= /apps/pkg/ncbi-blast-2.2.29+/rhel6_u5-x86_64/gnu/bin/
 FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/nucleotide_fasta[protein homolog model].fasta
 
 SPLIT_FASTA_DIR=/nobackup/afodor_research/card/nucleotide_homolog_splits
-
 FASTA_DIR_TO_FORMAT = $SPLIT_FASTA_DIR
+
+SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts
+
+CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
 
 NUMBER_CLUSTERS=100
