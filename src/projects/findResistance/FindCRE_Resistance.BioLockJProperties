@@ -12,3 +12,5 @@ SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistan
 CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
 
 NUMBER_CLUSTERS=100
+
+CHMOD_STRING = chmod 744

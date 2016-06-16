@@ -7,9 +7,13 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.StringTokenizer;
 
 import utils.ConfigReader;
+import utils.ProcessWrapper;
 
 public class BioJLockUtils
 {
@@ -46,6 +50,32 @@ public class BioJLockUtils
 		throw ex;
 	}
 		
+	public static void executeCHMOD_ifDefined(ConfigReader cReader )  throws Exception
+	{
+		if( cReader.getAProperty(ConfigReader.CHMOD_STRING) != null)
+		{
+			StringTokenizer sToken = new StringTokenizer(ConfigReader.CHMOD_STRING);
+			List<String> list = new ArrayList<String>();
+			
+			while(sToken.hasMoreTokens())
+				list.add(sToken.nextToken());
+			
+			String[] args = new String[list.size()];
+			
+			for( int x=0; x  < list.size(); x++)
+				args[x] = list.get(x);
+			
+			new ProcessWrapper(args);
+		}
+	}
+	
+	public static void executeFile(File f) throws Exception
+	{
+		String[] cmd = new String[1];
+		cmd[1] = f.getAbsolutePath();
+		new ProcessWrapper(cmd);
+	}
+	
 	public static File findProperyFile(String[] args ) throws Exception
 	{
 		if( args.length != 1)

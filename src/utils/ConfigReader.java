@@ -43,6 +43,7 @@ public class ConfigReader
 	public static final String SCRIPTS_DIR_FOR_BLAST_FORMAT="SCRIPTS_DIR_FOR_BLAST_FORMAT";
 	public static final String BLAST_PRELIMINARY_STRING = "BLAST_PRELIMINARY_STRING";
 	public static final String CLUSTER_BATCH_COMMAND = "CLUSTER_BATCH_COMMAND";
+	public static final String CHMOD_STRING = "CHMOD_STRING";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{
