@@ -50,11 +50,12 @@ public class BioJLockUtils
 		throw ex;
 	}
 		
-	public static void executeCHMOD_ifDefined(ConfigReader cReader )  throws Exception
+	public static void executeCHMOD_ifDefined(ConfigReader cReader, File file )  throws Exception
 	{
 		if( cReader.getAProperty(ConfigReader.CHMOD_STRING) != null)
 		{
-			StringTokenizer sToken = new StringTokenizer(ConfigReader.CHMOD_STRING);
+			StringTokenizer sToken = new StringTokenizer(cReader.getAProperty(ConfigReader.CHMOD_STRING) + " " + 
+								file.getAbsolutePath());
 			List<String> list = new ArrayList<String>();
 			
 			while(sToken.hasMoreTokens())

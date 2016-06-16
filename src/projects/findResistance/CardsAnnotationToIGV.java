@@ -19,7 +19,7 @@ public class CardsAnnotationToIGV
 		new BreakUpFastaSequence().executeProjectFile(propsFile);
 		FormatMultipleBlastDatabases fmbd = new FormatMultipleBlastDatabases();
 		fmbd.executeProjectFile(propsFile);
-		BioJLockUtils.executeCHMOD_ifDefined(cReader);
+		BioJLockUtils.executeCHMOD_ifDefined(cReader, fmbd.getRunAllFile());
 		BioJLockUtils.executeFile(fmbd.getRunAllFile());
 
 	}
