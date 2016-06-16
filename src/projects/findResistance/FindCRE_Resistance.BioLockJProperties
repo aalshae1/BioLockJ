@@ -12,6 +12,8 @@ FASTA_FILE_TO_FORMAT_FOR_BLAST_DB = /nobackup/afodor_research/bioLockJProjects/r
 
 SPLIT_FASTA_DIR=/nobackup/afodor_research/card/nucleotide_homolog_splits
 
+FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/nucleotide_fasta[protein homolog model].fasta
+
 
 # in seconds
 POLL_TIME = 10
