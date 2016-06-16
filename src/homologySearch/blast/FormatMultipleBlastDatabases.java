@@ -72,7 +72,13 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 				
 				writer.write(blastBinDin + "/makeblastdb -dbtype nucl " + 
 								"-in " + fastaFile.getAbsolutePath() + "\n");
-				writer.write("touch " + script.getAbsolutePath() + FINISHED_SUFFIX + "\n");
+				
+				File touchFile = new File(script.getAbsolutePath() + FINISHED_SUFFIX );
+				
+				if( touchFile.exists())
+					touchFile.delete();
+				
+				writer.write("touch " + touchFile.getAbsolutePath() + "\n");
 				
 				writer.flush();  writer.close();
 				this.scripts.add(script);
