@@ -4,6 +4,8 @@ BLAST_BINARY_DIR=/apps/pkg/ncbi-blast-2.2.29+/rhel6_u5-x86_64/gnu/bin/
 
 SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/formatGenome11ForBlast
 
+SCRIPTS_DIR_FOR_BLAST_QUERY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/blastQueryCardsToGenome11
+
 CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
 
 NUMBER_CLUSTERS=100
