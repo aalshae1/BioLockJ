@@ -44,6 +44,9 @@ public class ConfigReader
 	public static final String CHMOD_STRING = "CHMOD_STRING";
 	public static final String POLL_TIME = "POLL_TIME";
 	public static final String FASTA_FILE_TO_FORMAT_FOR_BLAST_DB = "FASTA_FILE_TO_FORMAT_FOR_BLAST_DB";
+	public static final String BLAST_QUERY_DIRECTORY = "BLAST_QUERY_DIRECTORY";
+	public static final String SCRIPTS_DIR_FOR_BLAST_QUERY = "SCRIPTS_DIR_FOR_BLAST_QUERY";
+	public static final String BLAST_OUTPUT_DIRECTORY = "BLAST_OUTPUT_DIRECTORY";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{

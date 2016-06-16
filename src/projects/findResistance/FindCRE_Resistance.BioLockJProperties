@@ -11,9 +11,11 @@ NUMBER_CLUSTERS=100
 FASTA_FILE_TO_FORMAT_FOR_BLAST_DB = /nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta
 
 SPLIT_FASTA_DIR=/nobackup/afodor_research/card/nucleotide_homolog_splits
+BLAST_QUERY_DIRECTORY=$SPLIT_FASTA_DIR
 
 FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/nucleotide_fasta[protein homolog model].fasta
 
+BLAST_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardsToRef11BlastOut
 
 # in seconds
 POLL_TIME = 10

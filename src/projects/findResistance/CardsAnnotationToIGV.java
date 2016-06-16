@@ -4,7 +4,7 @@ import java.io.File;
 
 import bioLockJ.BioJLockUtils;
 import homologySearch.BreakUpFastaSequence;
-import homologySearch.blast.FormatSingleBlastDatabase;
+import homologySearch.blast.MultipleQueriesToOneBlastDB;
 import utils.ConfigReader;
 
 public class CardsAnnotationToIGV 
@@ -19,11 +19,12 @@ public class CardsAnnotationToIGV
 		int pollTime = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.POLL_TIME);
 		
 		new BreakUpFastaSequence().executeProjectFile(propsFile);
-		FormatSingleBlastDatabase fmsd = new FormatSingleBlastDatabase();
-		fmsd.executeProjectFile(propsFile);
-		BioJLockUtils.executeCHMOD_ifDefined(cReader, fmsd.getRunAllFile());
-		BioJLockUtils.executeFile(fmsd.getRunAllFile());
-		BioJLockUtils.pollAndSpin(fmsd.getScriptFiles(), pollTime );
+		
+		MultipleQueriesToOneBlastDB queries = new MultipleQueriesToOneBlastDB();
+		queries.executeProjectFile(propsFile);
+		BioJLockUtils.executeCHMOD_ifDefined(cReader, queries.getRunAllFile());
+		BioJLockUtils.executeFile(queries.getRunAllFile());
+		BioJLockUtils.pollAndSpin(queries.getScriptFiles(), pollTime );
 		
 		System.out.println("Succesful finish");
 		
