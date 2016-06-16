@@ -49,7 +49,7 @@ public class GatherBlastHits extends BioLockJExecutor
 		{
 			writer.write(hs.getTargetId() + "\tblast\t" +  hs.getQueryId() + "\t"  + 
 							hs.getTargetStart() + "\t" + hs.getTargetEnd() + "\t" + 
-							hs.getBitScore() + "\t" + "+"  + "\t"  + "+" + "0\n");
+							hs.getBitScore() + "\t" + "+"  + "\t"  + "+" + "0\taGene\taGene\n");
 		}
 		
 		writer.flush();  writer.close();
