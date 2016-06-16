@@ -40,6 +40,7 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	
 
 		File logDir = BioJLockUtils.createLogDirectory(scriptDir, BreakUpFastaSequence.class.getSimpleName());
+		BioJLockUtils.copyPropertiesFile(projectFile, logDir);
 		
 		BufferedWriter logWriter = new BufferedWriter(new FileWriter(new File(
 				logDir.getAbsolutePath() + File.separator + BreakUpFastaSequence.class.getSimpleName() 
