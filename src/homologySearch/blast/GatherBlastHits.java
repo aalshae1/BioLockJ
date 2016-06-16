@@ -59,7 +59,7 @@ public class GatherBlastHits extends BioLockJExecutor
 	{
 		ConfigReader cReader = new ConfigReader(projectFile);
 		File blastOutputDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
-		File topHitsFile = BioJLockUtils.requireExistingFile(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
+		File topHitsFile = new File( BioJLockUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
 		
 		File logDir = BioJLockUtils.createLogDirectory(topHitsFile.getParentFile(), 
 								BreakUpFastaSequence.class.getSimpleName());
