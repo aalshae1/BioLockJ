@@ -41,7 +41,7 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 		{
 			BufferedWriter writer=  new BufferedWriter(new FileWriter(new File(
 				outFile.getAbsolutePath() + File.separator + inFile.getName().replace("fasta", "").
-				replace("FASTA", "") + "_" + x + "_" + NEW_SUFFIX)));
+				replace("FASTA", "").replaceAll(" ", "_") + "_" + x + "_" + NEW_SUFFIX)));
 			
 			writers.put(x, writer);
 		}
