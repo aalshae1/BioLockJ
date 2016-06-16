@@ -13,6 +13,6 @@ FASTA_FILE_TO_FORMAT_FOR_BLAST_DB = /nobackup/afodor_research/bioLockJProjects/r
 
 
 # in seconds
-POLL_TIME = 60
+POLL_TIME = 10
 
 CHMOD_STRING = chmod 744
