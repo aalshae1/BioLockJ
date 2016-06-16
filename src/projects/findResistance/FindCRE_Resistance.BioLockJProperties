@@ -13,4 +13,7 @@ CLUSTER_BATCH_COMMAND = qsub -q "viper_batch"
 
 NUMBER_CLUSTERS=100
 
+# in seconds
+POLL_TIME = 60
+
 CHMOD_STRING = chmod 744

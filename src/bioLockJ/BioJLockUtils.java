@@ -49,6 +49,7 @@ public class BioJLockUtils
 		logWriter.flush();
 		throw ex;
 	}
+	
 		
 	public static void executeCHMOD_ifDefined(ConfigReader cReader, File file )  throws Exception
 	{
@@ -68,6 +69,44 @@ public class BioJLockUtils
 			
 			new ProcessWrapper(args);
 		}
+	}
+	
+	public static void pollAndSpin(List<File> scriptFiles, int pollTime) throws Exception
+	{
+		boolean finished = false;
+		
+		while( ! finished)
+		{
+			finished = poll(scriptFiles);
+			
+			if( ! finished)
+			{
+				Thread.sleep(pollTime * 1000);
+			}
+		}
+	}
+	
+	public static boolean poll(List<File> scriptFiles) throws Exception
+	{
+		int numSuccess = 0;
+		
+		for(File f : scriptFiles)
+		{
+			File test = new File(f.getAbsolutePath() + BioLockJExecutor.FINISHED_SUFFIX);
+			
+			if( test.exists())
+			{
+				numSuccess++;
+			}
+			else
+			{
+				System.out.println(f.getAbsolutePath() + " not succesfully finished ");
+			}
+		}
+		
+		System.out.println("\n\n");
+		
+		return numSuccess == scriptFiles.size();
 	}
 	
 	public static void executeFile(File f) throws Exception

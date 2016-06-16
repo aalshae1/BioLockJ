@@ -44,6 +44,7 @@ public class ConfigReader
 	public static final String BLAST_PRELIMINARY_STRING = "BLAST_PRELIMINARY_STRING";
 	public static final String CLUSTER_BATCH_COMMAND = "CLUSTER_BATCH_COMMAND";
 	public static final String CHMOD_STRING = "CHMOD_STRING";
+	public static final String POLL_TIME = "POLL_TIME";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{

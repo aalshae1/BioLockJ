@@ -16,11 +16,14 @@ public class CardsAnnotationToIGV
 		
 		File propsFile = BioJLockUtils.findProperyFile(args);
 		ConfigReader cReader = new ConfigReader(propsFile);
+		int pollTime = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.POLL_TIME);
+		
 		new BreakUpFastaSequence().executeProjectFile(propsFile);
 		FormatMultipleBlastDatabases fmbd = new FormatMultipleBlastDatabases();
 		fmbd.executeProjectFile(propsFile);
 		BioJLockUtils.executeCHMOD_ifDefined(cReader, fmbd.getRunAllFile());
 		BioJLockUtils.executeFile(fmbd.getRunAllFile());
-
+		BioJLockUtils.pollAndSpin(fmbd.getScriptFiles(), pollTime );
+		
 	}
 }
