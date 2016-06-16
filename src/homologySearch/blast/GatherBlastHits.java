@@ -18,6 +18,8 @@ import utils.ConfigReader;
  * Gathers the top hits in BLAST_OUTPUT_DIRECTORY.
  * There should be other files in BLAST_OUTPUT_DIRECTORY (sub-directories are ignored)
  * and writes them all to BLAST_GATHERED_TOP_HITS_FILE
+ * 
+ * if GTF_GATHERED_TOP_HITS_FILE is defined, then a GTF file is written to that path
  */
 public class GatherBlastHits extends BioLockJExecutor
 {
@@ -37,6 +39,20 @@ public class GatherBlastHits extends BioLockJExecutor
 		}
 		
 		return list;
+	}
+	
+	private void writeGTFFile( List<HitScores> list, File outFile ) throws Exception
+	{
+		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
+		
+		for(HitScores hs : list)
+		{
+			writer.write(hs.getTargetId() + "\tblast\t" + hs.getQueryId() + "\t"  + 
+							hs.getTargetStart() + "\t" + hs.getTargetEnd() + "\t" + 
+							hs.getBitScore() + "\t" + "-"  + "\t"  + "-" + "\n");
+		}
+		
+		writer.flush();  writer.close();
 	}
 	
 	private void writeResults(List<HitScores> list, File outFile) throws Exception
@@ -71,6 +87,11 @@ public class GatherBlastHits extends BioLockJExecutor
 		BufferedWriter logWriter = new BufferedWriter(new FileWriter(new File(
 				logDir.getAbsolutePath() + File.separator + BreakUpFastaSequence.class.getSimpleName() 
 				 +"log.txt")));
+		
+		if( cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE) != null)
+		{
+			writeGTFFile(hits, new File(cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE)));
+		}
 		
 		logWriter.write("successful completion at " + new Date().toString() + "\n"); 
 		logWriter.flush(); logWriter.close();

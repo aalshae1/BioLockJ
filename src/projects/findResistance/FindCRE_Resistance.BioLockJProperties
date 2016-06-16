@@ -21,6 +21,8 @@ BLAST_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/resistantAnnot
 
 BLAST_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardsToChs11.txt
 
+GTF_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardToChs11.gtf
+
 # in seconds
 POLL_TIME = 10
 
