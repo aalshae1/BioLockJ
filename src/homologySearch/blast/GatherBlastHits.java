@@ -47,9 +47,9 @@ public class GatherBlastHits extends BioLockJExecutor
 		
 		for(HitScores hs : list)
 		{
-			writer.write(hs.getTargetId() + "\tblast\t" + hs.getQueryId() + "\t"  + 
+			writer.write(hs.getTargetId() + "\tblast\tgene\t" +  hs.getQueryId() + "\t"  + 
 							hs.getTargetStart() + "\t" + hs.getTargetEnd() + "\t" + 
-							hs.getBitScore() + "\t" + "-"  + "\t"  + "-" + "\n");
+							hs.getBitScore() + "\t" + "+"  + "\t"  + "+" + "\n");
 		}
 		
 		writer.flush();  writer.close();
