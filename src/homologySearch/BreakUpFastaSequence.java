@@ -17,7 +17,7 @@ import utils.ConfigReader;
  * Writes out to SPLIT_FASTA_DIR
  * Splits into NUMBER_CLUSTERS individual files
  */
-public class BreakUpFastaSequence implements BioLockJExecutor
+public class BreakUpFastaSequence extends BioLockJExecutor
 {
 	public static final String NEW_SUFFIX = "PART.fasta";
 	

@@ -38,6 +38,7 @@ public class ConfigReader
 	public static final String FASTA_TO_SPLIT_PATH = "FASTA_TO_SPLIT_PATH";
 	public static final String SPLIT_FASTA_DIR = "SPLIT_FASTA_DIR";
 	public static final String NUMBER_CLUSTERS = "NUMBER_CLUSTERS";
+	public static final String BLAST_BIN_DIR = "BLAST_BIN_DIR";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{
