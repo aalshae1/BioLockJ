@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.HashMap;
 
-import bioLockJ.BioJLockUtils;
+import bioLockJ.BioLockJUtils;
 import bioLockJ.BioLockJExecutor;
 import parsers.FastaSequence;
 import parsers.FastaSequenceOneAtATime;
@@ -60,19 +60,19 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
-		BioJLockUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
-		BioJLockUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
-		BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_CLUSTERS);
+		BioLockJUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
+		BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
+		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_CLUSTERS);
 	}
 	
 	@Override
 	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
 		File outputDir= 
-				BioJLockUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
+				BioLockJUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
 		File fileToParse = 
-				BioJLockUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
-		int numChunks = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_CLUSTERS);
+				BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
+		int numChunks = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_CLUSTERS);
 		
 		breakUpSequences(fileToParse, outputDir, numChunks);
 	}

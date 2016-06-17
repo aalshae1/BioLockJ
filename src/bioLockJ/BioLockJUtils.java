@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
-import java.util.concurrent.ExecutionException;
 
 import utils.ConfigReader;
 import utils.ProcessWrapper;
 
-public class BioJLockUtils
+public class BioLockJUtils
 {
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
 		private static void copyFile(File sourceFile, File destFile) throws Exception {
@@ -53,7 +52,7 @@ public class BioJLockUtils
 			
 			try
 			{
-				pollTime = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.POLL_TIME);
+				pollTime = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.POLL_TIME);
 			}
 			catch(Exception ex)
 			{
@@ -61,9 +60,9 @@ public class BioJLockUtils
 								pollTime +  " seconds ");		
 			}
 			
-			BioJLockUtils.executeCHMOD_ifDefined(cReader, bje.getRunAllFile());
-			BioJLockUtils.executeFile(bje.getRunAllFile());
-			BioJLockUtils.pollAndSpin(bje.getScriptFiles(), pollTime );
+			BioLockJUtils.executeCHMOD_ifDefined(cReader, bje.getRunAllFile());
+			BioLockJUtils.executeFile(bje.getRunAllFile());
+			BioLockJUtils.pollAndSpin(bje.getScriptFiles(), pollTime );
 		}
 	}
 	

@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import bioLockJ.BioJLockUtils;
+import bioLockJ.BioLockJUtils;
 import bioLockJ.BioLockJExecutor;
 import utils.ConfigReader;
 
@@ -28,25 +28,25 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
-		BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		BioJLockUtils.requireExistingFile(
+		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
+		BioLockJUtils.requireExistingFile(
 						cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
 		
-		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
-		BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
+		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 	}
 	
 	@Override
 	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
 		this.scripts = new ArrayList<File>();
-		String blastBinDin = BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		File fastaFileToFormat= BioJLockUtils.requireExistingFile(
+		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
+		File fastaFileToFormat= BioLockJUtils.requireExistingFile(
 						cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
 		
-		File scriptDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
+		File scriptDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
 		
-		String clusterBatchCommand = BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		
 		this.runAllFile = new File(scriptDir.getAbsolutePath() + File.separator + "runAll_" + 
 				System.currentTimeMillis() +	".sh");

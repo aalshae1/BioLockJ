@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import bioLockJ.BioJLockUtils;
+import bioLockJ.BioLockJUtils;
 import bioLockJ.BioLockJExecutor;
 import utils.ConfigReader;
 
@@ -29,20 +29,20 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
-		BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
-		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
-		BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
+		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
+		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
+		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 	}
 	
 	@Override
 	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
 		this.scripts = new ArrayList<File>();
-		String blastBinDin = BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		File fastaDirToFormat = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
-		File scriptDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
-		String clusterBatchCommand = BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
+		File fastaDirToFormat = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
+		File scriptDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
+		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 
 		int index =1;
 		this.runAllFile = new File(scriptDir.getAbsolutePath() + File.separator + "runAll_" + 

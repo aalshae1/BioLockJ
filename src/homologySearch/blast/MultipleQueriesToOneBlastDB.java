@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import bioLockJ.BioJLockUtils;
+import bioLockJ.BioLockJUtils;
 import bioLockJ.BioLockJExecutor;
 import utils.ConfigReader;
 
@@ -29,24 +29,24 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{	
-		BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
-		BioJLockUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
-		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
-		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
-		BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
+		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
+		BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
+		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
+		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
+		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 	}
 	
 	@Override
 	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
 		this.scripts = new ArrayList<File>();
-		String blastBinDin = BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		File blastQueryDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
-		File blastDatabaseFile = BioJLockUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
-		File blastOutputDirectory = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
-		File scriptDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
-		String clusterBatchCommand = BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
+		File blastQueryDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
+		File blastDatabaseFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
+		File blastOutputDirectory = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
+		File scriptDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
+		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		
 		int index =1;
 		this.runAllFile = new File(scriptDir.getAbsolutePath() + File.separator + "runAll_" + 

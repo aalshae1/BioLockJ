@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import bioLockJ.BioJLockUtils;
+import bioLockJ.BioLockJUtils;
 import bioLockJ.BioLockJExecutor;
 import parsers.HitScores;
 import utils.ConfigReader;
@@ -72,14 +72,14 @@ public class GatherBlastHits extends BioLockJExecutor
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
-		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
-		BioJLockUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
+		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
+		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
 	}
 	
 	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
-		File blastOutputDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
-		File topHitsFile = new File( BioJLockUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
+		File blastOutputDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
+		File topHitsFile = new File( BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
 		
 		List<HitScores> hits = getHits(blastOutputDir);
 		writeResults(hits, topHitsFile);

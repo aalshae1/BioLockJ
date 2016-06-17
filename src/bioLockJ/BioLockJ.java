@@ -29,30 +29,32 @@ public class BioLockJ
 		
 		ConfigReader cReader = new ConfigReader(propFile);
 		List<BioLockJExecutor> list = getListToRun(propFile);
-		File logDirectory = BioJLockUtils.createLogDirectory(propFile.getName());
-		BioJLockUtils.copyPropertiesFile(propFile, logDirectory);
+		File logDirectory = BioLockJUtils.createLogDirectory(propFile.getName());
+		BioLockJUtils.copyPropertiesFile(propFile, logDirectory);
 		
 		BufferedWriter logWriter = new BufferedWriter(new FileWriter(
 					new File(logDirectory + File.separator + 
 				"log.txt")));
 		
+		for( BioLockJExecutor e : list)
+			e.checkDependencies(cReader);
 		
 		for( BioLockJExecutor e : list)
 		{
-			BioJLockUtils.noteStartToLogWriter(logWriter, e);
+			BioLockJUtils.noteStartToLogWriter(logWriter, e);
 			
 			try
 			{
-				BioJLockUtils.executeAndWaitForScriptsIfAny(cReader, e, logWriter);
+				BioLockJUtils.executeAndWaitForScriptsIfAny(cReader, e, logWriter);
 			}
 			catch(Exception ex)
 			{
-				BioJLockUtils.logAndRethrow(logWriter, ex);
+				BioLockJUtils.logAndRethrow(logWriter, ex);
 			}
 			
-			BioJLockUtils.noteEndToLogWriter(logWriter, e);
-			BioJLockUtils.appendSuccessToPropertyFile(propFile, e.getClass().getName(), logDirectory);
-			BioJLockUtils.copyPropertiesFile(propFile, logDirectory);
+			BioLockJUtils.noteEndToLogWriter(logWriter, e);
+			BioLockJUtils.appendSuccessToPropertyFile(propFile, e.getClass().getName(), logDirectory);
+			BioLockJUtils.copyPropertiesFile(propFile, logDirectory);
 		}
 		
 		logWriter.write("All ran " + new Date().toString());
