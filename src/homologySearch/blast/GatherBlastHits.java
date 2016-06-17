@@ -88,6 +88,11 @@ public class GatherBlastHits extends BioLockJExecutor
 		{
 			writeGTFFile(hits, new File(cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE)));
 		}
+		else
+		{
+			logWriter.write(ConfigReader.GTF_GATHERED_TOP_HITS_FILE + " not defined so skipping GTF\n");
+			logWriter.flush();
+		}
 	}
 	
 }
