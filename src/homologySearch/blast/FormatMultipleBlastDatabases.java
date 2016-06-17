@@ -4,12 +4,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import bioLockJ.BioJLockUtils;
 import bioLockJ.BioLockJExecutor;
-import homologySearch.BreakUpFastaSequence;
 import utils.ConfigReader;
 
 public class FormatMultipleBlastDatabases extends BioLockJExecutor
@@ -29,25 +27,23 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	private List<File> scripts = null;
 	
 	@Override
-	public void executeProjectFile(File projectFile) throws Exception
+	public void checkDependencies(ConfigReader cReader) throws Exception
+	{
+		BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
+		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
+		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
+		BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+	}
+	
+	@Override
+	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
 		this.scripts = new ArrayList<File>();
-		ConfigReader cReader = new ConfigReader(projectFile);
 		String blastBinDin = BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		File fastaDirToFormat = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
-		
 		File scriptDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
-	
-
-		File logDir = BioJLockUtils.createLogDirectory(scriptDir, BreakUpFastaSequence.class.getSimpleName());
-		BioJLockUtils.copyPropertiesFile(projectFile, logDir);
-		
-		BufferedWriter logWriter = new BufferedWriter(new FileWriter(new File(
-				logDir.getAbsolutePath() + File.separator + BreakUpFastaSequence.class.getSimpleName() 
-				 +"log.txt")));
-		
 		String clusterBatchCommand = BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
-		
+
 		int index =1;
 		this.runAllFile = new File(scriptDir.getAbsolutePath() + File.separator + "runAll_" + 
 				System.currentTimeMillis() + 	".sh");
@@ -94,10 +90,6 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 		}
 		
 		allWriter.flush();  allWriter.close();
-
-		logWriter.write("successful completion at " + new Date().toString() + "\n"); 
-		logWriter.flush(); logWriter.close();
-		BioJLockUtils.appendSuccessToPropertyFile(projectFile, this.getClass().getName(), logDir);
 	}
 	
 	@Override
@@ -111,18 +103,4 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	{
 		return scripts;
 	}
-	
-	public static void main(String[] args) throws Exception
-	{
-		if( args.length != 1)
-		{
-			System.out.println("Usage " + FormatMultipleBlastDatabases.class.getName() + " pathToPropertyFile" );
-			System.exit(1);
-		}
-		
-		File propFile = BioJLockUtils.findProperyFile(args);
-		new FormatMultipleBlastDatabases().executeProjectFile(propFile);
-	}
-	
-	
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.concurrent.ExecutionException;
 
 import utils.ConfigReader;
 import utils.ProcessWrapper;
@@ -41,15 +42,45 @@ public class BioJLockUtils
 		    }
 		}
 		
-	public static void writeScriptsAndSpin(ConfigReader cReader, BioLockJExecutor bje) throws Exception
+	public static void executeAndWaitForScriptsIfAny(ConfigReader cReader, BioLockJExecutor bje,
+				BufferedWriter logWriter) throws Exception
 	{
-		int pollTime = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.POLL_TIME);
-		bje.executeProjectFile(cReader.getPropertiesFile());
-		BioJLockUtils.executeCHMOD_ifDefined(cReader, bje.getRunAllFile());
-		BioJLockUtils.executeFile(bje.getRunAllFile());
-		BioJLockUtils.pollAndSpin(bje.getScriptFiles(), pollTime );
+		bje.executeProjectFile(cReader, logWriter);
+		
+		if( bje.getRunAllFile() != null)
+		{
+			int pollTime = 15;
+			
+			try
+			{
+				pollTime = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.POLL_TIME);
+			}
+			catch(Exception ex)
+			{
+				System.out.println("Could not set " + ConfigReader.POLL_TIME + " setting poll time to " + 
+								pollTime +  " seconds ");		
+			}
+			
+			BioJLockUtils.executeCHMOD_ifDefined(cReader, bje.getRunAllFile());
+			BioJLockUtils.executeFile(bje.getRunAllFile());
+			BioJLockUtils.pollAndSpin(bje.getScriptFiles(), pollTime );
+		}
+	}
+	
+	public static void noteStartToLogWriter( BufferedWriter logWriter, BioLockJExecutor invoker )
+		throws Exception
+	{
+		logWriter.write("starting " + invoker.getClass().getName() + " at " + new Date().toString());
+		logWriter.flush();
 	}
 		
+	public static void noteEndToLogWriter( BufferedWriter logWriter,  BioLockJExecutor invoker )
+			throws Exception
+		{
+			logWriter.write("Finished " + invoker.getClass().getName() + " at " + new Date().toString());
+			logWriter.flush();
+		}
+	
 	public static void logAndRethrow(BufferedWriter logWriter, Exception ex)
 		throws Exception
 	{
@@ -230,7 +261,7 @@ public class BioJLockUtils
 						oldPropsFile.getName()));
 	}
 	
-	public static File createLogDirectory( File outputDirectory, String parentInvoker ) throws Exception
+	public static File createLogDirectory( String name ) throws Exception
 	{
 		while(true)
 		{
@@ -238,8 +269,8 @@ public class BioJLockUtils
 			
 			while( logDir == null || logDir.exists() )
 			{
-				logDir = new File(outputDirectory.getAbsolutePath() + File.separator + 
-							"log_" + parentInvoker + "_" +  System.currentTimeMillis());
+				logDir = new File(
+							"log_" + name + "_" +  System.currentTimeMillis());
 				
 				if( logDir.exists())
 					Thread.sleep(100);

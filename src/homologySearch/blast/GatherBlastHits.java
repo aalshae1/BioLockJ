@@ -4,13 +4,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import bioLockJ.BioJLockUtils;
 import bioLockJ.BioLockJExecutor;
-import homologySearch.BreakUpFastaSequence;
 import parsers.HitScores;
 import utils.ConfigReader;
 
@@ -71,44 +69,25 @@ public class GatherBlastHits extends BioLockJExecutor
 		writer.flush();  writer.close();
 	}
 	
-	public void executeProjectFile(File projectFile) throws Exception
+	@Override
+	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
-		ConfigReader cReader = new ConfigReader(projectFile);
+		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
+		BioJLockUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
+	}
+	
+	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	{
 		File blastOutputDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
 		File topHitsFile = new File( BioJLockUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
 		
-		File logDir = BioJLockUtils.createLogDirectory(topHitsFile.getParentFile(), 
-								BreakUpFastaSequence.class.getSimpleName());
-		BioJLockUtils.copyPropertiesFile(projectFile, logDir);
-		
 		List<HitScores> hits = getHits(blastOutputDir);
 		writeResults(hits, topHitsFile);
-		
-		BufferedWriter logWriter = new BufferedWriter(new FileWriter(new File(
-				logDir.getAbsolutePath() + File.separator + BreakUpFastaSequence.class.getSimpleName() 
-				 +"log.txt")));
 		
 		if( cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE) != null)
 		{
 			writeGTFFile(hits, new File(cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE)));
 		}
-		
-		logWriter.write("successful completion at " + new Date().toString() + "\n"); 
-		logWriter.flush(); logWriter.close();
-		BioJLockUtils.appendSuccessToPropertyFile(projectFile, this.getClass().getName(), logDir);
-	}
-
-	
-	public static void main(String[] args) throws Exception
-	{
-		if( args.length != 1)
-		{
-			System.out.println("Usage " + GatherBlastHits.class.getName() + " pathToPropertyFile" );
-			System.exit(1);
-		}
-		
-		File propFile = BioJLockUtils.findProperyFile(args);
-		new FormatSingleBlastDatabase().executeProjectFile(propFile);
 	}
 	
 }

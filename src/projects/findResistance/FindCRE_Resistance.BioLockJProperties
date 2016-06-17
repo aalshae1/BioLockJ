@@ -1,10 +1,11 @@
+#RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
+#RUN_BIOLOCK_J homologySearch.blast.FormatSingleBlastDatabase
+#RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
+
+
 # this properties file maps reference genome 11 to the CARDS database
 # and dumps out a gtf file suitable for visualizaiton in a tool such 
 # as the Integrated Genome Browser
-
-# this can be run in one go from projects.findResistance.CardsAnnotationToIGV
-# or can be run one step at a time (following the commands in that class)
-# if something breaks
 
 # these are for all BLAST jobs (formatting and searching)
 BLAST_PRELIMINARY_STRING = module load blast

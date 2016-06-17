@@ -3,7 +3,6 @@ package homologySearch;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Date;
 import java.util.HashMap;
 
 import bioLockJ.BioJLockUtils;
@@ -20,18 +19,6 @@ import utils.ConfigReader;
 public class BreakUpFastaSequence extends BioLockJExecutor
 {
 	public static final String NEW_SUFFIX = "PART.fasta";
-	
-	public static void main(String[] args) throws Exception
-	{
-		if( args.length != 1)
-		{
-			System.out.println("Usage " + BreakUpFastaSequence.class.getName() + " pathToPropertyFile" );
-			System.exit(1);
-		}
-		
-		File propFile = BioJLockUtils.findProperyFile(args);
-		new BreakUpFastaSequence().executeProjectFile(propFile);
-	}
 	
 	private static void breakUpSequences( File inFile, File outFile, int numClusters) throws Exception
 	{
@@ -71,36 +58,22 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(File projectFile) throws Exception
+	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
-		ConfigReader cReader = new ConfigReader(projectFile);
+		BioJLockUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
+		BioJLockUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
+		BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_CLUSTERS);
+	}
+	
+	@Override
+	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	{
 		File outputDir= 
 				BioJLockUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
 		File fileToParse = 
 				BioJLockUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
 		int numChunks = BioJLockUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_CLUSTERS);
-
-		File logDir = BioJLockUtils.createLogDirectory(
-				outputDir, BreakUpFastaSequence.class.getSimpleName());
-		BioJLockUtils.copyPropertiesFile(projectFile, logDir);
 		
-		BufferedWriter logWriter = new BufferedWriter(new FileWriter(new File(
-			logDir.getAbsolutePath() + File.separator + BreakUpFastaSequence.class.getSimpleName() 
-			 +"log.txt")));
-		
-		logWriter.write("starting " + new Date().toString() + "\n");  logWriter.flush();
-		
-		try
-		{
-			breakUpSequences(fileToParse, outputDir, numChunks);
-		}
-		catch(Exception ex)
-		{
-			BioJLockUtils.logAndRethrow(logWriter, ex);
-		}
-		
-		logWriter.write("successful completion at " + new Date().toString() + "\n"); 
-		logWriter.flush(); logWriter.close();
-		BioJLockUtils.appendSuccessToPropertyFile(projectFile, this.getClass().getName(), logDir);
+		breakUpSequences(fileToParse, outputDir, numChunks);
 	}
 }

@@ -4,12 +4,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import bioLockJ.BioJLockUtils;
 import bioLockJ.BioLockJExecutor;
-import homologySearch.BreakUpFastaSequence;
 import utils.ConfigReader;
 
 /**
@@ -29,24 +27,25 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 	private List<File> scripts = null;
 	
 	@Override
-	public void executeProjectFile(File projectFile) throws Exception
+	public void checkDependencies(ConfigReader cReader) throws Exception
+	{	
+		BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
+		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
+		BioJLockUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
+		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
+		BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
+		BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+	}
+	
+	@Override
+	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
 		this.scripts = new ArrayList<File>();
-		ConfigReader cReader = new ConfigReader(projectFile);
 		String blastBinDin = BioJLockUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		File blastQueryDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
 		File blastDatabaseFile = BioJLockUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
 		File blastOutputDirectory = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
-		
 		File scriptDir = BioJLockUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
-	
-		File logDir = BioJLockUtils.createLogDirectory(scriptDir, BreakUpFastaSequence.class.getSimpleName());
-		BioJLockUtils.copyPropertiesFile(projectFile, logDir);
-		
-		BufferedWriter logWriter = new BufferedWriter(new FileWriter(new File(
-				logDir.getAbsolutePath() + File.separator + BreakUpFastaSequence.class.getSimpleName() 
-				 +"log.txt")));
-		
 		String clusterBatchCommand = BioJLockUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		
 		int index =1;
@@ -101,10 +100,6 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 		}
 		
 		allWriter.flush();  allWriter.close();
-
-		logWriter.write("successful completion at " + new Date().toString() + "\n"); 
-		logWriter.flush(); logWriter.close();
-		BioJLockUtils.appendSuccessToPropertyFile(projectFile, this.getClass().getName(), logDir);
 	}
 	
 	@Override
@@ -117,17 +112,5 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 	public List<File> getScriptFiles()
 	{
 		return scripts;
-	}
-	
-	public static void main(String[] args) throws Exception
-	{
-		if( args.length != 1)
-		{
-			System.out.println("Usage " + MultipleQueriesToOneBlastDB.class.getName() + " pathToPropertyFile" );
-			System.exit(1);
-		}
-		
-		File propFile = BioJLockUtils.findProperyFile(args);
-		new MultipleQueriesToOneBlastDB().executeProjectFile(propFile);
 	}
 }

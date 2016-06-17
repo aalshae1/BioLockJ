@@ -95,6 +95,6 @@ public class ConfigReader
 		InputStream in = new FileInputStream(propertiesFile);
 		props = new Properties();
 		props.load(in);
-
+		in.close();
 	}
 }
