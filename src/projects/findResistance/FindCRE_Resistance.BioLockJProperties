@@ -22,6 +22,9 @@ NUMBER_CLUSTERS=100
 # and this file was created with cat nucleotide_fasta*.fasta > all_nucleotide_fasta.fasta
 FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/all_nucleotide_fasta.fasta
 
+# where the split FASTA_TO_SPLIT_PATH files will live
+SPLIT_FASTA_DIR=/nobackup/afodor_research/card/allFastaSplits
+
 # script dirs must exist before the program is run
 SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/formatGenome11ForBlast
 SCRIPTS_DIR_FOR_BLAST_QUERY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/blastQueryCardsToGenome11
