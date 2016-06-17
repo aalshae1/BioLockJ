@@ -69,14 +69,14 @@ public class BioLockJUtils
 	public static void noteStartToLogWriter( BufferedWriter logWriter, BioLockJExecutor invoker )
 		throws Exception
 	{
-		logWriter.write("starting " + invoker.getClass().getName() + " at " + new Date().toString());
+		logWriter.write("starting " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
 		logWriter.flush();
 	}
 		
 	public static void noteEndToLogWriter( BufferedWriter logWriter,  BioLockJExecutor invoker )
 			throws Exception
 		{
-			logWriter.write("Finished " + invoker.getClass().getName() + " at " + new Date().toString());
+			logWriter.write("Finished " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
 			logWriter.flush();
 		}
 	

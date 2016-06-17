@@ -1,6 +1,7 @@
 #RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
 #RUN_BIOLOCK_J homologySearch.blast.FormatSingleBlastDatabase
 #RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
+#RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
 
 
 # this properties file maps reference genome 11 to the CARDS database
