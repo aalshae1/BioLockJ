@@ -1,29 +1,38 @@
-BLAST_PRELIMINARY_STRING = module load blast
+# this properties file maps reference genome 11 to the CARDS database
+# and dumps out a gtf file suitable for visualizaiton in a tool such 
+# as the Integrated Genome Browser
 
+# this can be run in one go from projects.findResistance.CardsAnnotationToIGV
+# or can be run one step at a time (following the commands in that class)
+# if something breaks
+
+# these are for all BLAST jobs (formatting and searching)
+BLAST_PRELIMINARY_STRING = module load blast
 BLAST_BINARY_DIR=/apps/pkg/ncbi-blast-2.2.29+/rhel6_u5-x86_64/gnu/bin/
 
-SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/formatGenome11ForBlast
+# executed before running script files on the cluster
+CHMOD_STRING = chmod 744
 
-SCRIPTS_DIR_FOR_BLAST_QUERY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/blastQueryCardsToGenome11
-
+# these are set for our UNCC cluster
 CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
-
 NUMBER_CLUSTERS=100
 
+# the query file to split into NUMBER_CLUSTER query files
+# the cards database was downloaded on June 15,2016
+# and this file was created with cat nucleotide_fasta*.fasta > all_nucleotide_fasta.fasta
+FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/all_nucleotide_fasta.fasta
+
+# script dirs must exist before the program is run
+SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/formatGenome11ForBlast
+SCRIPTS_DIR_FOR_BLAST_QUERY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/blastQueryCardsToGenome11
+
+# our target database
 FASTA_FILE_TO_FORMAT_FOR_BLAST_DB = /nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta
 
-SPLIT_FASTA_DIR=/nobackup/afodor_research/card/nucleotide_homolog_splits
-BLAST_QUERY_DIRECTORY=$SPLIT_FASTA_DIR
-
-FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/nucleotide_fasta[protein homolog model].fasta
-
+# the output directories and files for blasted results
 BLAST_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardsToRef11BlastOut
-
 BLAST_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardsToChs11.txt
-
 GTF_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardToChs11.gtf
 
-# in seconds
+# in seconds - how long to wait before checking to see if queued jobs have finished
 POLL_TIME = 10
-
-CHMOD_STRING = chmod 744

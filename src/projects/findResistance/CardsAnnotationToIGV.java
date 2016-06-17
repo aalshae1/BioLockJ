@@ -19,10 +19,10 @@ public class CardsAnnotationToIGV
 		File propsFile = BioJLockUtils.findProperyFile(args);
 		
 		
-		//ConfigReader cReader = new ConfigReader(propsFile);
-		//new BreakUpFastaSequence().executeProjectFile(propsFile);
-		//BioJLockUtils.writeScriptsAndSpin(cReader, new FormatSingleBlastDatabase());
-		//BioJLockUtils.writeScriptsAndSpin(cReader, new MultipleQueriesToOneBlastDB());
+		ConfigReader cReader = new ConfigReader(propsFile);
+		new BreakUpFastaSequence().executeProjectFile(propsFile);
+		BioJLockUtils.writeScriptsAndSpin(cReader, new FormatSingleBlastDatabase());
+		BioJLockUtils.writeScriptsAndSpin(cReader, new MultipleQueriesToOneBlastDB());
 	
 		new GatherBlastHits().executeProjectFile(propsFile);
 		
