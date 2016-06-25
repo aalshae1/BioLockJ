@@ -43,6 +43,7 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 			logWriter.write(index + " of " + names.length + " "+  
 					"Starting " + s + " at " + (System.currentTimeMillis() - startTime)/1000f 
 								+ " with " + Runtime.getRuntime().freeMemory() + " free \n");
+			logWriter.flush();
 			
 			index++;
 			
