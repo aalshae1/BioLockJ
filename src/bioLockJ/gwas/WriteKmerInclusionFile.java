@@ -10,10 +10,13 @@ import java.util.HashMap;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bitManipulations.Encode;
 import utils.ConfigReader;
 
 public class WriteKmerInclusionFile extends BioLockJExecutor
 {
+	public static final int KMER_SIZE = 31;
+	public static final String SUFFIX_TO_REMOVE = "_dsk.txt";
 
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
@@ -23,24 +26,59 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);		
 	}
 	
-	private HashMap<Integer, BitSet> getBigBitSet(File inDirectory, BufferedWriter logWriter,
+	private HashMap<Long, BitSet> getBigBitSet(File inDirectory, BufferedWriter logWriter,
 					HashMap<String, Integer> nameMap) throws Exception
 	{
-		HashMap<Integer, BitSet> bigMap = new HashMap<Integer,BitSet>();
+		long startTime = System.currentTimeMillis();
+		
+		HashMap<Long, BitSet> bigMap = new HashMap<Long,BitSet>();
 
 		String[] names = inDirectory.list();
 		
+		int index =0;
+		
 		for(String s : names)
 		{
+			logWriter.write(index + " of " + names.length + " "+  
+					"Starting " + s + " at " + (System.currentTimeMillis() - startTime)/1000f 
+								+ " with " + Runtime.getRuntime().freeMemory() + " free ");
+			
+			index++;
+			
 			if( s.endsWith(".txt"))
 			{
+				Integer keyValue = nameMap.get(s.replaceAll(SUFFIX_TO_REMOVE, ""));
+				
 				File inFile = new File(inDirectory.getAbsolutePath() + File.separator +
 											s);
 				
 				BufferedReader reader = new BufferedReader( new FileReader(
 						inFile.getAbsolutePath() + File.separator + s));
 				
-				
+				for(String s2= reader.readLine(); s2 != null ; s2 = reader.readLine())
+				{
+					String[] splits = s2.split("\t");
+					
+					if( splits.length != 2)
+						throw new Exception("Parsing error " + inFile.getAbsolutePath() + " " +s);
+					
+					if( splits[0].length() != KMER_SIZE)
+						throw new Exception("Initial implementation is for k=31 only \n" + 
+								"Parsing error " + inFile.getAbsolutePath() + " " +s);
+					
+					long aVal = Encode.makeLong(splits[0]);
+					
+					BitSet bSet = bigMap.get(aVal);
+					
+					if( bSet == null)
+					{
+						bSet = new BitSet(nameMap.size());
+						bigMap.put(aVal, bSet);
+					}
+					
+					bSet.set(keyValue);
+					
+				}
 			}
 		}
 		
@@ -61,7 +99,7 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		{
 			if( s.endsWith(".txt"))
 			{
-				String key = s.replace("_dsk.txt", "");
+				String key = s.replace(SUFFIX_TO_REMOVE, "");
 				writer.write(key + "\t" + index);
 				map.put(key, index);
 				index++;
@@ -73,9 +111,47 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		
 	}
 	
+	private static String getAsBitString(BitSet set) throws Exception
+	{
+		StringBuffer buff =  new StringBuffer();
+		
+		for(int x=0; x < set.length(); x++)
+		{
+			if( set.get(x))
+				buff.append("1");
+			else
+				buff.append("0");
+		}
+		
+		return buff.toString();
+	}
+	
+	private static void writeResults(File outFile, HashMap<Long, BitSet> bigMap) 
+		throws Exception
+	{
+		BufferedWriter writer =new BufferedWriter(new FileWriter(outFile));
+		
+		for( Long l : bigMap.keySet())
+		{
+			BitSet set = bigMap.get(l);
+			
+			if( set.length() != bigMap.size())
+				throw new Exception("Logic error " + set.length()  + " " +  bigMap.size() + " " + l);
+			
+			writer.write(l + "\t" + getAsBitString(set) + "\n");
+		}
+		
+		writer.flush();  writer.close();
+	}
 	@Override
 	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
 		File genomeToIndexFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);
+		File kmerToGenomeFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);	
+		File dirToParse = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_OUTPUT_DIRECTORY);
+		
+		HashMap<String, Integer> nameMap= getNameToIntegerMap(dirToParse, kmerToGenomeFile);
+		HashMap<Long, BitSet> bigMap = getBigBitSet(dirToParse, logWriter, nameMap);
+		writeResults(kmerToGenomeFile, bigMap);
 	}
 }
