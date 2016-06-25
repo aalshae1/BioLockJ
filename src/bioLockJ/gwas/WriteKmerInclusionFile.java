@@ -119,11 +119,11 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		
 	}
 	
-	private static String getAsBitString(BitSet set) throws Exception
+	private static String getAsBitString(BitSet set, int length) throws Exception
 	{
 		StringBuffer buff =  new StringBuffer();
 		
-		for(int x=0; x < set.length(); x++)
+		for(int x=0; x < length; x++)
 		{
 			if( set.get(x))
 				buff.append("1");
@@ -144,10 +144,7 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		{
 			BitSet set = bigMap.get(l);
 			
-			if( set.length() != nameMap.size())
-				throw new Exception("Logic error " + set.length()  + " " +  nameMap.size() + " " + l);
-			
-			writer.write(l + "\t" + getAsBitString(set) + "\n");
+			writer.write(l + "\t" + getAsBitString(set, nameMap.size()) + "\n");
 		}
 		
 		writer.flush();  writer.close();
