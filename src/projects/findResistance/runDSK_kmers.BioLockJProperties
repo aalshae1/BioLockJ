@@ -1,5 +1,5 @@
 ##RUN_BIOLOCK_J dskWrapper.RunDSKOnDirectory
-RUN_BIOLOCK_J dskWrapper.gwas.WriteKmerInclusionFile
+#RUN_BIOLOCK_J dskWrapper.gwas.WriteKmerInclusionFile
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
