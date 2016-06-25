@@ -50,6 +50,11 @@ public class ConfigReader
 	public static final String BLAST_GATHERED_TOP_HITS_FILE = "BLAST_GATHERED_TOP_HITS_FILE";
 	public static final String GTF_GATHERED_TOP_HITS_FILE = "GTF_GATHERED_TOP_HITS_FILE";
 	
+	public static final String DSK_INPUT_DIRECTORY = "DSK_INPUT_DIRECTORY";
+	public static final String DSK_OUTPUT_DIRECTORY = "DSK_OUTPUT_DIRECTORY";
+	public static final String DSK_BINARY_DIRECTORY = "DSK_BINARY_DIRECTORY";
+	public static final String DSK_SCRIPT_DIR = "DSK_SCRIPT_DIR";
+	
 	public boolean isSetToTrue(String namedProperty)
 	{
 		Object obj = props.get(namedProperty);
