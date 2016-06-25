@@ -22,8 +22,8 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{	
 		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_OUTPUT_DIRECTORY);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);		
+		BioLockJUtils.requireString(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);
+		BioLockJUtils.requireString(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);		
 	}
 	
 	private HashMap<Long, BitSet> getBigBitSet(File inDirectory, BufferedWriter logWriter,
@@ -148,8 +148,10 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 	@Override
 	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
-		File genomeToIndexFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);
-		File kmerToGenomeFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);	
+		File genomeToIndexFile = new File(
+				BioLockJUtils.requireString(cReader, ConfigReader.GENOME_TO_INTEGER_FILE));
+		File kmerToGenomeFile = new File(
+				BioLockJUtils.requireString(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE));	
 		File dirToParse = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_OUTPUT_DIRECTORY);
 		
 		HashMap<String, Integer> nameMap= getNameToIntegerMap(dirToParse, genomeToIndexFile);
