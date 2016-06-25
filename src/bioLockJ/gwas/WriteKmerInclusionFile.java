@@ -41,7 +41,7 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		{
 			logWriter.write(index + " of " + names.length + " "+  
 					"Starting " + s + " at " + (System.currentTimeMillis() - startTime)/1000f 
-								+ " with " + Runtime.getRuntime().freeMemory() + " free ");
+								+ " with " + Runtime.getRuntime().freeMemory() + " free \n");
 			
 			index++;
 			
@@ -49,11 +49,13 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 			{
 				Integer keyValue = nameMap.get(s.replaceAll(SUFFIX_TO_REMOVE, ""));
 				
+				if(keyValue == null)
+					throw new Exception("Could not find " + s.replaceAll(SUFFIX_TO_REMOVE, ""));
+				
 				File inFile = new File(inDirectory.getAbsolutePath() + File.separator +
 											s);
 				
-				BufferedReader reader = new BufferedReader( new FileReader(
-						inFile.getAbsolutePath() + File.separator + s));
+				BufferedReader reader = new BufferedReader( new FileReader(inFile));
 				
 				for(String s2= reader.readLine(); s2 != null ; s2 = reader.readLine())
 				{
@@ -150,7 +152,7 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		File kmerToGenomeFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);	
 		File dirToParse = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_OUTPUT_DIRECTORY);
 		
-		HashMap<String, Integer> nameMap= getNameToIntegerMap(dirToParse, kmerToGenomeFile);
+		HashMap<String, Integer> nameMap= getNameToIntegerMap(dirToParse, genomeToIndexFile);
 		HashMap<Long, BitSet> bigMap = getBigBitSet(dirToParse, logWriter, nameMap);
 		writeResults(kmerToGenomeFile, bigMap);
 	}

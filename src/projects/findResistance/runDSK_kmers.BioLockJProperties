@@ -1,4 +1,5 @@
-#RUN_BIOLOCK_J dskWrapper.RunDSKOnDirectory
+##RUN_BIOLOCK_J dskWrapper.RunDSKOnDirectory
+RUN_BIOLOCK_J dskWrapper.gwas.WriteKmerInclusionFile
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
@@ -17,3 +18,6 @@ DSK_BINARY_DIRECTORY=/nobackup/afodor_research/dsk/dsk-2.1.0-Linux/bin
 
 # will be passed to JVM as -Xms20g not currently implemented
 #JAVA_VM_ARGS=-Xms20g 
+
+GENOME_TO_INTEGER_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/pneuKmerCode.txt
+KMER_TO_HAS_GENOME_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/kmersToGenome.txt
