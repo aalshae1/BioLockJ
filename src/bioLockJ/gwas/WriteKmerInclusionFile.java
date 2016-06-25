@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.util.BitSet;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
@@ -59,16 +60,20 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 				
 				for(String s2= reader.readLine(); s2 != null ; s2 = reader.readLine())
 				{
-					String[] splits = s2.split("\t");
+					StringTokenizer sToken = new StringTokenizer(s2);
 					
-					if( splits.length != 2)
-						throw new Exception("Parsing error " + inFile.getAbsolutePath() + " " +s2);
+					String kmer = sToken.nextToken();
 					
-					if( splits[0].length() != KMER_SIZE)
+					if( kmer.length() != KMER_SIZE)
 						throw new Exception("Initial implementation is for k=31 only \n" + 
 								"Parsing error " + inFile.getAbsolutePath() + " " +s);
 					
-					long aVal = Encode.makeLong(splits[0]);
+					long aVal = Encode.makeLong(kmer);
+					
+					sToken.nextToken();
+					
+					if( sToken.hasMoreTokens())
+						throw new Exception("Parsing error " + inFile.getAbsolutePath() + " " +s2);
 					
 					BitSet bSet = bigMap.get(aVal);
 					
