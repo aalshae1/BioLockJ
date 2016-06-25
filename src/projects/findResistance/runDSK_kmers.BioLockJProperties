@@ -1,0 +1,16 @@
+#RUN_BIOLOCK_J dskWrapper.RunDSKOnDirectory
+
+# executed before running script files on the cluster
+CHMOD_STRING = chmod 744
+
+# these are set for our UNCC cluster
+CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
+NUMBER_CLUSTERS=100
+
+# in seconds - how long to wait before checking to see if queued jobs have finished
+POLL_TIME = 10
+
+DSK_INPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/kpneu
+DSK_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/dskOut
+DSK_SCRIPT_DIR=/nobackup/afodor_research/bioLockJProjects/scripts
+DSK_BINARY_DIRECTORY=/nobackup/afodor_research/dsk/dsk-2.1.0-Linux/bin
