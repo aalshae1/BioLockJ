@@ -49,6 +49,9 @@ public class ConfigReader
 	public static final String BLAST_OUTPUT_DIRECTORY = "BLAST_OUTPUT_DIRECTORY";
 	public static final String BLAST_GATHERED_TOP_HITS_FILE = "BLAST_GATHERED_TOP_HITS_FILE";
 	public static final String GTF_GATHERED_TOP_HITS_FILE = "GTF_GATHERED_TOP_HITS_FILE";
+	public static final String JAVA_VM_ARGS= "JAVA_VM_ARGS"; 
+	public static final String GENOME_TO_INTEGER_FILE = "GENOME_TO_INTEGER_FILE";
+	public static final String KMER_TO_HAS_GENOME_FILE = "KMER_TO_HAS_GENOME_FILE";
 	
 	public static final String DSK_INPUT_DIRECTORY = "DSK_INPUT_DIRECTORY";
 	public static final String DSK_OUTPUT_DIRECTORY = "DSK_OUTPUT_DIRECTORY";
