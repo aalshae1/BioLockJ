@@ -62,7 +62,7 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 					String[] splits = s2.split("\t");
 					
 					if( splits.length != 2)
-						throw new Exception("Parsing error " + inFile.getAbsolutePath() + " " +s);
+						throw new Exception("Parsing error " + inFile.getAbsolutePath() + " " +s2);
 					
 					if( splits[0].length() != KMER_SIZE)
 						throw new Exception("Initial implementation is for k=31 only \n" + 
