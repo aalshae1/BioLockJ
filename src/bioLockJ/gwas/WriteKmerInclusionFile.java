@@ -108,7 +108,7 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 			if( s.endsWith(".txt"))
 			{
 				String key = s.replace(SUFFIX_TO_REMOVE, "");
-				writer.write(key + "\t" + index);
+				writer.write(key + "\t" + index + "\n");
 				map.put(key, index);
 				index++;
 			}
@@ -134,7 +134,8 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		return buff.toString();
 	}
 	
-	private static void writeResults(File outFile, HashMap<Long, BitSet> bigMap) 
+	private static void writeResults(File outFile, HashMap<Long, BitSet> bigMap,
+						HashMap<String, Integer> nameMap) 
 		throws Exception
 	{
 		BufferedWriter writer =new BufferedWriter(new FileWriter(outFile));
@@ -143,8 +144,8 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		{
 			BitSet set = bigMap.get(l);
 			
-			if( set.length() != bigMap.size())
-				throw new Exception("Logic error " + set.length()  + " " +  bigMap.size() + " " + l);
+			if( set.length() != nameMap.size())
+				throw new Exception("Logic error " + set.length()  + " " +  nameMap.size() + " " + l);
 			
 			writer.write(l + "\t" + getAsBitString(set) + "\n");
 		}
@@ -162,6 +163,6 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		
 		HashMap<String, Integer> nameMap= getNameToIntegerMap(dirToParse, genomeToIndexFile);
 		HashMap<Long, BitSet> bigMap = getBigBitSet(dirToParse, logWriter, nameMap);
-		writeResults(kmerToGenomeFile, bigMap);
+		writeResults(kmerToGenomeFile, bigMap, nameMap);
 	}
 }
