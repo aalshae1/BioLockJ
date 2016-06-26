@@ -10,6 +10,7 @@ import java.util.HashMap;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import utils.ConfigReader;
+import utils.FisherTest;
 
 public class KmerPValuesFromFisherTest extends BioLockJExecutor
 {
@@ -112,7 +113,7 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 		writer.write("kmer\tnumCondition1WithKmer\tnumCondition1WithoutKmer\t" + 
-				"numCondition2WithKmer\tnumCondition2WithoutKmer\n");		
+				"numCondition2WithKmer\tnumCondition2WithoutKmer\tpValue\n");		
 		BufferedReader reader = new BufferedReader(new FileReader(inKmerFile.getAbsolutePath() + "_filteredTo_" 
 				+  minKmerNumber+ ".txt"));
 		
@@ -170,7 +171,18 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 			writer.write(numCondition1WithKmer + "\t");
 			writer.write(numCondition1WithoutKmer + "\t");
 			writer.write(numCondition2WithKmer + "\t");
-			writer.write(numCondition2WithoutKmer + "\n");
+			writer.write(numCondition2WithoutKmer + "\t");
+			
+			int bigN = numCondition1WithKmer + numCondition1WithoutKmer + numCondition2WithKmer + 
+					numCondition2WithoutKmer;
+
+			int bigK = numCondition1WithKmer + numCondition2WithKmer;
+
+			int littleN = numCondition1WithKmer + numCondition1WithoutKmer;
+
+			int litteK= numCondition1WithKmer;
+
+			writer.write( FisherTest.getFisherP(bigN, bigK, littleN, litteK) + "\n" );
 			
 			writer.flush();
 		}
