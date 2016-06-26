@@ -32,6 +32,8 @@ public class PivotPValuesToReferenceGenome extends BioLockJExecutor
 		
 		BufferedReader reader = new BufferedReader(new FileReader(inFile));
 		
+		reader.readLine();
+		
 		for(String s = reader.readLine(); s != null; s= reader.readLine())
 		{
 			String[] splits = s.split("\t");
