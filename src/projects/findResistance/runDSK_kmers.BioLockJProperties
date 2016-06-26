@@ -2,7 +2,9 @@
 ##RUN_BIOLOCK_J bioLockJ.gwas.WriteKmerInclusionFile
 ##RUN_BIOLOCK_J bioLockJ.gwas.FilterOutRareKmers
 ##RUN_BIOLOCK_J bioLockJ.gwas.KmerPValuesFromFisherTest
-#RUN_BIOLOCK_J bioLockJ.gwas.PivotPValuesToReferenceGenome
+##RUN_BIOLOCK_J bioLockJ.gwas.PivotPValuesToReferenceGenome
+#RUN_BIOLOCK_J bioLockJ.genomeFeatures.GC_Content
+
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
