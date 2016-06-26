@@ -112,7 +112,7 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 		writer.write("kmer\tnumCondition1WithKmer\tnumCondition1WithoutKmer\t" + 
-				"numCondition2WithKmer\tnumCondition2WithoutKmer\tpValue\n");		
+				"numCondition2WithKmer\tnumCondition2WithoutKmer\n");		
 		BufferedReader reader = new BufferedReader(new FileReader(inKmerFile.getAbsolutePath() + "_filteredTo_" 
 				+  minKmerNumber+ ".txt"));
 		
