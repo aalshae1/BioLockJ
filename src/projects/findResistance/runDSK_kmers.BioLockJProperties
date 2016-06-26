@@ -1,7 +1,8 @@
 ##RUN_BIOLOCK_J dskWrapper.RunDSKOnDirectory
 ##RUN_BIOLOCK_J bioLockJ.gwas.WriteKmerInclusionFile
 ##RUN_BIOLOCK_J bioLockJ.gwas.FilterOutRareKmers
-#RUN_BIOLOCK_J bioLockJ.gwas.KmerPValuesFromFisherTest
+##RUN_BIOLOCK_J bioLockJ.gwas.KmerPValuesFromFisherTest
+#RUN_BIOLOCK_J bioLockJ.gwas.PivotPValuesToReferenceGenome
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
@@ -31,3 +32,6 @@ STRAIN_METADATA_FILE=/nobackup/afodor_research/af_broad/strainMeta.txt
 FISHER_CONDITION_1=resistant
 FISHER_CONDITION_2=susceptible
 FISHER_PVALUES_OUTPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/resistantVsSuc_kneu.txt
+
+FISHER_GTF_OUTPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/resistantVsSuc_To11.gwas
+REFERENCE_GENOME=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta

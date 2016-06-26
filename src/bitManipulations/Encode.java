@@ -36,7 +36,7 @@ public class Encode
 		return buff.toString();
 	}
 	
-	public static long makeLong( String s) throws Exception
+	public static Long makeLong( String s) throws Exception
  	{
 		long val =0;
 		
@@ -63,7 +63,7 @@ public class Encode
 			{
 				val = val | (T_INT << (x*2));
 			}
-			else throw new Exception("Unexpected character " + c);
+			else return null;
 		}
 	
 

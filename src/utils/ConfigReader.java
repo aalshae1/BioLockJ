@@ -66,6 +66,10 @@ public class ConfigReader
 	public static final String FISHER_CONDITION_1 = "FISHER_CONDITION_1";
 	public static final String FISHER_CONDITION_2 = "FISHER_CONDITION_2";
 	
+	public static final String FISHER_GTF_OUTPUT_FILE = "FISHER_GTF_OUTPUT_FILE";
+	
+	public static final String REFERENCE_GENOME="REFERENCE_GENOME";
+	
 	public boolean isSetToTrue(String namedProperty)
 	{
 		Object obj = props.get(namedProperty);
