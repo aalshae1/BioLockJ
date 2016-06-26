@@ -1,6 +1,7 @@
 ##RUN_BIOLOCK_J dskWrapper.RunDSKOnDirectory
 ##RUN_BIOLOCK_J bioLockJ.gwas.WriteKmerInclusionFile
-#RUN_BIOLOCK_J bioLockJ.gwas.FilterOutRareKmers
+##RUN_BIOLOCK_J bioLockJ.gwas.FilterOutRareKmers
+#RUN_BIOLOCK_J bioLockJ.gwas.KmerPValuesFromFisherTest
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
@@ -24,3 +25,9 @@ GENOME_TO_INTEGER_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnot
 KMER_TO_HAS_GENOME_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/kmersToGenome.txt
 
 MIN_NUMBER_OF_DIFFERENT_KMERS=10
+
+STRAIN_METADATA_FILE=/nobackup/afodor_research/af_broad/strainMeta.txt
+
+FISHER_CONDITION_1=resistant
+FISHER_CONDITION_2=susceptible
+FISHER_PVALUES_OUTPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/resistantVsSuc_kneu.txt

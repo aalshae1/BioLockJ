@@ -60,6 +60,12 @@ public class ConfigReader
 	
 	public static final String MIN_NUMBER_OF_DIFFERENT_KMERS = "MIN_NUMBER_OF_DIFFERENT_KMERS";
 	
+	public static final String STRAIN_METADATA_FILE = "STRAIN_METADATA_FILE";
+	public static final String FISHER_PVALUES_OUTPUT_FILE = "FISHER_PVALUES_OUTPUT_FILE";
+	
+	public static final String FISHER_CONDITION_1 = "FISHER_CONDITION_1";
+	public static final String FISHER_CONDITION_2 = "FISHER_CONDITION_2";
+	
 	public boolean isSetToTrue(String namedProperty)
 	{
 		Object obj = props.get(namedProperty);
