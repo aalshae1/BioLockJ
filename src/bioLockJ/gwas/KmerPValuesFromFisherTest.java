@@ -10,7 +10,6 @@ import java.util.HashMap;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import utils.ConfigReader;
-import utils.FisherTest;
 
 public class KmerPValuesFromFisherTest extends BioLockJExecutor
 {
@@ -171,18 +170,8 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 			writer.write(numCondition1WithKmer + "\t");
 			writer.write(numCondition1WithoutKmer + "\t");
 			writer.write(numCondition2WithKmer + "\t");
-			writer.write(numCondition2WithoutKmer + "\t");
+			writer.write(numCondition2WithoutKmer + "\n");
 			
-			int bigN = numCondition1WithKmer + numCondition1WithoutKmer + numCondition2WithKmer + 
-								numCondition2WithoutKmer;
-			
-			int bigK = numCondition1WithKmer + numCondition2WithKmer;
-			
-			int littleN = numCondition1WithKmer + numCondition1WithoutKmer;
-			
-			int litteK= numCondition1WithKmer;
-			
-			writer.write( FisherTest.getFisherPSum(bigN, bigK, littleN, litteK) + "\n" );
 			writer.flush();
 		}
 		

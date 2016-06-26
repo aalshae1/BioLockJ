@@ -13,11 +13,14 @@ public class FisherTest
 		return choose(allK,k) * choose(allN - allK, n - k) / choose(allN,n);
 	}
 	
+	/*
+	 * Probably not implemented correctly (doesn't consider both sides?)
+	 */
 	public static double getFisherPSum(int allN, int allK, int n, int k  )
 	{
 		double sum =0;
 		
-		for( int x = k; x <=n ; x++)
+		for( int x = k; x <=n && x <= allK ; x++)
 			sum += getFisherP( allN, allK, n, x);
 		
 		return sum;
