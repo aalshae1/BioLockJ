@@ -69,6 +69,9 @@ public class ConfigReader
 	public static final String FISHER_GTF_OUTPUT_FILE = "FISHER_GTF_OUTPUT_FILE";
 	
 	public static final String REFERENCE_GENOME="REFERENCE_GENOME";
+	public static final String GC_CONTENT_IGV_OUTPUT_FILE = "GC_CONTENT_IGV_OUTPUT_FILE";
+	
+	public static final String GC_CONTENT_WINDOW_SIZE = "GC_CONTENT_WINDOW_SIZE";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{
