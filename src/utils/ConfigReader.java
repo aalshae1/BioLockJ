@@ -58,6 +58,8 @@ public class ConfigReader
 	public static final String DSK_BINARY_DIRECTORY = "DSK_BINARY_DIRECTORY";
 	public static final String DSK_SCRIPT_DIR = "DSK_SCRIPT_DIR";
 	
+	public static final String MIN_NUMBER_OF_DIFFERENT_KMERS = "MIN_NUMBER_OF_DIFFERENT_KMERS";
+	
 	public boolean isSetToTrue(String namedProperty)
 	{
 		Object obj = props.get(namedProperty);
