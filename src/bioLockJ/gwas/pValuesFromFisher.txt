@@ -1,0 +1,20 @@
+#not currently being used (too slow...)
+rm(list=ls())
+setwd("C:\\bioLockProjects\\resistantAnnotation")
+
+myT <- read.table("resistantVsSuc_kneu.txt", sep="\t", header=TRUE)
+
+names <- vector(length=nrow(myT))
+pValues <- vector(length=nrow(myT) )
+
+for( i in 1:nrow(myT))
+{
+	aRow <- myT[i,]
+	m <- matrix( c( as.integer(aRow[2]),as.integer(aRow[3]),as.integer(aRow[4]),as.integer(aRow[5])) ,
+		 nrow=2)
+	pValues[i] <- fisher.test(m)$p.value
+	names[i] <- aRow$kmer
+}
+
+myFrame <- data.frame( names,pValues )
+write.table( myFrame, file="resistantVsSucPvalues.txt",sep="\t")
