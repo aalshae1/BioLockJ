@@ -72,6 +72,7 @@ public class ConfigReader
 	public static final String GC_CONTENT_IGV_OUTPUT_FILE = "GC_CONTENT_IGV_OUTPUT_FILE";
 	
 	public static final String GC_CONTENT_WINDOW_SIZE = "GC_CONTENT_WINDOW_SIZE";
+	public static final String GC_CONTENT_STEP_SIZE = "GC_CONTENT_STEP_SIZE";
 	
 	public boolean isSetToTrue(String namedProperty)
 	{

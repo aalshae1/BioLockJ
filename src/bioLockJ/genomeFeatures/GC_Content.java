@@ -18,6 +18,7 @@ public class GC_Content extends BioLockJExecutor
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);
 		BioLockJUtils.requireString(cReader, ConfigReader.GC_CONTENT_IGV_OUTPUT_FILE);
 		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_WINDOW_SIZE);
+		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_STEP_SIZE);
 	}
 	
 	private float getGCContent(String s )
@@ -52,6 +53,9 @@ public class GC_Content extends BioLockJExecutor
 		int windowSize =
 				BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_WINDOW_SIZE);
 		
+		int stepSize = 
+				BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_STEP_SIZE);
+		
 		List<FastaSequence> list = FastaSequence.readFastaFile(referenceGenome);
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
@@ -62,7 +66,7 @@ public class GC_Content extends BioLockJExecutor
 			String seq = fs.getSequence().toUpperCase();
 			String chr = fs.getFirstTokenOfHeader();
 			
-			for( int x=0; x < seq.length() - windowSize -1 ; x += windowSize)
+			for( int x=0; x < seq.length() - windowSize -1 ; x += stepSize)
 			{
 				String subSeq = seq.substring(x, x + windowSize );
 				writer.write(chr + "\t");

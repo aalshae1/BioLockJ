@@ -39,3 +39,4 @@ FISHER_GTF_OUTPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnot
 REFERENCE_GENOME=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta
 GC_CONTENT_IGV_OUTPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/genome11_gc.igv
 GC_CONTENT_WINDOW_SIZE=500
+GC_CONTENT_STEP_SIZE=50
