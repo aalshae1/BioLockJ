@@ -33,6 +33,7 @@ public class FisherTest
 		
 		System.out.println( getFisherP(60, 20, 7, 3) );
 		
+		// see slide # 8 here http://afodor.github.io/classes/stats2016/Lecture07.pptx
 		System.out.println( getFisherPSum(34, 16, 15, 13));
 	}
 }
