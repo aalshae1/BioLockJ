@@ -162,10 +162,10 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 			}
 			
 			if( numCondition1WithKmer + numCondition1WithoutKmer == 0 )
-				throw new Exception("Could not find condition 1");
+				throw new Exception("Could not find condition 1 " + condition1);
 			
 			if( numCondition2WithKmer + numCondition2WithoutKmer == 0 )
-				throw new Exception("Could not find condition 2");
+				throw new Exception("Could not find condition 2 " + condition2);
 			
 			writer.write(splits[0] + "\t");
 			writer.write(numCondition1WithKmer + "\t");
