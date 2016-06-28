@@ -44,4 +44,4 @@ GTF_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantA
 # in seconds - how long to wait before checking to see if queued jobs have finished
 POLL_TIME = 10
 
-ConfigReader.BLAST_DB_TYPE=nucl
+BLAST_DB_TYPE=nucl
