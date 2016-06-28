@@ -34,6 +34,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		
 		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
 		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		BioLockJUtils.requireDBType(cReader);
 	}
 	
 	@Override
@@ -47,6 +48,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		File scriptDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
 		
 		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		String dbType = BioLockJUtils.requireDBType(cReader);
 		
 		this.runAllFile = new File(scriptDir.getAbsolutePath() + File.separator + "runAll_" + 
 				System.currentTimeMillis() +	".sh");
@@ -62,8 +64,8 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		if( prelimString != null)
 			writer.write(prelimString + "\n");
 				
-		writer.write(blastBinDin + "/makeblastdb -dbtype nucl " + 
-								"-in " + fastaFileToFormat.getAbsolutePath() + "\n");
+		writer.write(blastBinDin + "/makeblastdb -dbtype " + dbType +  
+								" -in " + fastaFileToFormat.getAbsolutePath() + "\n");
 				
 		File touchFile = new File(script.getAbsolutePath() + FINISHED_SUFFIX );
 				

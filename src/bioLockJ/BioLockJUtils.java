@@ -80,6 +80,19 @@ public class BioLockJUtils
 			logWriter.flush();
 		}
 	
+	public static String requireDBType(ConfigReader cReader) throws Exception
+	{
+		String val = cReader.getAProperty(ConfigReader.BLAST_DB_TYPE);
+		
+		if( val == null)
+			throw new Exception("Could not find " + ConfigReader.BLAST_DB_TYPE);
+		
+		if( !val.equals("prot") && ! val.equals("nucl"))
+			throw new Exception(ConfigReader.BLAST_DB_TYPE + " must be either prot or nucl");
+		
+		return val;
+	}
+	
 	public static void logAndRethrow(BufferedWriter logWriter, Exception ex)
 		throws Exception
 	{

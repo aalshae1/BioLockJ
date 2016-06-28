@@ -74,6 +74,9 @@ public class ConfigReader
 	public static final String GC_CONTENT_WINDOW_SIZE = "GC_CONTENT_WINDOW_SIZE";
 	public static final String GC_CONTENT_STEP_SIZE = "GC_CONTENT_STEP_SIZE";
 	
+	// should be either prot or nucl
+	public static final String BLAST_DB_TYPE = "BLAST_DB_TYPE";
+	
 	public boolean isSetToTrue(String namedProperty)
 	{
 		Object obj = props.get(namedProperty);
