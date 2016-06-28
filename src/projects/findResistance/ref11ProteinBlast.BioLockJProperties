@@ -1,5 +1,5 @@
 #RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
-#RUN_BIOLOCK_J homologySearch.blast.FormatSingleBlastDatabase
+##RUN_BIOLOCK_J homologySearch.blast.FormatSingleBlastDatabase
 #RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
 #RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
 
@@ -42,3 +42,4 @@ GTF_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantA
 POLL_TIME = 10
 
 BLAST_DB_TYPE=prot
+BLAST_ALL_COMMAND=blastp

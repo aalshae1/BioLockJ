@@ -77,6 +77,8 @@ public class ConfigReader
 	// should be either prot or nucl
 	public static final String BLAST_DB_TYPE = "BLAST_DB_TYPE";
 	
+	public static final String BLAST_ALL_COMMAND="BLAST_ALL_COMMAND";
+	
 	public boolean isSetToTrue(String namedProperty)
 	{
 		Object obj = props.get(namedProperty);

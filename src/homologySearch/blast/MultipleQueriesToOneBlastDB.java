@@ -35,6 +35,7 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
 		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
 		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_ALL_COMMAND);
 	}
 	
 	@Override
@@ -47,6 +48,7 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 		File blastOutputDirectory = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
 		File scriptDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
 		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		String blastAllCommand = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_ALL_COMMAND);
 		
 		int index =1;
 		this.runAllFile = new File(scriptDir.getAbsolutePath() + File.separator + "runAll_" + 
@@ -76,7 +78,7 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 				File outFile = new File( blastOutputDirectory + File.separator + fastaFile.getName() + "_to_" + 
 							blastDatabaseFile.getName() + ".txt");
 				
-				writer.write(blastBinDin + "/blastn -db " + 
+				writer.write(blastBinDin + "/" + blastAllCommand + " -db " + 
 						blastDatabaseFile.getAbsolutePath() + " -out " + 
 							outFile.getAbsolutePath() +  
 							" -query " +fastaFile.getAbsolutePath() + 
