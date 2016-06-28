@@ -1,7 +1,8 @@
 ##RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
 ##RUN_BIOLOCK_J homologySearch.blast.FormatSingleBlastDatabase
 ##RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
-#RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
+##RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
+#RUN_BIOLOCK_J bioLockJ.genomeFeatures.AddMBGDGeneAnnotationsToGTF
 
 # these are for all BLAST jobs (formatting and searching)
 BLAST_PRELIMINARY_STRING = module load blast
@@ -45,3 +46,12 @@ BLAST_DB_TYPE=prot
 BLAST_ALL_COMMAND=blastp
 
 OUTPUT_QUERY_COORDINATES_TO_GTF=TRUE
+
+# the gene prediction file provided by the broad with the olive download
+INPUT_GTF_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/klebsiella_pneumoniae_chs_11.0.gtf
+OUTPUT_GTF_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/chs11WithMBDGAnnotation.gtf
+
+# downloaded from the MBDD database
+MBGD_EXTENDED_PATH=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/mbgd/mbgd_2016-01_extended.tab
+	
+
