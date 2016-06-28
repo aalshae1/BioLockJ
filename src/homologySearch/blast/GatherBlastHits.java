@@ -39,7 +39,7 @@ public class GatherBlastHits extends BioLockJExecutor
 		return list;
 	}
 	
-	private void writeGTFFile( List<HitScores> list, File outFile, boolean useTargetCoordinates ) throws Exception
+	private void writeGTFFile( List<HitScores> list, File outFile, boolean useQueryCoordinates ) throws Exception
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 		
@@ -47,7 +47,7 @@ public class GatherBlastHits extends BioLockJExecutor
 		{
 			writer.write(hs.getTargetId() + "\tblast\t" +  hs.getQueryId() + "\t");  
 			
-			if( useTargetCoordinates)
+			if( ! useQueryCoordinates)
 				writer.write(hs.getTargetStart() + "\t" + hs.getTargetEnd() + "\t");
 			else
 				writer.write(hs.getQueryStart() + "\t" + hs.getQueryEnd() + "\t");
@@ -79,13 +79,14 @@ public class GatherBlastHits extends BioLockJExecutor
 	{
 		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
 		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
+		BioLockJUtils.requireBoolean(cReader, ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
 	}
 	
 	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
 	{
 		File blastOutputDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
 		File topHitsFile = new File( BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
-		String useQueryCoordiantes = cReader.getAProperty(ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
+		boolean useQueryCoordiantes = BioLockJUtils.requireBoolean(cReader, ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
 		
 		List<HitScores> hits = getHits(blastOutputDir);
 		writeResults(hits, topHitsFile);
@@ -93,7 +94,7 @@ public class GatherBlastHits extends BioLockJExecutor
 		if( cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE) != null)
 		{
 			writeGTFFile(hits, new File(cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE)),
-					useQueryCoordiantes == null);
+					useQueryCoordiantes);
 		}
 		else
 		{

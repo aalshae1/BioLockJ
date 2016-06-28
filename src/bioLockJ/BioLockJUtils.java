@@ -93,6 +93,23 @@ public class BioLockJUtils
 		return val;
 	}
 	
+	public static boolean requireBoolean(ConfigReader cReader, String propertyName) throws Exception
+	{
+		String val = cReader.getAProperty(propertyName);
+		
+		if( val == null)
+			throw new Exception("Could not find " + propertyName);
+		
+		if( val.equalsIgnoreCase(ConfigReader.TRUE))
+			return true;
+		
+		if( val.equalsIgnoreCase(ConfigReader.FALSE))
+			return false;
+		
+		throw new Exception(propertyName + " must be set to either " + ConfigReader.TRUE + " or " +
+								ConfigReader.FALSE);	
+	}
+	
 	public static void logAndRethrow(BufferedWriter logWriter, Exception ex)
 		throws Exception
 	{

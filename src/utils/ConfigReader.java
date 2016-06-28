@@ -30,7 +30,7 @@ public class ConfigReader
 	}
 	
 	public static final String TRUE = "TRUE";
-	public static final String YES = "YES";
+	public static final String FALSE= "FALSE";
 
 	public static final String CLUSTER_NAME = "CLUSTER_NAME";
 	public static final String FASTA_TO_SPLIT_PATH = "FASTA_TO_SPLIT_PATH";
@@ -81,19 +81,6 @@ public class ConfigReader
 	
 	public static final String BLAST_ALL_COMMAND="BLAST_ALL_COMMAND";
 	
-	public boolean isSetToTrue(String namedProperty)
-	{
-		Object obj = props.get(namedProperty);
-
-		if (obj == null)
-			return false;
-
-		if (obj.toString().equalsIgnoreCase(TRUE)
-				|| obj.toString().equalsIgnoreCase(YES))
-			return true;
-
-		return false;
-	}
 	
 	public String getAProperty(String namedProperty) throws Exception
 	{
