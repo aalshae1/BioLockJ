@@ -39,15 +39,20 @@ public class GatherBlastHits extends BioLockJExecutor
 		return list;
 	}
 	
-	private void writeGTFFile( List<HitScores> list, File outFile ) throws Exception
+	private void writeGTFFile( List<HitScores> list, File outFile, boolean useTargetCoordinates ) throws Exception
 	{
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 		
 		for(HitScores hs : list)
 		{
-			writer.write(hs.getTargetId() + "\tblast\t" +  hs.getQueryId() + "\t"  + 
-							hs.getTargetStart() + "\t" + hs.getTargetEnd() + "\t" + 
-							hs.getBitScore() + "\t" + "+"  + "\t"  + "+" + "0\taGene\taGene\n");
+			writer.write(hs.getTargetId() + "\tblast\t" +  hs.getQueryId() + "\t");  
+			
+			if( useTargetCoordinates)
+				writer.write(hs.getTargetStart() + "\t" + hs.getTargetEnd() + "\t");
+			else
+				writer.write(hs.getQueryStart() + "\t" + hs.getQueryEnd() + "\t");
+			
+			writer.write(hs.getBitScore() + "\t" + "+"  + "\t"  + "+" + "0\taGene\taGene\n");
 		}
 		
 		writer.flush();  writer.close();
@@ -80,13 +85,15 @@ public class GatherBlastHits extends BioLockJExecutor
 	{
 		File blastOutputDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
 		File topHitsFile = new File( BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
+		String useQueryCoordiantes = cReader.getAProperty(ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
 		
 		List<HitScores> hits = getHits(blastOutputDir);
 		writeResults(hits, topHitsFile);
 		
 		if( cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE) != null)
 		{
-			writeGTFFile(hits, new File(cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE)));
+			writeGTFFile(hits, new File(cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE)),
+					useQueryCoordiantes == null);
 		}
 		else
 		{

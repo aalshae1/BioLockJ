@@ -1,6 +1,6 @@
-#RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
+##RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
 ##RUN_BIOLOCK_J homologySearch.blast.FormatSingleBlastDatabase
-#RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
+##RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
 #RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
 
 # these are for all BLAST jobs (formatting and searching)
@@ -43,3 +43,6 @@ POLL_TIME = 10
 
 BLAST_DB_TYPE=prot
 BLAST_ALL_COMMAND=blastp
+
+# OMIT THIS ENTIRE LINE TO USE TARGET CO-ORDINATES
+OUTPUT_QUERY_COORDINATES_TO_GTF=ANY_VALUE_HERE_WILL_CAUSE_THIS_TO_BE_TRUE
