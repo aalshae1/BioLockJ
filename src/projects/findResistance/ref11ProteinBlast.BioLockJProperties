@@ -1,7 +1,7 @@
-##RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
+#RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
 ##RUN_BIOLOCK_J homologySearch.blast.FormatSingleBlastDatabase
-##RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
-##RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
+#RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
+#RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
 #RUN_BIOLOCK_J bioLockJ.genomeFeatures.AddMBGDGeneAnnotationsToGTF
 
 # these are for all BLAST jobs (formatting and searching)
@@ -17,7 +17,7 @@ NUMBER_CLUSTERS=100
 
 # the query file to split into NUMBER_CLUSTER query files
 # this comes from MetagenomicTools creOrthologs.QuickTranslate
-FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/predictedProteins.txt
+FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/predictedProteins_chs11.txt
 
 # where the split FASTA_TO_SPLIT_PATH files will live 
 # once created, these files will serve as the blast query (defined by BLAST_QUERY_DIRECTORY)
@@ -37,7 +37,6 @@ FASTA_FILE_TO_FORMAT_FOR_BLAST_DB=/nobackup/afodor_research/bioLockJProjects/res
 # the output directories and files for blasted results
 BLAST_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/blastOutDir
 BLAST_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/protRef11Blast.txt
-GTF_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/protToChs11.gtf
 
 # in seconds - how long to wait before checking to see if queued jobs have finished
 POLL_TIME = 10
