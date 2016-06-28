@@ -22,7 +22,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.INPUT_GTF_FILE);
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.MBGD_EXTENDED_PATH);
 		BioLockJUtils.requireString(cReader, ConfigReader.OUTPUT_GTF_FILE);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
+		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
 	}
 	
 	public static HashMap<Integer, String> getLineDescriptions(File extendedFile) throws Exception
@@ -181,8 +181,8 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 		File inputFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.INPUT_GTF_FILE);
 		File mbdgFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.MBGD_EXTENDED_PATH);
 		File outFile = new File(BioLockJUtils.requireString(cReader, ConfigReader.OUTPUT_GTF_FILE));
-		File topHitsFile = 
-				BioLockJUtils.requireExistingFile(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
+		File topHitsFile = new File(
+				BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
 		
 		HashMap<String, String> geneIdtoProtMap = geneIDtoProtMap(topHitsFile);
 		HashMap<Integer, String> map = getLineDescriptions(mbdgFile);
