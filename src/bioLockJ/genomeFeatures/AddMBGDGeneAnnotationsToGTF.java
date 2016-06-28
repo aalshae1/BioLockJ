@@ -125,13 +125,9 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 				throw new Exception("Parsing error");
 			
 			StringTokenizer sToken = new StringTokenizer(splits[8], ";");
-			sToken.nextToken();
 			
 			String key = sToken.nextToken().replaceAll("\"", "");
-			key = key.substring(0, key.length()-2);
-			//System.out.println("Trying " + key);
 			String protKey = geneIdToProtMap.get(key);
-			//System.out.println("Got " + protKey);
 			
 			String description = null;
 			
