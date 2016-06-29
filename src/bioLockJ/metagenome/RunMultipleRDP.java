@@ -3,6 +3,8 @@ package bioLockJ.metagenome;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
@@ -10,7 +12,21 @@ import utils.ConfigReader;
 
 public class RunMultipleRDP extends BioLockJExecutor
 {
-
+	private File runAllFile= null;
+	private List<File> scriptFiles = new ArrayList<File>();
+	
+	@Override
+	public File getRunAllFile()
+	{
+		return runAllFile;
+	}
+	
+	@Override
+	public List<File> getScriptFiles()
+	{
+		return scriptFiles;
+	}
+	
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{	
@@ -32,10 +48,12 @@ public class RunMultipleRDP extends BioLockJExecutor
 		
 		String[] files = fastaInDir.list();
 	
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(new File(
-			rdpScriptDir.getAbsoluteFile() + File.separator + "runAll.sh")));
+		this.runAllFile = 
+				new File(
+						rdpScriptDir.getAbsoluteFile() + File.separator + "runAll.sh");
 		
-
+		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
+		
 		int countNum=0;
 		for(String s : files)
 		{
@@ -47,6 +65,8 @@ public class RunMultipleRDP extends BioLockJExecutor
 			
 			File runFile = new File(rdpScriptDir.getAbsoluteFile() + File.separator + "run_" + 
 						countNum + "_" + System.currentTimeMillis() +  ".sh");
+			
+			this.scriptFiles.add(runFile);
 			
 			BufferedWriter writer = new BufferedWriter( new FileWriter(runFile));
 			
