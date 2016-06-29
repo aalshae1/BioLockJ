@@ -127,7 +127,12 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			StringTokenizer sToken = new StringTokenizer(splits[8], ";");
 			
 			String key = sToken.nextToken().replaceAll("\"", "");
+			
+			System.out.println("Searching " + key);
+			
 			String protKey = geneIdToProtMap.get(key);
+			
+			System.out.println("found " + protKey);
 			
 			String description = null;
 			
@@ -166,6 +171,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			if( map.containsKey(splits[0]))
 				throw new Exception("duplicate " + splits[0]);
 			
+			System.out.println("Adding " + splits[0] + " " + splits[1]);
 			map.put(splits[0], splits[1]);
 		}
 		
