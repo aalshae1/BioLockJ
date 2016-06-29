@@ -1,0 +1,16 @@
+#RUN_BIOLOCK_J bioLockJ.metagenome.RunMultipleRDP
+
+# executed before running script files on the cluster
+CHMOD_STRING = chmod 744
+
+# these are set for our UNCC cluster
+CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
+NUMBER_CLUSTERS=100
+
+# in seconds - how long to wait before checking to see if queued jobs have finished
+POLL_TIME = 10
+
+PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/sangMay2016/fastaOut
+PATH_TO_OUTPUT_RDP_DIRECTORY=/nobackup/afodor_research/sangMay2016/fastaOut/biolockJ/rdpOut
+PATH_TO_RDP_JAR=/users/afodor/rdp/rdp_classifier_2.10.1/dist/classifier.jar
+RDP_SCRIPT_DIR=/nobackup/afodor_research/sangMay2016/fastaOut/biolockJ/scripts/runRDP
