@@ -53,7 +53,8 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 		return map;
 	}
 	
-	private static HashMap<String, HashSet<Integer>>  getFileLineMap( File extendedFile ) throws Exception
+	private static HashMap<String, HashSet<Integer>>  getFileLineMap( File extendedFile,
+			HashSet<String> included) throws Exception
 	{
 		System.out.println("Reading annotations...");
 		HashMap<String, HashSet<Integer>> map = new HashMap<String, HashSet<Integer>>();
@@ -85,15 +86,19 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 					{
 						String key = new StringTokenizer(innerTokenizer.nextToken(), "(").nextToken();
 						
-						HashSet<Integer> set = map.get(key);
-						
-						if( set == null)
+						if( included.contains(key))
 						{
-							set = new HashSet<Integer>();
-							map.put(key, set);
+
+							HashSet<Integer> set = map.get(key);
+							
+							if( set == null)
+							{
+								set = new HashSet<Integer>();
+								map.put(key, set);
+							}
+							
+							set.add(lineNumber);
 						}
-						
-						set.add(lineNumber);
 					}
 				}
 			}
@@ -101,7 +106,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			lineNumber++;
 			
 			if( lineNumber % 1000 == 0 )
-				System.out.println(lineNumber);
+				System.out.println(lineNumber + " " + map.size());
 				
 		}
 		
@@ -184,6 +189,21 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 		return map;
 	}
 	
+	private static HashSet<String> getNeededIds( File topHitsFile) throws Exception
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(topHitsFile));
+		
+		HashSet<String> set = new HashSet<String>();
+		
+		reader.readLine();
+		
+		for(String s= reader.readLine(); s != null; s=reader.readLine())
+			set.add(s.split("\t")[1]);
+		
+		reader.close();
+		
+		return set;
+	}
 	
 	@Override
 	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
@@ -191,11 +211,12 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 		File inputFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.INPUT_GTF_FILE);
 		File mbdgFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.MBGD_EXTENDED_PATH);
 		File outFile = new File(BioLockJUtils.requireString(cReader, ConfigReader.OUTPUT_GTF_FILE));
-		File topHitsFile = new File(
+		File topHitsFile= new File(
 				BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
 		
 		HashMap<String, String> geneIdtoProtMap = geneIDtoProtMap(topHitsFile);
-		HashMap<String, HashSet<Integer>> fileLineMap = getFileLineMap(mbdgFile);
+		HashMap<String, HashSet<Integer>> fileLineMap = getFileLineMap(mbdgFile, 
+							getNeededIds(topHitsFile));
 		HashMap<Integer, String> map = getLineDescriptions(mbdgFile);
 		
 		addGeneAnnotation(inputFile.getAbsolutePath(), outFile.getAbsolutePath(), 
