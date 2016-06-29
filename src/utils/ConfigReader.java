@@ -87,6 +87,11 @@ public class ConfigReader
 	public static final String MBGD_EXTENDED_PATH="MBGD_EXTENDED_PATH";
 	public static final String CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE="CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE";
 	
+	public static final String PATH_TO_RDP_JAR="PATH_TO_RDP_JAR";
+	public static final String PATH_TO_INPUT_RDP_FASTA_DIRECTORY="PATH_TO_INPUT_RDP_FASTA_DIRECTORY";
+	public static final String PATH_TO_OUTPUT_RDP_DIRECTORY = "PATH_TO_OUTPUT_RDP_DIRECTORY";
+	
+	public static final String RDP_SCRIPT_DIR = "RDP_SCRIPT_DIR";
 	
 	public String getAProperty(String namedProperty) throws Exception
 	{
