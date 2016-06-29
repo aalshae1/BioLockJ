@@ -42,7 +42,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 
 		System.out.println("Writing results " + outFile.getAbsolutePath());
-		writer.write("Chromosome\tStart\tEnd\tFeature\tgcContent\n");
+		writer.write("Chromosome\tStart\tEnd\tFeature\tratioConsereved\n");
 		
 		for(FastaSequence fs : list)
 		{
@@ -74,7 +74,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 			writer.write( (startPos + 1) + "\t");
 			writer.write(( startPos + 1 + WriteKmerInclusionFile.KMER_SIZE) + "\t");
 			writer.write("num\t");
-			writer.write(aVal+ "\n");
+			writer.write(ratioPresent+ "\n");
 		}
 		
 	}
