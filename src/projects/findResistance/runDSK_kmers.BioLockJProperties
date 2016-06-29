@@ -3,8 +3,8 @@
 ##RUN_BIOLOCK_J bioLockJ.gwas.FilterOutRareKmers
 ##RUN_BIOLOCK_J bioLockJ.gwas.KmerPValuesFromFisherTest
 ##RUN_BIOLOCK_J bioLockJ.gwas.PivotPValuesToReferenceGenome
-#RUN_BIOLOCK_J bioLockJ.genomeFeatures.GC_Content
-
+##RUN_BIOLOCK_J bioLockJ.genomeFeatures.GC_Content
+#RUN_BIOLOCK_J bioLockJ.genomeFeatures.WriteConservedKMersForReference
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
@@ -40,3 +40,7 @@ REFERENCE_GENOME=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/
 GC_CONTENT_IGV_OUTPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/genome11_gc.igv
 GC_CONTENT_WINDOW_SIZE=500
 GC_CONTENT_STEP_SIZE=100
+
+CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/conservedKmer.igv
+
+

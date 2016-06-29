@@ -85,6 +85,7 @@ public class ConfigReader
 	public static final String OUTPUT_GTF_FILE="OUTPUT_GTF_FILE";
 	
 	public static final String MBGD_EXTENDED_PATH="MBGD_EXTENDED_PATH";
+	public static final String CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE="CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE";
 	
 	
 	public String getAProperty(String namedProperty) throws Exception
