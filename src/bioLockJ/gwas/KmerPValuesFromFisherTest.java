@@ -18,7 +18,6 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
-		BioLockJUtils.requirePositiveInteger( cReader, ConfigReader.MIN_NUMBER_OF_DIFFERENT_KMERS);
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.STRAIN_METADATA_FILE);
 		BioLockJUtils.requireString(cReader, ConfigReader.FISHER_CONDITION_1);
 		BioLockJUtils.requireString(cReader, ConfigReader.FISHER_CONDITION_2);
@@ -101,7 +100,6 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 	{
 		File inKmerFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
 		File genomeToIntegerFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);
-		int minKmerNumber =  BioLockJUtils.requirePositiveInteger( cReader, ConfigReader.MIN_NUMBER_OF_DIFFERENT_KMERS);
 		File strainMetadataFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.STRAIN_METADATA_FILE);
 		String condition1 =  BioLockJUtils.requireString(cReader, ConfigReader.FISHER_CONDITION_1);
 		String condition2 = BioLockJUtils.requireString(cReader, ConfigReader.FISHER_CONDITION_2);
@@ -114,8 +112,7 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 		writer.write("kmer\tnumCondition1WithKmer\tnumCondition1WithoutKmer\t" + 
 				"numCondition2WithKmer\tnumCondition2WithoutKmer\tpValue\n");		
-		BufferedReader reader = new BufferedReader(new FileReader(inKmerFile.getAbsolutePath() + "_filteredTo_" 
-				+  minKmerNumber+ ".txt"));
+		BufferedReader reader = new BufferedReader(new FileReader(inKmerFile));
 		
 		for(String s = reader.readLine(); s!=null; s = reader.readLine())
 		{

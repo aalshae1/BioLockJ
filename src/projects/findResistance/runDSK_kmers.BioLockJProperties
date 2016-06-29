@@ -1,10 +1,10 @@
 ##RUN_BIOLOCK_J dskWrapper.RunDSKOnDirectory
 ##RUN_BIOLOCK_J bioLockJ.gwas.WriteKmerInclusionFile
 ##RUN_BIOLOCK_J bioLockJ.gwas.FilterOutRareKmers
-##RUN_BIOLOCK_J bioLockJ.gwas.KmerPValuesFromFisherTest
-##RUN_BIOLOCK_J bioLockJ.gwas.PivotPValuesToReferenceGenome
+#RUN_BIOLOCK_J bioLockJ.gwas.KmerPValuesFromFisherTest
+#RUN_BIOLOCK_J bioLockJ.gwas.PivotPValuesToReferenceGenome
 ##RUN_BIOLOCK_J bioLockJ.genomeFeatures.GC_Content
-#RUN_BIOLOCK_J bioLockJ.genomeFeatures.WriteConservedKMersForReference
+##RUN_BIOLOCK_J bioLockJ.genomeFeatures.WriteConservedKMersForReference
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
@@ -26,8 +26,6 @@ DSK_BINARY_DIRECTORY=/nobackup/afodor_research/dsk/dsk-2.1.0-Linux/bin
 
 GENOME_TO_INTEGER_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/pneuKmerCode.txt
 KMER_TO_HAS_GENOME_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/kmersToGenome.txt
-
-MIN_NUMBER_OF_DIFFERENT_KMERS=10
 
 STRAIN_METADATA_FILE=/nobackup/afodor_research/af_broad/strainMeta.txt
 
