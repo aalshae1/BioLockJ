@@ -105,7 +105,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			
 			lineNumber++;
 			
-			if( lineNumber % 1000 == 0 )
+			if( lineNumber % 100 == 0 )
 				System.out.println(lineNumber + " " + map.size());
 				
 		}
