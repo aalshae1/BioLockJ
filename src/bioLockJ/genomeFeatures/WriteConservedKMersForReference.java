@@ -40,6 +40,8 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 		List<FastaSequence> list = FastaSequence.readFastaFile(refGenome);
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
+
+		System.out.println("Writing results " + outFile.getAbsolutePath());
 		writer.write("Chromosome\tStart\tEnd\tFeature\tgcContent\n");
 		
 		for(FastaSequence fs : list)
@@ -98,6 +100,9 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 					numOnes++;
 			
 			map.put(Long.parseLong(splits[0]), numOnes/bitMap.length());
+			
+			if( map.size() %10000 == 0)
+				System.out.println(map.size());
 		}
 		
 		return map;
