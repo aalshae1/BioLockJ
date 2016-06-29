@@ -134,11 +134,11 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			
 			String key = sToken.nextToken().replaceAll("\"", "").replace("gene_id ", "");
 			
-			System.out.println("Searching " + key);
+			//System.out.println("Searching " + key);
 			
 			String protKey = geneIdToProtMap.get(key);
 			
-			System.out.println("found " + protKey);
+			//System.out.println("found " + protKey);
 			
 			StringBuffer description = new StringBuffer();
 			
