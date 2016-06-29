@@ -9,8 +9,11 @@ import java.util.HashMap;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.genomeFeatures.WriteConservedKMersForReference;
+import bitManipulations.Encode;
 import utils.ConfigReader;
 import utils.FisherTest;
+import utils.Translate;
 
 public class KmerPValuesFromFisherTest extends BioLockJExecutor
 {
@@ -108,10 +111,11 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 		HashMap<Integer,String> genomeToIntegerMap = getIntegerToGenomeMap(genomeToIntegerFile);
 		HashMap<String, String> metaMap = getMetaMap(strainMetadataFile);
 		HashMap<Integer, String> integerToMetaMap = getIntegerToMetaMap(genomeToIntegerMap, metaMap);
+		HashMap<Long, Float> conservationMap = WriteConservedKMersForReference.getConservationMap(inKmerFile);
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 		writer.write("kmer\tnumCondition1WithKmer\tnumCondition1WithoutKmer\t" + 
-				"numCondition2WithKmer\tnumCondition2WithoutKmer\tpValue\n");		
+				"numCondition2WithKmer\tnumCondition2WithoutKmer\tpValue\tratioConserved\n");		
 		BufferedReader reader = new BufferedReader(new FileReader(inKmerFile));
 		
 		for(String s = reader.readLine(); s!=null; s = reader.readLine())
@@ -179,7 +183,25 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 
 			int litteK= numCondition1WithKmer;
 
-			writer.write( FisherTest.getFisherP(bigN, bigK, littleN, litteK) + "\n" );
+			writer.write( FisherTest.getFisherP(bigN, bigK, littleN, litteK) + "\t" );
+			
+			Long aLong = Long.parseLong(splits[0]);
+			Float aScore = conservationMap.get(aLong);
+			
+			if( aScore == null)
+			{
+				String seq = Encode.getKmer(aLong, WriteKmerInclusionFile.KMER_SIZE);
+				seq = Translate.safeReverseTranscribe(seq);
+				aLong = Encode.makeLong(seq);
+				if( aLong != null)
+					aScore = conservationMap.get(aLong);
+					
+			}
+			
+			if( aScore != null)
+				writer.write(aScore + "\n");
+			else
+				writer.write("\n");
 			
 			writer.flush();
 		}

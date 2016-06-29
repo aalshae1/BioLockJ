@@ -79,7 +79,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 		
 	}
 	
-	private static HashMap<Long, Float> getConservationMap(File inKmerFile) throws Exception
+	public static HashMap<Long, Float> getConservationMap(File inKmerFile) throws Exception
 	{
 		HashMap<Long, Float> map = new HashMap<Long,Float>();
 		

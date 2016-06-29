@@ -87,6 +87,8 @@ public class ConfigReader
 	public static final String MBGD_EXTENDED_PATH="MBGD_EXTENDED_PATH";
 	public static final String CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE="CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE";
 	
+	public static final String TABULAR_P_VALUES_OUTPUT_FIL
+	
 	
 	public String getAProperty(String namedProperty) throws Exception
 	{
