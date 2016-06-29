@@ -25,7 +25,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
 	}
 	
-	public static HashMap<Integer, String> getLineDescriptions(File extendedFile) throws Exception
+	private static HashMap<Integer, String> getLineDescriptions(File extendedFile) throws Exception
 	{
 		HashMap<Integer, String> map = new HashMap<Integer, String>();
 		
@@ -53,7 +53,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 		return map;
 	}
 	
-	public static HashMap<String, HashSet<Integer>>  getFileLineMap( File extendedFile ) throws Exception
+	private static HashMap<String, HashSet<Integer>>  getFileLineMap( File extendedFile ) throws Exception
 	{
 		System.out.println("Reading annotations...");
 		HashMap<String, HashSet<Integer>> map = new HashMap<String, HashSet<Integer>>();
@@ -110,7 +110,8 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 	}
 	
 	public static void addGeneAnnotation(String inFile, String outFile, 
-			HashMap<Integer, String> lineDescriptions, HashMap<String, String> geneIdToProtMap) 
+			HashMap<Integer, String> lineDescriptions, HashMap<String, String> geneIdToProtMap,
+			HashMap<String, HashSet<Integer>> fileLineMap) 
 				throws Exception
 	{	
 		BufferedReader reader = new BufferedReader(new FileReader( inFile));
@@ -134,17 +135,20 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			
 			System.out.println("found " + protKey);
 			
-			String description = null;
+			StringBuffer description = new StringBuffer();
 			
 			if( protKey != null)
 			{
-				Integer intKey = Integer.parseInt(s.split("\t")[0].replaceAll("\"", "").replace("Line_", ""));
-				description = lineDescriptions.get(intKey) ;
+				HashSet<Integer> set  = fileLineMap.get(protKey);
+				
+				if( set != null)
+					for( Integer i : set)
+						description.append(lineDescriptions.get(i) + ";");
 				
 			}
 			
-			if( description == null)
-				description = "NA";
+			if( description.length() == 0 )
+				description.append("NA");
 			
 			for( int x=0; x < 8; x++)
 				writer.write(splits[x] + "\t");
@@ -171,7 +175,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			if( map.containsKey(splits[0]))
 				throw new Exception("duplicate " + splits[0]);
 			
-			System.out.println("Adding " + splits[0] + " " + splits[1]);
+			//System.out.println("Adding " + splits[0] + " " + splits[1]);
 			map.put(splits[0], splits[1]);
 		}
 		
@@ -191,10 +195,11 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 				BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
 		
 		HashMap<String, String> geneIdtoProtMap = geneIDtoProtMap(topHitsFile);
+		HashMap<String, HashSet<Integer>> fileLineMap = getFileLineMap(mbdgFile);
 		HashMap<Integer, String> map = getLineDescriptions(mbdgFile);
 		
 		addGeneAnnotation(inputFile.getAbsolutePath(), outFile.getAbsolutePath(), 
-					map, geneIdtoProtMap);	
+					map, geneIdtoProtMap, fileLineMap);	
 	}
 	
 }
