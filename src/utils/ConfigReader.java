@@ -91,7 +91,11 @@ public class ConfigReader
 	public static final String PATH_TO_INPUT_RDP_FASTA_DIRECTORY="PATH_TO_INPUT_RDP_FASTA_DIRECTORY";
 	public static final String PATH_TO_OUTPUT_RDP_DIRECTORY = "PATH_TO_OUTPUT_RDP_DIRECTORY";
 	
+	
+	
 	public static final String RDP_SCRIPT_DIR = "RDP_SCRIPT_DIR";
+	public static final String RDP_SUMMARY_DIRECTORY = "RDP_SUMMARY_DIRECTORY";
+	public static final String RDP_THRESHOLD = "RDP_THRESHOLD";
 	
 	public String getAProperty(String namedProperty) throws Exception
 	{
