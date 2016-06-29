@@ -1,7 +1,7 @@
-#RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
+##RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
 ##RUN_BIOLOCK_J homologySearch.blast.FormatSingleBlastDatabase
-#RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
-#RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
+##RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
+##RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
 #RUN_BIOLOCK_J bioLockJ.genomeFeatures.AddMBGDGeneAnnotationsToGTF
 
 # these are for all BLAST jobs (formatting and searching)
