@@ -21,7 +21,7 @@ public class PivotPValuesToReferenceGenome extends BioLockJExecutor
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.FISHER_PVALUES_OUTPUT_FILE);
+		BioLockJUtils.requireString(cReader, ConfigReader.FISHER_PVALUES_OUTPUT_FILE);
 		BioLockJUtils.requireString(cReader, ConfigReader.FISHER_GTF_OUTPUT_FILE);
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);	
 	}
