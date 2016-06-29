@@ -49,7 +49,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 			String seq = fs.getSequence().toUpperCase();
 			String chr = fs.getFirstTokenOfHeader();
 			
-			for( int x=0; x < seq.length(); x++)
+			for( int x=0; x < seq.length()- WriteKmerInclusionFile.KMER_SIZE-1; x++)
 			{
 				String subSeq = seq.substring(x, x + WriteKmerInclusionFile.KMER_SIZE);
 				writeIfPresent(writer, x, subSeq, conservationMap, chr);
