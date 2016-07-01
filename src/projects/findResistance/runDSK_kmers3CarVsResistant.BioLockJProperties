@@ -1,0 +1,44 @@
+##RUN_BIOLOCK_J dskWrapper.RunDSKOnDirectory
+##RUN_BIOLOCK_J bioLockJ.gwas.WriteKmerInclusionFile
+##RUN_BIOLOCK_J bioLockJ.gwas.FilterOutRareKmers
+#RUN_BIOLOCK_J bioLockJ.gwas.KmerPValuesFromFisherTest
+#RUN_BIOLOCK_J bioLockJ.gwas.PivotPValuesToReferenceGenome
+##RUN_BIOLOCK_J bioLockJ.genomeFeatures.GC_Content
+##RUN_BIOLOCK_J bioLockJ.genomeFeatures.WriteConservedKMersForReference
+
+# executed before running script files on the cluster
+CHMOD_STRING = chmod 744
+
+# these are set for our UNCC cluster
+CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
+NUMBER_CLUSTERS=100
+
+# in seconds - how long to wait before checking to see if queued jobs have finished
+POLL_TIME = 10
+
+DSK_INPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/kpneu
+DSK_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/dskOut
+DSK_SCRIPT_DIR=/nobackup/afodor_research/bioLockJProjects/scripts
+DSK_BINARY_DIRECTORY=/nobackup/afodor_research/dsk/dsk-2.1.0-Linux/bin
+
+# will be passed to JVM as -Xms20g not currently implemented
+#JAVA_VM_ARGS=-Xms20g 
+
+GENOME_TO_INTEGER_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/pneuKmerCode.txt
+KMER_TO_HAS_GENOME_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/kmersToGenome.txt
+
+STRAIN_METADATA_FILE=/nobackup/afodor_research/af_broad/strainMeta.txt
+
+FISHER_CONDITION_1=carolina
+FISHER_CONDITION_2=resistant
+FISHER_PVALUES_OUTPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/carolinaVsResistant_kneu.txt
+
+FISHER_GTF_OUTPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/carolinaVsResistant_To11.gwas
+REFERENCE_GENOME=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta
+GC_CONTENT_IGV_OUTPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/genome11_gc.igv
+GC_CONTENT_WINDOW_SIZE=500
+GC_CONTENT_STEP_SIZE=100
+
+CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/conservedKmer.igv
+
+
