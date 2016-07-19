@@ -131,6 +131,7 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 			if( db.length() != genomeToIntegerMap.size())
 				throw new Exception("Parsing error");
 	
+			float numIncluded =0;
 			for( int x=0; x < db.length(); x++)
 			{
 				String meta = integerToMetaMap.get(x);
@@ -142,6 +143,7 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 				
 				if( meta.equals(condition1))
 				{
+					numIncluded++;
 					if( kmerIsPresent == '1')
 						numCondition1WithKmer++;
 					else if( kmerIsPresent == '0')
@@ -150,6 +152,7 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 				}
 				else if ( meta.equals(condition2))
 				{
+					numIncluded++;
 					if( kmerIsPresent == '1')
 						numCondition2WithKmer++;
 					else if( kmerIsPresent == '0')
@@ -181,7 +184,7 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 
 			writer.write( FisherTest.getFisherP(bigN, bigK, littleN, litteK) + "\t" );
 			
-			float aScore = ((float)numCondition1WithKmer+ numCondition2WithKmer)/ db.length();
+			float aScore = ((float)numCondition1WithKmer+ numCondition2WithKmer)/ numIncluded;
 			
 			writer.write(aScore+ "\n");
 			
