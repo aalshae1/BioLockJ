@@ -106,7 +106,7 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 			aWriter.write("java -jar "  + rdpBinary.getAbsolutePath() + " " +  
 					"-o \"" + rdpOutFile.getAbsolutePath()  + "\" -q \"" + fastaFile+ "\"\n" );
 			
-			aWriter.write("gzip " + rdpOutFile.getAbsolutePath() + " \n");
+			aWriter.write("gzip \"" + rdpOutFile.getAbsolutePath() + "\" \n");
 			
 			numToDo--;
 			
