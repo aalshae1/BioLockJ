@@ -97,6 +97,8 @@ public class ConfigReader
 	public static final String RDP_SUMMARY_DIRECTORY = "RDP_SUMMARY_DIRECTORY";
 	public static final String RDP_THRESHOLD = "RDP_THRESHOLD";
 	
+	public static final String NUMBER_OF_JOBS_PER_CORE="NUMBER_OF_JOBS_PER_CORE";
+	
 	public String getAProperty(String namedProperty) throws Exception
 	{
 		Object obj = props.get(namedProperty);
