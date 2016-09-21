@@ -112,7 +112,7 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 			
 			if( numToDo == 0 )
 			{
-				numToDo = countNum;
+				numToDo = numJobsPerCore;
 				closeARunFile(aWriter, runFile);
 				runFile = makeNewRunFile(rdpScriptDir, allWriter, clusterCommand, countNum);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
