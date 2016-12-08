@@ -1,0 +1,23 @@
+##RUN_BIOLOCK_J bioLockJ.metagenome.RunMultipleRDP_MultiplePerCore
+#RUN_BIOLOCK_J bioLockJ.metagenome.GatherRDPResults
+
+# executed before running script files on the cluster
+CHMOD_STRING = chmod 744
+
+# these are set for our UNCC cluster
+CLUSTER_BATCH_COMMAND = qsub -q "copperhead" 
+NUMBER_CLUSTERS=100
+
+# in seconds - how long to wait before checking to see if queued jobs have finished
+POLL_TIME = 10
+
+PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/katieDataSep21/inFasta
+PATH_TO_OUTPUT_RDP_DIRECTORY=/nobackup/afodor_research/katieDataSep21/rdpOut
+PATH_TO_RDP_JAR=/users/afodor/rdp/rdp_classifier_2.10.1/dist/classifier.jar
+RDP_SCRIPT_DIR=/users/afodor/katieScripts/runRDP
+
+RDP_SUMMARY_DIRECTORY=/nobackup/afodor_research/katieDataSep21/rdpSummary
+RDP_THRESHOLD=50
+
+# Run 3 RDP jobs (one after the other) on each core
+NUMBER_OF_JOBS_PER_CORE=3
