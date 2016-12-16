@@ -43,14 +43,16 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 	}
 	
 	private File makeNewRunFile( File rdpScriptDir, BufferedWriter allWriter,
-					String clusterCommand, int countNum) throws Exception
+					String clusterCommand, String clusterParams, int countNum) throws Exception
 	{
 		File runFile = new File(rdpScriptDir.getAbsoluteFile() + File.separator + "run_" + 
 				countNum + "_" + System.currentTimeMillis() +  ".sh");
 	
 		this.scriptFiles.add(runFile);
 		
-		allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() +  "\n"  );
+		
+		allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() + 
+				" " + (clusterParams == null ?  "": clusterParams ) +   "\n"  );
 		allWriter.flush();
 	
 		return runFile;
@@ -79,6 +81,7 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 		File rdpBinary =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_RDP_JAR);
 		File rdpScriptDir =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.RDP_SCRIPT_DIR);
 		int numJobsPerCore = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
+		String clusterParams = BioLockJUtils.getStringOrNull(cReader, ConfigReader.CLUSTER_PARAMS);
 		
 		String[] files = fastaInDir.list();
 	
@@ -89,9 +92,10 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
 		
 		
+		
 		int countNum=0;
 		int numToDo = numJobsPerCore;
-		File runFile = makeNewRunFile(rdpScriptDir, allWriter, clusterCommand, countNum);
+		File runFile = makeNewRunFile(rdpScriptDir, allWriter, clusterCommand, clusterParams,countNum);
 		BufferedWriter aWriter = new BufferedWriter(new FileWriter(runFile));
 		
 		for(String s : files)
@@ -114,7 +118,7 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 			{
 				numToDo = numJobsPerCore;
 				closeARunFile(aWriter, runFile);
-				runFile = makeNewRunFile(rdpScriptDir, allWriter, clusterCommand, countNum);
+				runFile = makeNewRunFile(rdpScriptDir, allWriter, clusterCommand,clusterParams,countNum);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
 			}
 			
