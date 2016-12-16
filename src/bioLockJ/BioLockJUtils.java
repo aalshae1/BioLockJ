@@ -222,6 +222,12 @@ public class BioLockJUtils
 		return val;
 	}
 	
+
+	public static String getStringOrNull(ConfigReader reader, String propertyName) throws Exception
+	{
+		return  reader.getAProperty(propertyName);
+	}
+	
 	public static File requireExistingDirectory(ConfigReader reader, String propertyName) throws Exception
 	{
 		String val = reader.getAProperty(propertyName);

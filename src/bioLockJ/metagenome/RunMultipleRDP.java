@@ -50,6 +50,8 @@ public class RunMultipleRDP extends BioLockJExecutor
 		File rdpBinary =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_RDP_JAR);
 		File rdpScriptDir =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.RDP_SCRIPT_DIR);
 		
+		String clusterParams = BioLockJUtils.getStringOrNull(cReader, ConfigReader.CLUSTER_PARAMS);
+		
 		String[] files = fastaInDir.list();
 	
 		this.runAllFile = 
@@ -88,7 +90,8 @@ public class RunMultipleRDP extends BioLockJExecutor
 			
 			writer.flush();  writer.close();
 			
-			allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() +  "\n"  );
+			allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() + 
+					" " + (clusterParams == null ? "" : clusterParams) +  "\n"  );
 			allWriter.flush();
 		}
 		

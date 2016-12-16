@@ -92,6 +92,7 @@ public class ConfigReader
 	public static final String PATH_TO_OUTPUT_RDP_DIRECTORY = "PATH_TO_OUTPUT_RDP_DIRECTORY";
 	
 	
+	public static final String CLUSTER_PARAMS = "CLUSTER_PARAMS";
 	
 	public static final String RDP_SCRIPT_DIR = "RDP_SCRIPT_DIR";
 	public static final String RDP_SUMMARY_DIRECTORY = "RDP_SUMMARY_DIRECTORY";

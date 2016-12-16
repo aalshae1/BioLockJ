@@ -5,7 +5,8 @@
 CHMOD_STRING = chmod 744
 
 # these are set for our UNCC cluster
-CLUSTER_BATCH_COMMAND = qsub -q "copperhead" procs=1
+CLUSTER_BATCH_COMMAND = qsub -q "copperhead" 
+CLUSTER_PARAMS = "procs=1"
 NUMBER_CLUSTERS=100
 
 # in seconds - how long to wait before checking to see if queued jobs have finished
