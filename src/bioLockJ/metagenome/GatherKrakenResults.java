@@ -67,7 +67,7 @@ public class GatherKrakenResults extends BioLockJExecutor
 		
 		for(String s= reader.readLine(); s != null; s= reader.readLine())
 		{
-			StringTokenizer sToken =new StringTokenizer(s);
+			StringTokenizer sToken =new StringTokenizer(s, "\t");
 			sToken.nextToken();
 			
 			String[] splits = sToken.nextToken().split(";");
