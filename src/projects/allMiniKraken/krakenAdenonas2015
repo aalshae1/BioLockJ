@@ -1,4 +1,5 @@
-#RUN_BIOLOCK_J bioLockJ.metagenome.RunMultipleKraken_MultiplePerCore
+##RUN_BIOLOCK_J bioLockJ.metagenome.RunMultipleKraken_MultiplePerCore
+RUN_BIOLOCK_J bioLockJ.metagenome.GatherKrakenResults
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
@@ -16,6 +17,8 @@ PATH_TO_KRAKEN_OUTPUT_DIRECTORY=/nobackup/afodor_research/topeSep15/krakenOut
 PATH_TO_KRAKEN_BINARY=/nobackup/afodor_research/krakenInstallDec2016/kraken
 PATH_TO_KRAKEN_SCRIPT_DIR =/nobackup/afodor_research/topeSep15/krakenScripts
 PATH_TO_KRAKEN_DATABASE=/nobackup/afodor_research/minikraken/minikraken_20141208
+
+PATH_TO_KRAKEN_SUMMARY_DIR=/nobackup/afodor_research/topeSep15/krakenSummary
 
 # Run 8 RDP jobs (one after the other) on each core
 NUMBER_OF_JOBS_PER_CORE=8

@@ -104,6 +104,7 @@ public class ConfigReader
 	public static final String PATH_TO_KRAKEN_BINARY = "PATH_TO_KRAKEN_BINARY";
 	public static final String PATH_TO_KRAKEN_OUTPUT_DIRECTORY = "PATH_TO_KRAKEN_OUTPUT_DIRECTORY";
 	public static final String PATH_TO_KRAKEN_SCRIPT_DIR = "PATH_TO_KRAKEN_SCRIPT_DIR";
+	public static final String PATH_TO_KRAKEN_SUMMARY_DIR = "PATH_TO_KRAKEN_SUMMARY_DIR";
 	
 	
 	public String getAProperty(String namedProperty) throws Exception
