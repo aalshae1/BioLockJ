@@ -104,6 +104,8 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			File fastaFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
 			
 			File krakenOutFile = new File(krakenOutDir.getAbsolutePath() + File.separator + s  + "toKraken.txt");
+			File krakenTranslateFile = 
+					new File(krakenOutDir.getAbsolutePath() + File.separator + s  + "toKrakenTranslate.txt");
 			
 			if( clusterParams != null)
 				aWriter.write(clusterParams + "\n");
@@ -111,6 +113,12 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			aWriter.write(krakenBinary.getAbsolutePath() + " -db " +  
 					krakenDatabase.getAbsolutePath()  + " --output " + krakenOutFile.getAbsolutePath() +
 					" " +  fastaFile+ "\n" );
+			
+			
+			aWriter.write(krakenBinary.getAbsolutePath() + "-translate " + " -db " +  
+					krakenDatabase.getAbsolutePath()  + " " + krakenOutFile.getAbsolutePath() +
+					" > " + krakenTranslateFile + "\n" );
+			
 			
 			numToDo--;
 			
