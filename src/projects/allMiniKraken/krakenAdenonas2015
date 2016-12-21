@@ -1,5 +1,5 @@
 ##RUN_BIOLOCK_J bioLockJ.metagenome.RunMultipleKraken_MultiplePerCore
-RUN_BIOLOCK_J bioLockJ.metagenome.GatherKrakenResults
+#RUN_BIOLOCK_J bioLockJ.metagenome.GatherKrakenResults
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
