@@ -51,7 +51,14 @@ public class GatherKrakenResults extends BioLockJExecutor
 			{
 				File inFile= new File(krakenOutDir.getAbsoluteFile() + File.separator + s);
 				HashMap<String, Integer> innerMap = getCounts(inFile, parseLevel);
-				map.put(inFile.getName().replace("toKrakenTranslate.txt", ""), innerMap);
+				
+				long sum =0;
+				
+				for( Integer i : innerMap.values())
+					sum += i;
+				
+				if( sum >0 )
+					map.put(inFile.getName().replace("toKrakenTranslate.txt", ""), innerMap);
 			}
 		}
 				
