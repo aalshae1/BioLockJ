@@ -118,7 +118,7 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			{
 				numToDo = numJobsPerCore;
 				closeARunFile(aWriter, runFile);
-				runFile = makeNewRunFile(krakenScriptDir, allWriter, clusterCommand,clusterParams,countNum);
+				runFile = makeNewRunFile(krakenScriptDir, allWriter, clusterCommand,countNum);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
 			}
 			
