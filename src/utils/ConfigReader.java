@@ -100,6 +100,12 @@ public class ConfigReader
 	
 	public static final String NUMBER_OF_JOBS_PER_CORE="NUMBER_OF_JOBS_PER_CORE";
 	
+	public static final String PATH_TO_KRAKEN_DATABASE = "PATH_TO_KRAKEN_DATABASE";
+	public static final String PATH_TO_KRAKEN_BINARY = "PATH_TO_KRAKEN_BINARY";
+	public static final String PATH_TO_KRAKEN_OUTPUT_DIRECTORY = "PATH_TO_KRAKEN_OUTPUT_DIRECTORY";
+	public static final String PATH_TO_KRAKEN_SCRIPT_DIR = "PATH_TO_KRAKEN_SCRIPT_DIR";
+	
+	
 	public String getAProperty(String namedProperty) throws Exception
 	{
 		Object obj = props.get(namedProperty);
