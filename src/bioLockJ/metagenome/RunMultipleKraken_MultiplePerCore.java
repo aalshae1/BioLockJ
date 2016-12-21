@@ -44,7 +44,7 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 	}
 	
 	private File makeNewRunFile( File rdpScriptDir, BufferedWriter allWriter,
-					String clusterCommand, String clusterParams, int countNum) throws Exception
+					String clusterCommand, int countNum) throws Exception
 	{
 		File runFile = new File(rdpScriptDir.getAbsoluteFile() + File.separator + "run_" + 
 				countNum + "_" + System.currentTimeMillis() +  ".sh");
@@ -52,8 +52,7 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		this.scriptFiles.add(runFile);
 		
 		
-		allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() + 
-				" " + (clusterParams == null ?  "": clusterParams ) +   "\n"  );
+		allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() + "\n"  );
 		allWriter.flush();
 	
 		return runFile;
@@ -96,7 +95,7 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		
 		int countNum=0;
 		int numToDo = numJobsPerCore;
-		File runFile = makeNewRunFile(krakenScriptDir, allWriter, clusterCommand, clusterParams,countNum);
+		File runFile = makeNewRunFile(krakenScriptDir, allWriter, clusterCommand, countNum);
 		BufferedWriter aWriter = new BufferedWriter(new FileWriter(runFile));
 		
 		for(String s : files)
@@ -106,8 +105,11 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			
 			File krakenOutFile = new File(krakenOutDir.getAbsolutePath() + File.separator + s  + "toKraken.txt");
 			
+			if( clusterParams != null)
+				aWriter.write(clusterParams + "\n");
+			
 			aWriter.write(krakenBinary.getAbsolutePath() + " -db " +  
-					krakenDatabase.getAbsolutePath()  + "--output " + krakenOutFile.getAbsolutePath() +
+					krakenDatabase.getAbsolutePath()  + " --output " + krakenOutFile.getAbsolutePath() +
 					" " +  fastaFile+ "\n" );
 			
 			numToDo--;
