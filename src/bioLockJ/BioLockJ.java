@@ -12,6 +12,9 @@ import java.util.StringTokenizer;
 
 import utils.ConfigReader;
 
+/**
+ * Test code with BioLockJ ./testProp
+ */
 public class BioLockJ
 {
 	public static void main(String[] args) throws Exception
@@ -33,8 +36,7 @@ public class BioLockJ
 		BioLockJUtils.copyPropertiesFile(propFile, logDirectory);
 		
 		BufferedWriter logWriter = new BufferedWriter(new FileWriter(
-					new File(logDirectory + File.separator + 
-				"log.txt")));
+					new File(logDirectory + File.separator + "log.txt")));
 		
 		for( BioLockJExecutor e : list)
 			e.checkDependencies(cReader);
@@ -65,28 +67,29 @@ public class BioLockJ
 	{
 		List<BioLockJExecutor> list = new ArrayList<BioLockJExecutor>();
 		BufferedReader reader =new BufferedReader(new FileReader(propFile));
-		
-		for(String s = reader.readLine(); s != null; s= reader.readLine())
+		try
 		{
-			if (s.startsWith(BioLockJExecutor.RUN_BIOLOCK_J))
+			for(String s = reader.readLine(); s != null; s= reader.readLine())
 			{
-				StringTokenizer sToken = new StringTokenizer(s);
-				sToken.nextToken();
-				
-				if( ! sToken.hasMoreTokens())
-					throw new Exception("Lines starting with " + BioLockJExecutor.RUN_BIOLOCK_J 
-							+ " must be followed by a Java class that is a BioLockJExecutor");
-				
-				list.add( (BioLockJExecutor) Class.forName(sToken.nextToken()).newInstance());
-				
-				if( sToken.hasMoreTokens())
-					throw new Exception("Lines starting with " + BioLockJExecutor.RUN_BIOLOCK_J 
-							+ " must be followed by a Java class that is a BioLockJExecutor with no parameters");
-				
+				if (s.startsWith(BioLockJExecutor.RUN_BIOLOCK_J))
+				{
+					StringTokenizer sToken = new StringTokenizer(s);
+					sToken.nextToken();
+					
+					if( ! sToken.hasMoreTokens())
+						throw new Exception("Lines starting with " + BioLockJExecutor.RUN_BIOLOCK_J 
+								+ " must be followed by a Java class that is a BioLockJExecutor");
+					
+					list.add( (BioLockJExecutor) Class.forName(sToken.nextToken()).newInstance());
+					
+					if( sToken.hasMoreTokens())
+						throw new Exception("Lines starting with " + BioLockJExecutor.RUN_BIOLOCK_J 
+								+ " must be followed by a Java class that is a BioLockJExecutor with no parameters");
+				}
 			}
 		}
+		finally{ if (reader != null) reader.close(); }
 		
 		return list;
-		
 	}
 }

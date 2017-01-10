@@ -90,8 +90,7 @@ public class ConfigReader
 	public static final String PATH_TO_RDP_JAR="PATH_TO_RDP_JAR";
 	public static final String PATH_TO_INPUT_RDP_FASTA_DIRECTORY="PATH_TO_INPUT_RDP_FASTA_DIRECTORY";
 	public static final String PATH_TO_OUTPUT_RDP_DIRECTORY = "PATH_TO_OUTPUT_RDP_DIRECTORY";
-	
-	
+
 	public static final String CLUSTER_PARAMS = "CLUSTER_PARAMS";
 	
 	public static final String RDP_SCRIPT_DIR = "RDP_SCRIPT_DIR";
@@ -106,6 +105,8 @@ public class ConfigReader
 	public static final String PATH_TO_KRAKEN_SCRIPT_DIR = "PATH_TO_KRAKEN_SCRIPT_DIR";
 	public static final String PATH_TO_KRAKEN_SUMMARY_DIR = "PATH_TO_KRAKEN_SUMMARY_DIR";
 	
+	public static final String PROJECT_NAME = "PROJECT_NAME"; 
+	public static final String BIOLOCKJ_PROJECT_DIR = "BIOLOCKJ_PROJECT_DIR";
 	
 	public String getAProperty(String namedProperty) throws Exception
 	{
@@ -124,8 +125,7 @@ public class ConfigReader
 			if( obj == null)
 				return null;
 			
-			val = obj.toString();
-			
+			val = obj.toString();	
 		}
 		
 		return val;

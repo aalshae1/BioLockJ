@@ -5,7 +5,7 @@
 CHMOD_STRING = chmod 744
 
 # these are set for our UNCC cluster
-CLUSTER_BATCH_COMMAND = qsub -q "copperhead" 
+CLUSTER_BATCH_COMMAND = qsub -q "copperhead"
 CLUSTER_PARAMS = #PBS -l procs=1
 NUMBER_CLUSTERS=100
 
@@ -13,12 +13,15 @@ NUMBER_CLUSTERS=100
 POLL_TIME = 10
 
 PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/topeSep15/splitFiles
-PATH_TO_KRAKEN_OUTPUT_DIRECTORY=/nobackup/afodor_research/topeSep15/krakenOut
 PATH_TO_KRAKEN_BINARY=/nobackup/afodor_research/krakenInstallDec2016/kraken
-PATH_TO_KRAKEN_SCRIPT_DIR =/nobackup/afodor_research/topeSep15/krakenScripts
 PATH_TO_KRAKEN_DATABASE=/nobackup/afodor_research/minikraken/minikraken_20141208
 
+PATH_TO_KRAKEN_SCRIPT_DIR =/nobackup/afodor_research/topeSep15/krakenScripts
+PATH_TO_KRAKEN_OUTPUT_DIRECTORY=/nobackup/afodor_research/topeSep15/krakenOut
 PATH_TO_KRAKEN_SUMMARY_DIR=/nobackup/afodor_research/topeSep15/krakenSummary
 
 # Run 8 RDP jobs (one after the other) on each core
 NUMBER_OF_JOBS_PER_CORE=8
+
+BIOLOCKJ_PROJECT_DIR=/nobackup/afodor_research/msioda
+PROJECT_NAME=adenomas_2015

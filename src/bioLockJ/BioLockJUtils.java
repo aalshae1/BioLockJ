@@ -7,39 +7,41 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
+import org.slf4j.*;
 
 import utils.ConfigReader;
 import utils.ProcessWrapper;
 
 public class BioLockJUtils
 {
+	static Logger LOGGER = LoggerFactory.getLogger(BioLockJUtils.class);
+	static SimpleDateFormat LOG_NAME_FORMAT = new SimpleDateFormat("yyyyMMdd_kkmmss");
+
+
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
-		private static void copyFile(File sourceFile, File destFile) throws Exception {
-		    if(!destFile.exists()) {
-		        destFile.createNewFile();
-		    }
-
-		    FileChannel source = null;
-		    FileChannel destination = null;
-
-		    try {
-		        source = new FileInputStream(sourceFile).getChannel();
-		        destination = new FileOutputStream(destFile).getChannel();
-		        destination.transferFrom(source, 0, source.size());
-		    }
-		    finally {
-		        if(source != null) {
-		            source.close();
-		        }
-		        if(destination != null) {
-		            destination.close();
-		        }
-		    }
-		}
+	private static void copyFile(File sourceFile, File destFile) throws Exception 
+	{    
+		if(!destFile.exists()) destFile.createNewFile();
+	    FileInputStream fileInputStream = new FileInputStream(sourceFile);
+	    FileOutputStream fileOutputStream = new FileOutputStream(destFile);
+	    FileChannel source = null, destination = null;
+	    try{
+	    	source = fileInputStream.getChannel();
+	        destination = fileOutputStream.getChannel();
+	        destination.transferFrom(source, 0, source.size());
+	    }
+	    finally{
+	        if(source!= null) source.close();
+	        if(destination != null) destination.close();
+	        if(fileInputStream != null) fileInputStream.close();
+	        if(fileOutputStream != null) fileOutputStream.close();
+	    }
+	}
 		
 	public static void executeAndWaitForScriptsIfAny(ConfigReader cReader, BioLockJExecutor bje,
 				BufferedWriter logWriter) throws Exception
@@ -56,8 +58,8 @@ public class BioLockJUtils
 			}
 			catch(Exception ex)
 			{
-				System.out.println("Could not set " + ConfigReader.POLL_TIME + " setting poll time to " + 
-								pollTime +  " seconds ");		
+				LOGGER.warn("Could not set " + ConfigReader.POLL_TIME + " setting poll time to " + 
+								pollTime +  " seconds ", ex);		
 			}
 			
 			BioLockJUtils.executeCHMOD_ifDefined(cReader, bje.getRunAllFile());
@@ -69,16 +71,14 @@ public class BioLockJUtils
 	public static void noteStartToLogWriter( BufferedWriter logWriter, BioLockJExecutor invoker )
 		throws Exception
 	{
-		logWriter.write("starting " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
-		logWriter.flush();
+		LOGGER.info("starting " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
 	}
 		
 	public static void noteEndToLogWriter( BufferedWriter logWriter,  BioLockJExecutor invoker )
 			throws Exception
-		{
-			logWriter.write("Finished " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
-			logWriter.flush();
-		}
+	{
+		LOGGER.info("Finished " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
+	}
 	
 	public static String requireDBType(ConfigReader cReader) throws Exception
 	{
@@ -113,9 +113,8 @@ public class BioLockJUtils
 	public static void logAndRethrow(BufferedWriter logWriter, Exception ex)
 		throws Exception
 	{
-		logWriter.write("Terminating at " + new Date().toString());
-		logWriter.write(ex.toString());
-		logWriter.flush();
+		LOGGER.error("Terminating at " + new Date().toString());
+		LOGGER.error(ex.toString());
 		throw ex;
 	}
 	
@@ -163,17 +162,17 @@ public class BioLockJUtils
 		{
 			File test = new File(f.getAbsolutePath() + BioLockJExecutor.FINISHED_SUFFIX);
 			
-			if( test.exists())
+			if(test.exists())
 			{
 				numSuccess++;
 			}
 			else
 			{
-				System.out.println(f.getAbsolutePath() + " not succesfully finished ");
+				LOGGER.info(f.getAbsolutePath() + " not succesfully finished ");
 			}
 		}
 		
-		System.out.println("\n finished " + numSuccess + " of " + scriptFiles.size() + "\n");
+		LOGGER.info("\n finished " + numSuccess + " of " + scriptFiles.size() + "\n");
 		
 		return numSuccess == scriptFiles.size();
 	}
@@ -301,15 +300,10 @@ public class BioLockJUtils
 		while(true)
 		{
 			File logDir = null;
-			
 			while( logDir == null || logDir.exists() )
 			{
-				logDir = new File(
-							"log_" + name + "_" +  System.currentTimeMillis());
-				
-				if( logDir.exists())
-					Thread.sleep(100);
-				
+				logDir = new File("log_" + name + "_" +  LOG_NAME_FORMAT.format(new Date()) + ".txt");
+				if(logDir.exists()) Thread.sleep(100);
 			}
 			
 			logDir.mkdirs();
