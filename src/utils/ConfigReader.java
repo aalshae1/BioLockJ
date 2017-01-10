@@ -15,9 +15,13 @@ package utils;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
-
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
+
+import bioLockJ.BioLockJUtils;
 
 public class ConfigReader
 {
@@ -106,9 +110,16 @@ public class ConfigReader
 	public static final String PATH_TO_KRAKEN_SUMMARY_DIR = "PATH_TO_KRAKEN_SUMMARY_DIR";
 	
 	public static final String PROJECT_NAME = "PROJECT_NAME"; 
-	public static final String BIOLOCKJ_PROJECT_DIR = "BIOLOCKJ_PROJECT_DIR";
 	
-	public String getAProperty(String namedProperty) throws Exception
+	public static final String BLJ_ROOT = "BLJ_ROOT"; 
+	public static final String PROJECT_DIR = "PROJECT_DIR"; 
+	public static final String SCRIPT_DIR = "SCRIPT_DIR"; 
+	public static final String SUMMARY_DIR = "SUMMARY_DIR"; 
+	public static final String OUTPUT_DIR = "OUTPUT_DIR"; 
+	
+
+	
+	public String getAProperty(String namedProperty)
 	{
 		Object obj = props.get(namedProperty);
 
@@ -138,6 +149,41 @@ public class ConfigReader
 		InputStream in = new FileInputStream(propertiesFile);
 		props = new Properties();
 		props.load(in);
+		props.setProperty(BLJ_ROOT, getBLJRoot());
+		props.setProperty(PROJECT_DIR, getProjectDir());
+		props.setProperty(OUTPUT_DIR, getOutputDir());
+		props.setProperty(SCRIPT_DIR, getScriptDir());
+		props.setProperty(SUMMARY_DIR, getSummaryDir());
 		in.close();
 	}
+	
+	
+	public String getOutputDir() throws Exception
+	{
+		return getProjectDir() + "output" + File.separator;
+	} 
+	
+	public String getSummaryDir() throws Exception
+	{ 
+		return getProjectDir() + "summary" + File.separator;
+	} 
+	
+	public String getScriptDir() throws Exception
+	{ 
+		return getProjectDir() + "script" + File.separator;
+	} 
+	
+	public String getProjectDir() throws Exception
+	{
+		return getBLJRoot() + "project" + File.separator + getAProperty(PROJECT_NAME) + File.separator;
+
+	}
+	
+	public static String getBLJRoot() throws IOException, URISyntaxException
+	{
+		URL u = ConfigReader.class.getProtectionDomain().getCodeSource().getLocation();
+		File f = new File(u.toURI());
+		return f.getParent() + File.separator;
+	}
+	
 }

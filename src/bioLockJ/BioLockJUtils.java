@@ -5,7 +5,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,9 +22,8 @@ import utils.ProcessWrapper;
 
 public class BioLockJUtils
 {
-	static Logger LOGGER = LoggerFactory.getLogger(BioLockJUtils.class);
+	static Logger LOG = LoggerFactory.getLogger(BioLockJUtils.class);
 	static SimpleDateFormat LOG_NAME_FORMAT = new SimpleDateFormat("yyyyMMdd_kkmmss");
-
 
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
 	private static void copyFile(File sourceFile, File destFile) throws Exception 
@@ -58,7 +60,7 @@ public class BioLockJUtils
 			}
 			catch(Exception ex)
 			{
-				LOGGER.warn("Could not set " + ConfigReader.POLL_TIME + " setting poll time to " + 
+				LOG.warn("Could not set " + ConfigReader.POLL_TIME + " setting poll time to " + 
 								pollTime +  " seconds ", ex);		
 			}
 			
@@ -71,13 +73,13 @@ public class BioLockJUtils
 	public static void noteStartToLogWriter( BufferedWriter logWriter, BioLockJExecutor invoker )
 		throws Exception
 	{
-		LOGGER.info("starting " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
+		LOG.info("starting " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
 	}
 		
 	public static void noteEndToLogWriter( BufferedWriter logWriter,  BioLockJExecutor invoker )
 			throws Exception
 	{
-		LOGGER.info("Finished " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
+		LOG.info("Finished " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
 	}
 	
 	public static String requireDBType(ConfigReader cReader) throws Exception
@@ -113,8 +115,8 @@ public class BioLockJUtils
 	public static void logAndRethrow(BufferedWriter logWriter, Exception ex)
 		throws Exception
 	{
-		LOGGER.error("Terminating at " + new Date().toString());
-		LOGGER.error(ex.toString());
+		LOG.error("Terminating at " + new Date().toString());
+		LOG.error(ex.toString());
 		throw ex;
 	}
 	
@@ -168,11 +170,11 @@ public class BioLockJUtils
 			}
 			else
 			{
-				LOGGER.info(f.getAbsolutePath() + " not succesfully finished ");
+				LOG.info(f.getAbsolutePath() + " not succesfully finished ");
 			}
 		}
 		
-		LOGGER.info("\n finished " + numSuccess + " of " + scriptFiles.size() + "\n");
+		LOG.info("\n finished " + numSuccess + " of " + scriptFiles.size() + "\n");
 		
 		return numSuccess == scriptFiles.size();
 	}
@@ -311,4 +313,22 @@ public class BioLockJUtils
 			return logDir;
 		}
 	}
+	
+	public static File createProjectDirectory( String name ) throws Exception
+	{
+		while(true)
+		{
+			File logDir = null;
+			while( logDir == null || logDir.exists() )
+			{
+				logDir = new File("log_" + name + "_" +  LOG_NAME_FORMAT.format(new Date()) + ".txt");
+				if(logDir.exists()) Thread.sleep(100);
+			}
+			
+			logDir.mkdirs();
+			
+			return logDir;
+		}
+	}
+	
 }

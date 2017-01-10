@@ -5,10 +5,14 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.StringTokenizer;
+import org.slf4j.*;
 
 import utils.ConfigReader;
 
@@ -17,17 +21,18 @@ import utils.ConfigReader;
  */
 public class BioLockJ
 {
+	static Logger LOG = LoggerFactory.getLogger(BioLockJ.class);
+	
+	
 	public static void main(String[] args) throws Exception
 	{
-		if( args.length != 1)
-		{
-			System.out.println("Usage " + BioLockJ.class.getName() + " pathToPropertiesFile.txt");
+		if( args.length != 1){
+			LOG.info("Usage " + BioLockJ.class.getName() + " pathToPropertiesFile.txt");
 			System.exit(1);
 		}
 		
 		File propFile = new File(args[0]);
-		
-		if( ! propFile.exists() || propFile.isDirectory())
+		if( !propFile.exists() || propFile.isDirectory() )
 			throw new Exception(propFile.getAbsolutePath() + " is not a valid file");
 		
 		ConfigReader cReader = new ConfigReader(propFile);
@@ -92,4 +97,5 @@ public class BioLockJ
 		
 		return list;
 	}
+	
 }
