@@ -29,27 +29,27 @@ public class GatherKrakenResults extends BioLockJExecutor
 	{
 		for( int x=0; x < KRAKEN_TAXONOMY.length; x++)
 		{
-			HashMap<String, HashMap<String, Integer>> map = getAllSamples(
-					new File(BioLockJUtils.requireString(cReader, ConfigReader.OUTPUT_DIR)), x+2);
-			File summaryFile = new File(BioLockJUtils.requireString(
-					cReader, ConfigReader.SUMMARY_DIR) + "kraken_" + KRAKEN_TAXONOMY[x] + ".txt");
+			HashMap<String, HashMap<String, Integer>> map = getAllSamples(cReader, x+2);
+			
+			
+			File summaryFile = new File(cReader.getSummaryDir() + "kraken_" + KRAKEN_TAXONOMY[x] + ".txt");
 			GatherRDPResults.writeResults(map, summaryFile.getAbsolutePath());
 		}
 	}
 	
 	private static HashMap<String, HashMap<String, Integer>> getAllSamples( 
-		File krakenOutDir,	int parseLevel ) throws Exception
+			ConfigReader cReader, int parseLevel ) throws Exception
 	{
 		HashMap<String, HashMap<String, Integer>>  map =new HashMap<String,HashMap<String,Integer>>();
-		
-		for(String s : krakenOutDir.list())
+		File outputDir = new File(cReader.getOutputDir());
+		for(String s : outputDir.list())
 		{
 			if(s.endsWith("toKrakenTranslate.txt"))
 			{
-				File inFile= new File(krakenOutDir.getAbsoluteFile() + File.separator + s);
+				File inFile= new File(outputDir.getAbsoluteFile() + File.separator + s);
 				HashMap<String, Integer> innerMap = getCounts(inFile, parseLevel);
 				
-				long sum =0;
+				long sum = 0;
 				
 				for( Integer i : innerMap.values())
 					sum += i;

@@ -116,8 +116,8 @@ public class ConfigReader
 	public static final String SCRIPT_DIR = "SCRIPT_DIR"; 
 	public static final String SUMMARY_DIR = "SUMMARY_DIR"; 
 	public static final String OUTPUT_DIR = "OUTPUT_DIR"; 
+	public static final String LOG_DIR = "LOG_DIR"; 
 	
-
 	
 	public String getAProperty(String namedProperty)
 	{
@@ -154,9 +154,14 @@ public class ConfigReader
 		props.setProperty(OUTPUT_DIR, getOutputDir());
 		props.setProperty(SCRIPT_DIR, getScriptDir());
 		props.setProperty(SUMMARY_DIR, getSummaryDir());
+		props.setProperty(LOG_DIR, value)
 		in.close();
 	}
 	
+	public String getOutputDir() throws Exception
+	{
+		return getProjectDir() + "output" + File.separator;
+	} 
 	
 	public String getOutputDir() throws Exception
 	{

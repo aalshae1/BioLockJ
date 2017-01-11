@@ -275,43 +275,53 @@ public class BioLockJUtils
 						oldPropsFile.getName()));
 	}
 	
-	public static File createLogDirectory( String name ) throws Exception
+//	public static File createLogDirectory( String name ) throws Exception
+//	{
+//		while(true)
+//		{
+//			File logDir = null;
+//			while( logDir == null || logDir.exists() )
+//			{
+//				logDir = new File("log_" + name + "_" +  getDateString() + ".txt");
+//				if( logDir.exists() ) Thread.sleep(100);
+//			}
+//			
+//			logDir.mkdirs();
+//			
+//			return logDir;
+//		}
+//	}
+	
+	
+	public static void initializeProject( ConfigReader reader ) throws Exception
 	{
-		while(true)
-		{
-			File logDir = null;
-			while( logDir == null || logDir.exists() )
-			{
-				logDir = new File("log_" + name + "_" +  getDateString() + ".txt");
-				if(logDir.exists()) Thread.sleep(100);
-			}
-			
-			logDir.mkdirs();
-			
-			return logDir;
-		}
+		File projectDir = createProjectDirectory(reader);
 	}
+	
+	public static void createLogFile( ConfigReader reader ) throws Exception
+	{
+		
+	}
+	
+	public static File createProjectDirectory( ConfigReader reader ) throws Exception
+	{
+		String pd = reader.getProjectDir();
+		File projectDir = null;
+		while(projectDir == null || projectDir.exists())
+		{
+			projectDir = new File(pd + "_" +  getDateString());
+			if(projectDir.exists()) break; 
+			Thread.sleep(500);
+		}
+		
+		projectDir.mkdirs();
+		return projectDir;
+	}
+	
 	
 	public static String getDateString()
 	{
 		return DATE_FORMAT.format(new Date()); 
-	}
-	
-	public static File createProjectDirectory( String name ) throws Exception
-	{
-		while(true)
-		{
-			File logDir = null;
-			while( logDir == null || logDir.exists() )
-			{
-				logDir = new File("log_" + name + "_" +  getDateString() + ".txt");
-				if(logDir.exists()) Thread.sleep(100);
-			}
-			
-			logDir.mkdirs();
-			
-			return logDir;
-		}
 	}
 	
 

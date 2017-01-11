@@ -26,7 +26,8 @@ public class BioLockJ
 	
 	public static void main(String[] args) throws Exception
 	{
-		if( args.length != 1){
+		if( args.length != 1)
+		{
 			LOG.info("Usage " + BioLockJ.class.getName() + " pathToPropertiesFile.txt");
 			System.exit(1);
 		}
@@ -37,8 +38,12 @@ public class BioLockJ
 		
 		ConfigReader cReader = new ConfigReader(propFile);
 		List<BioLockJExecutor> list = getListToRun(propFile);
-		//File logDirectory = BioLockJUtils.createLogDirectory(propFile.getName());
-		BioLockJUtils.copyPropertiesFile(propFile, logDirectory);
+		BioLockJUtils.initializeProject(cReader);
+		BioLockJUtils.createLogFile(cReader);
+		BioLockJUtils.copyPropertiesFile(propFile);
+		
+		BioLockJUtils.createProjectDirectory(cReader);
+		
 		
 		//BufferedWriter logWriter = new BufferedWriter(new FileWriter(
 		//			new File(logDirectory + File.separator + "log.txt")));
