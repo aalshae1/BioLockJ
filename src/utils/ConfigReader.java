@@ -158,10 +158,6 @@ public class ConfigReader
 		in.close();
 	}
 	
-	public String getOutputDir() throws Exception
-	{
-		return getProjectDir() + "output" + File.separator;
-	} 
 	
 	public String getOutputDir() throws Exception
 	{
