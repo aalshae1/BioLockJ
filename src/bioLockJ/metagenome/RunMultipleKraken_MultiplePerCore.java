@@ -44,11 +44,10 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 	private File makeNewRunFile(String scriptDir, BufferedWriter allWriter, 
 			String clusterCommand, int countNum) throws Exception
 	{
-		File runFile = new File(scriptDir + "run_" + countNum + "_" + System.currentTimeMillis() +  ".sh");
+		File runFile = new File(scriptDir + "run_" + countNum + "_" + BioLockJUtils.getDateString() +  ".sh");
 		this.scriptFiles.add(runFile);
 		allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() + "\n"  );
 		allWriter.flush();
-	
 		return runFile;
 	}
 	
@@ -73,15 +72,17 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		
 		//File krakenScriptDir =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_KRAKEN_SCRIPT_DIR);
 		//File krakenOutDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_KRAKEN_OUTPUT_DIRECTORY);
+		String outputDir = BioLockJUtils.requireString(cReader, ConfigReader.OUTPUT_DIR);
+		String scriptDir = BioLockJUtils.requireString(cReader, ConfigReader.SCRIPT_DIR);
 		
 		String[] files = fastaInDir.list();
-
-		this.runAllFile = new File(getScriptDir(cReader) + File.separator + "runAll.sh");
+		
+		this.runAllFile = new File(scriptDir + "runAll.sh");
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
 		int countNum=0;
 		int numToDo = numJobsPerCore;
-		File runFile = makeNewRunFile(getScriptDir(cReader), allWriter, clusterCommand, countNum);
+		File runFile = makeNewRunFile(scriptDir, allWriter, clusterCommand, countNum);
 		BufferedWriter aWriter = new BufferedWriter(new FileWriter(runFile));
 		
 		for(String s : files)
@@ -92,10 +93,10 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			//File krakenOutFile = new File(krakenOutDir.getAbsolutePath() + File.separator + s  + "toKraken.txt");
 			//File krakenTranslateFile = new File(krakenOutDir.getAbsolutePath() + File.separator + s  + "toKrakenTranslate.txt");
 			
-			String krakenOutput = getOutputDir(cReader) + s + "toKraken.txt";
-			String krakenTranslate = getOutputDir(cReader) + s + "toKrakenTranslate.txt";
+			String krakenOutput = outputDir + s + "toKraken.txt";
+			String krakenTranslate = outputDir + s + "toKrakenTranslate.txt";
 			
-			if( clusterParams != null)
+			if( clusterParams != null )
 				aWriter.write(clusterParams + "\n");
 			
 			aWriter.write(krakenBinary.getAbsolutePath() + " --db " +  krakenDatabase.getAbsolutePath()  + 
@@ -103,14 +104,14 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			aWriter.write("if [ $? –eq 0 ]; then \n" );
 			aWriter.write("    " + krakenBinary.getAbsolutePath() + "-translate " + " --db " +  
 					krakenDatabase.getAbsolutePath()  + " " + krakenOutput + " > " + krakenTranslate + "\n" );
-			aWriter.write("else touch " + getOutputDir(cReader) + s + FAILED_TO_PROCESS + " fi \n" );
+			aWriter.write("else touch " + outputDir + s + FAILED_TO_PROCESS + " fi \n" );
 			
 			//numToDo--; MS move "--" into in conditional before param to subtract before check			
 			if( --numToDo == 0 )
 			{
 				numToDo = numJobsPerCore;
 				closeARunFile(aWriter, runFile);
-				runFile = makeNewRunFile(getScriptDir(cReader), allWriter, clusterCommand, countNum);
+				runFile = makeNewRunFile(scriptDir, allWriter, clusterCommand, countNum);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
 			}
 		}

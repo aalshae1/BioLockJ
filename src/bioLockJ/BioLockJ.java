@@ -37,11 +37,11 @@ public class BioLockJ
 		
 		ConfigReader cReader = new ConfigReader(propFile);
 		List<BioLockJExecutor> list = getListToRun(propFile);
-		File logDirectory = BioLockJUtils.createLogDirectory(propFile.getName());
+		//File logDirectory = BioLockJUtils.createLogDirectory(propFile.getName());
 		BioLockJUtils.copyPropertiesFile(propFile, logDirectory);
 		
-		BufferedWriter logWriter = new BufferedWriter(new FileWriter(
-					new File(logDirectory + File.separator + "log.txt")));
+		//BufferedWriter logWriter = new BufferedWriter(new FileWriter(
+		//			new File(logDirectory + File.separator + "log.txt")));
 		
 		for( BioLockJExecutor e : list)
 			e.checkDependencies(cReader);

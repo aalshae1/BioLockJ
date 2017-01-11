@@ -8,12 +8,13 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import bioLockJ.BioLockJExecutor;
+import bioLockJ.BioLockJUtils;
 import utils.ConfigReader;
 import org.slf4j.*;
 
 public class GatherKrakenResults extends BioLockJExecutor
 {
-	static Logger LOGGER = LoggerFactory.getLogger(GatherKrakenResults.class);
+	static Logger LOG = LoggerFactory.getLogger(GatherKrakenResults.class);
 	
 	public static final String[] KRAKEN_TAXONOMY = 
 			 {"domain","phylum", "class", "order", "family", "genus", "species"};
@@ -28,9 +29,11 @@ public class GatherKrakenResults extends BioLockJExecutor
 	{
 		for( int x=0; x < KRAKEN_TAXONOMY.length; x++)
 		{
-			HashMap<String, HashMap<String, Integer>> map = getAllSamples(new File(getOutputDir(cReader)), x+2);
-			File outFile = new File(getSummaryDir(cReader) + "kraken_" + KRAKEN_TAXONOMY[x] + ".txt"	);
-			GatherRDPResults.writeResults(map, outFile.getAbsolutePath());
+			HashMap<String, HashMap<String, Integer>> map = getAllSamples(
+					new File(BioLockJUtils.requireString(cReader, ConfigReader.OUTPUT_DIR)), x+2);
+			File summaryFile = new File(BioLockJUtils.requireString(
+					cReader, ConfigReader.SUMMARY_DIR) + "kraken_" + KRAKEN_TAXONOMY[x] + ".txt");
+			GatherRDPResults.writeResults(map, summaryFile.getAbsolutePath());
 		}
 	}
 	
@@ -59,9 +62,9 @@ public class GatherKrakenResults extends BioLockJExecutor
 		return map;
 	}
 
-	private static HashMap<String, Integer> getCounts( File inFile, int parseNum) throws Exception
+	private static HashMap<String, Integer> getCounts( File inFile, int parseNum ) throws Exception
 	{
-		LOGGER.debug("GatherKrakenResults.getCounts from file: " + inFile.getAbsolutePath());
+		LOG.debug("GatherKrakenResults.getCounts from file: " + inFile.getAbsolutePath());
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		BufferedReader reader = new BufferedReader(new FileReader(inFile));
 		for(String s= reader.readLine(); s != null; s= reader.readLine())
@@ -83,7 +86,7 @@ public class GatherKrakenResults extends BioLockJExecutor
 				map.put(new String (splits[parseNum]), val );
 			}
 		}
-		
+
 		reader.close();
 		
 		return map;
