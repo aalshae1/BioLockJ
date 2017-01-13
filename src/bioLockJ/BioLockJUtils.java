@@ -1,16 +1,9 @@
 package bioLockJ;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import java.io.*;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.StringTokenizer;
 import org.slf4j.*;
 
@@ -23,10 +16,9 @@ public class BioLockJUtils
 	public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_kkmmss");
 
 		
-	public static void executeAndWaitForScriptsIfAny(ConfigReader cReader, BioLockJExecutor bje,
-				BufferedWriter logWriter) throws Exception
+	public static void executeAndWaitForScriptsIfAny(ConfigReader cReader, BioLockJExecutor bje) throws Exception
 	{
-		bje.executeProjectFile(cReader, logWriter);
+		bje.executeProjectFile(cReader);
 		
 		if( bje.getRunAllFile() != null)
 		{
@@ -48,16 +40,14 @@ public class BioLockJUtils
 		}
 	}
 	
-	public static void noteStartToLogWriter( BufferedWriter logWriter, BioLockJExecutor invoker )
-		throws Exception
+	public static void noteStartToLogWriter( BioLockJExecutor invoker )
 	{
-		LOG.info("starting " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
+		LOG.info("starting " + invoker.getClass().getName() + "\n");
 	}
 		
-	public static void noteEndToLogWriter( BufferedWriter logWriter,  BioLockJExecutor invoker )
-			throws Exception
+	public static void noteEndToLogWriter( BioLockJExecutor invoker )
 	{
-		LOG.info("Finished " + invoker.getClass().getName() + " at " + new Date().toString() + "\n");
+		LOG.info("Finished " + invoker.getClass().getName() + "\n");
 	}
 	
 	public static String requireDBType(ConfigReader cReader) throws Exception
@@ -90,10 +80,9 @@ public class BioLockJUtils
 								ConfigReader.FALSE);	
 	}
 	
-	public static void logAndRethrow(BufferedWriter logWriter, Exception ex)
+	public static void logAndRethrow(Exception ex)
 		throws Exception
 	{
-		LOG.error("Terminating at " + new Date().toString());
 		LOG.error(ex.toString());
 		throw ex;
 	}
@@ -152,7 +141,7 @@ public class BioLockJUtils
 			}
 		}
 		
-		LOG.info("\n finished " + numSuccess + " of " + scriptFiles.size() + "\n");
+		LOG.info("\n Finished " + numSuccess + " of " + scriptFiles.size() + "\n");
 		
 		return numSuccess == scriptFiles.size();
 	}
@@ -178,15 +167,13 @@ public class BioLockJUtils
 	}
 	
 	public static void appendSuccessToPropertyFile( File propertyFile, String invokingClass,
-			File logDirectory) throws Exception
+			File projectDirectory) throws Exception
 	{
 		FileWriter fWriter = new FileWriter(propertyFile, true);
 		BufferedWriter writer = new BufferedWriter(fWriter);
 		PrintWriter out = new PrintWriter(writer);
 		
-		out.write("\n# ran " + invokingClass + " log to " + logDirectory.getAbsolutePath() + " " + 
-						new Date().toString() + "\n");
-		
+		out.write("\n# ran " + invokingClass + " log to " + projectDirectory.getAbsolutePath() + "\n");
 		out.flush(); out.close();
 	}
 	
@@ -268,62 +255,29 @@ public class BioLockJUtils
 		return aFile;
 	}
 	
-	public static void copyPropertiesFile( File oldPropsFile, File logDirectory )
+	public static void copyPropertiesFile( File propsFile, String projectDir )
 		throws Exception
 	{
-		copyFile(oldPropsFile, new File(logDirectory.getAbsolutePath() + File.separator + 
-						oldPropsFile.getName()));
+		copyFile(propsFile, new File(projectDir + propsFile.getName()));
 	}
-	
-//	public static File createLogDirectory( String name ) throws Exception
-//	{
-//		while(true)
-//		{
-//			File logDir = null;
-//			while( logDir == null || logDir.exists() )
-//			{
-//				logDir = new File("log_" + name + "_" +  getDateString() + ".txt");
-//				if( logDir.exists() ) Thread.sleep(100);
-//			}
-//			
-//			logDir.mkdirs();
-//			
-//			return logDir;
-//		}
-//	}
-	
-	
-	public static void initializeProject( ConfigReader reader ) throws Exception
-	{
-		File projectDir = createProjectDirectory(reader);
-	}
-	
-	public static void createLogFile( ConfigReader reader ) throws Exception
-	{
-		
-	}
-	
-	public static File createProjectDirectory( ConfigReader reader ) throws Exception
-	{
-		String pd = reader.getProjectDir();
-		File projectDir = null;
-		while(projectDir == null || projectDir.exists())
-		{
-			projectDir = new File(pd + "_" +  getDateString());
-			if(projectDir.exists()) break; 
-			Thread.sleep(500);
-		}
-		
-		projectDir.mkdirs();
-		return projectDir;
-	}
-	
 	
 	public static String getDateString()
 	{
 		return DATE_FORMAT.format(new Date()); 
 	}
 	
+	public static void logConfigFileSettings(ConfigReader reader) throws Exception 
+	{    
+		HashMap<String, String> map = reader.getProperties();
+		Iterator<String> it = map.keySet().iterator();
+		LOG.info(LOG_SPACER);
+		LOG.info("Property Config Settings");
+		while(it.hasNext()){
+			String key = it.next();
+			LOG.info(key + " = " + map.get(key));
+		}
+		LOG.info(LOG_SPACER);
+	}
 
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
 	private static void copyFile(File sourceFile, File destFile) throws Exception 
@@ -345,4 +299,5 @@ public class BioLockJUtils
 	    }
 	}
 	
+	public static final String LOG_SPACER = "=================================================";
 }

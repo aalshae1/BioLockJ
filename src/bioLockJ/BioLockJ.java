@@ -1,17 +1,7 @@
 package bioLockJ;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 import org.slf4j.*;
 
 import utils.ConfigReader;
@@ -22,7 +12,6 @@ import utils.ConfigReader;
 public class BioLockJ
 {
 	static Logger LOG = LoggerFactory.getLogger(BioLockJ.class);
-	
 	
 	public static void main(String[] args) throws Exception
 	{
@@ -38,39 +27,37 @@ public class BioLockJ
 		
 		ConfigReader cReader = new ConfigReader(propFile);
 		List<BioLockJExecutor> list = getListToRun(propFile);
-		BioLockJUtils.initializeProject(cReader);
-		BioLockJUtils.createLogFile(cReader);
-		BioLockJUtils.copyPropertiesFile(propFile);
 		
-		BioLockJUtils.createProjectDirectory(cReader);
+		String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PROJECT_DIR);
+				
 		
-		
-		//BufferedWriter logWriter = new BufferedWriter(new FileWriter(
-		//			new File(logDirectory + File.separator + "log.txt")));
-		
+		BioLockJUtils.logConfigFileSettings(cReader);
+		BioLockJUtils.copyPropertiesFile(propFile, projectDir);
+
 		for( BioLockJExecutor e : list)
 			e.checkDependencies(cReader);
 		
 		for( BioLockJExecutor e : list)
 		{
-			BioLockJUtils.noteStartToLogWriter(logWriter, e);
+			BioLockJUtils.noteStartToLogWriter(e);
 			
 			try
 			{
-				BioLockJUtils.executeAndWaitForScriptsIfAny(cReader, e, logWriter);
+				BioLockJUtils.executeAndWaitForScriptsIfAny(cReader, e);
 			}
 			catch(Exception ex)
 			{
-				BioLockJUtils.logAndRethrow(logWriter, ex);
+				BioLockJUtils.logAndRethrow(ex);
 			}
 			
-			BioLockJUtils.noteEndToLogWriter(logWriter, e);
-			BioLockJUtils.appendSuccessToPropertyFile(propFile, e.getClass().getName(), logDirectory);
-			BioLockJUtils.copyPropertiesFile(propFile, logDirectory);
+			BioLockJUtils.noteEndToLogWriter(e);
+//			BioLockJUtils.appendSuccessToPropertyFile(propFile, e.getClass().getName(), 
+//					BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PROJECT_DIR));
 		}
 		
-		logWriter.write("All ran " + new Date().toString());
-		logWriter.flush(); logWriter.close();
+		LOG.info(BioLockJUtils.LOG_SPACER);
+		LOG.info("PROGRAM COMPLETE");
+		LOG.info(BioLockJUtils.LOG_SPACER);
 	}
 	
 	private static List<BioLockJExecutor> getListToRun( File propFile ) throws Exception

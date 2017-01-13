@@ -25,14 +25,13 @@ public class GatherKrakenResults extends BioLockJExecutor
 	public void checkDependencies(ConfigReader cReader) throws Exception{}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		for( int x=0; x < KRAKEN_TAXONOMY.length; x++)
 		{
 			HashMap<String, HashMap<String, Integer>> map = getAllSamples(cReader, x+2);
-			
-			
-			File summaryFile = new File(cReader.getSummaryDir() + "kraken_" + KRAKEN_TAXONOMY[x] + ".txt");
+			File summaryFile = new File(cReader.getAProperty(ConfigReader.SUMMARY_DIR) + 
+					"kraken_" + KRAKEN_TAXONOMY[x] + ".txt");
 			GatherRDPResults.writeResults(map, summaryFile.getAbsolutePath());
 		}
 	}
@@ -40,8 +39,8 @@ public class GatherKrakenResults extends BioLockJExecutor
 	private static HashMap<String, HashMap<String, Integer>> getAllSamples( 
 			ConfigReader cReader, int parseLevel ) throws Exception
 	{
-		HashMap<String, HashMap<String, Integer>>  map =new HashMap<String,HashMap<String,Integer>>();
-		File outputDir = new File(cReader.getOutputDir());
+		HashMap<String, HashMap<String, Integer>>  map = new HashMap<String,HashMap<String,Integer>>();
+		File outputDir = new File(cReader.getAProperty(ConfigReader.OUTPUT_DIR));
 		for(String s : outputDir.list())
 		{
 			if(s.endsWith("toKrakenTranslate.txt"))

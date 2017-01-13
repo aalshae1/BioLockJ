@@ -1,6 +1,5 @@
 package bioLockJ;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.util.List;
 
@@ -8,7 +7,7 @@ import utils.ConfigReader;
 
 public abstract class BioLockJExecutor
 {
-	public abstract void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) 
+	public abstract void executeProjectFile(ConfigReader cReader) 
 				throws Exception;
 	public abstract void checkDependencies(ConfigReader cReader) throws Exception;
 	

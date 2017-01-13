@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Properties;
+import java.util.*;
 
 import bioLockJ.BioLockJUtils;
 
@@ -116,7 +116,7 @@ public class ConfigReader
 	public static final String SCRIPT_DIR = "SCRIPT_DIR"; 
 	public static final String SUMMARY_DIR = "SUMMARY_DIR"; 
 	public static final String OUTPUT_DIR = "OUTPUT_DIR"; 
-	public static final String LOG_DIR = "LOG_DIR"; 
+	public static final String LOG_FILE = "LOG_FILE"; 
 	
 	
 	public String getAProperty(String namedProperty)
@@ -149,42 +149,68 @@ public class ConfigReader
 		InputStream in = new FileInputStream(propertiesFile);
 		props = new Properties();
 		props.load(in);
-		props.setProperty(BLJ_ROOT, getBLJRoot());
-		props.setProperty(PROJECT_DIR, getProjectDir());
-		props.setProperty(OUTPUT_DIR, getOutputDir());
-		props.setProperty(SCRIPT_DIR, getScriptDir());
-		props.setProperty(SUMMARY_DIR, getSummaryDir());
-		props.setProperty(LOG_DIR, value)
 		in.close();
+		
+		String bljRoot = getBLJRoot();
+		String projectDir = createProjectDir(bljRoot);
+		
+		props.setProperty(BLJ_ROOT, bljRoot);
+		props.setProperty(PROJECT_DIR, projectDir);
+		props.setProperty(OUTPUT_DIR, createSubDir(projectDir, "output"));
+		props.setProperty(SCRIPT_DIR, createSubDir(projectDir, "scripts"));
+		props.setProperty(SUMMARY_DIR, createSubDir(projectDir, "summary"));
+		props.setProperty(LOG_FILE, getLogName(projectDir));
 	}
 	
 	
-	public String getOutputDir() throws Exception
+	public HashMap<String, String> getProperties()
 	{
-		return getProjectDir() + "output" + File.separator;
-	} 
-	
-	public String getSummaryDir() throws Exception
-	{ 
-		return getProjectDir() + "summary" + File.separator;
-	} 
-	
-	public String getScriptDir() throws Exception
-	{ 
-		return getProjectDir() + "script" + File.separator;
-	} 
-	
-	public String getProjectDir() throws Exception
-	{
-		return getBLJRoot() + "project" + File.separator + getAProperty(PROJECT_NAME) + File.separator;
-
+		HashMap<String, String> map = new HashMap<String, String>();
+		Iterator<String> it = props.stringPropertyNames().iterator();
+		while(it.hasNext()){
+			String key = it.next();
+			map.put(key, props.getProperty(key));
+		}
+		return map;
 	}
 	
-	public static String getBLJRoot() throws IOException, URISyntaxException
+	private String getLogName(String projectDir)
+	{
+		return projectDir + projectDateString + ".log";
+	}
+	
+	private String createSubDir(String projectDir, String name)
+	{ 
+		File dir = new File(projectDir + name);
+		dir.mkdir();
+		return dir.getAbsolutePath() + File.separator;
+	} 
+	
+	private String createProjectDir(String bljRoot) throws Exception
+	{
+		String projectName = BioLockJUtils.requireString(this, PROJECT_NAME);
+		String pd = bljRoot + "projects" + File.separator + projectName;
+		File projectDir = null;
+		while(projectDir == null || projectDir.exists())
+		{
+			projectDateString = BioLockJUtils.getDateString();
+			projectDir = new File(pd + "_" +  projectDateString);
+			if(projectDir.exists()) Thread.sleep(1000);
+		}
+		
+		projectDir.mkdirs();
+		return projectDir.getAbsolutePath() + File.separator;
+		
+	}
+	
+	
+	private static String getBLJRoot() throws IOException, URISyntaxException
 	{
 		URL u = ConfigReader.class.getProtectionDomain().getCodeSource().getLocation();
 		File f = new File(u.toURI());
 		return f.getParent() + File.separator;
 	}
+	
+	private String projectDateString;
 	
 }

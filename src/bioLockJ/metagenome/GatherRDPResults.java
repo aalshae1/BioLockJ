@@ -35,7 +35,7 @@ public class GatherRDPResults extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File rdpOutDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_OUTPUT_RDP_DIRECTORY);
 		File summaryDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.RDP_SUMMARY_DIRECTORY);
