@@ -40,11 +40,10 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 		this.scripts = new ArrayList<File>();
 		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		File fastaDirToFormat = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
-		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 
 		File scriptDir = getScriptDir(cReader, "formatBlastDB");
 		
-		int index =1;
+		int index = 0;
 		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(this.runAllFile));
@@ -55,11 +54,12 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 		{
 			File fastaFile = new File(fastaDirToFormat.getAbsolutePath() + File.separator + s);
 			
-			if( ! fastaFile.isDirectory())
+			if( !fastaFile.isDirectory() )
 			{
-				File script = new File(
-						scriptDir.getAbsolutePath() + File.separator + "run_" + index + "_" +
-								getTimeStamp(cReader) + 	"_.sh");
+				
+				File script = BioLockJUtils.makeNewRunFile(cReader, 
+						scriptDir.getAbsolutePath(), allWriter, index++ );
+				this.scripts.add(script);
 				
 				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				
@@ -71,20 +71,7 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 				writer.write(blastBinDin + "/makeblastdb -dbtype nucl " + 
 								"-in " + fastaFile.getAbsolutePath() + "\n");
 				
-				File touchFile = new File(script.getAbsolutePath() + FINISHED_SUFFIX );
-				
-				if( touchFile.exists())
-					touchFile.delete();
-				
-				writer.write("touch " + touchFile.getAbsolutePath() + "\n");
-				
-				writer.flush();  writer.close();
-				this.scripts.add(script);
-				
-				allWriter.write(clusterBatchCommand + " " + script.getAbsolutePath() + "\n");
-				allWriter.flush();
-				
-				index++;
+				BioLockJUtils.closeRunFile(writer, script);
 			}
 		}
 		
