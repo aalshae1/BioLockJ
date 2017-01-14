@@ -46,7 +46,7 @@ public class PivotPValuesToReferenceGenome extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File inFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.FISHER_PVALUES_OUTPUT_FILE);
 		File outFile = new File( BioLockJUtils.requireString(cReader, ConfigReader.FISHER_GTF_OUTPUT_FILE));

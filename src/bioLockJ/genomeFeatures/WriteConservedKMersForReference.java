@@ -28,7 +28,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File refGenome = BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);
 		File kmerFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
@@ -41,7 +41,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 
-		System.out.println("Writing results " + outFile.getAbsolutePath());
+		LOG.info("Writing results " + outFile.getAbsolutePath());
 		writer.write("Chromosome\tStart\tEnd\tFeature\tratioConsereved\n");
 		
 		for(FastaSequence fs : list)
@@ -102,7 +102,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 			map.put(Long.parseLong(splits[0]), numOnes/bitMap.length());
 			
 			if( map.size() %1000000 == 0)
-				System.out.println(map.size());
+				LOG.info(new Integer(map.size()).toString());
 		}
 		
 		return map;

@@ -32,27 +32,24 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
 		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_ALL_COMMAND);
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		this.scripts = new ArrayList<File>();
 		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		File blastQueryDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
 		File blastDatabaseFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
-		File blastOutputDirectory = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
-		File scriptDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_QUERY);
 		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		String blastAllCommand = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_ALL_COMMAND);
+		File blastOutputDirectory = getOutputDir(cReader);
+		File scriptDir = getScriptDir(cReader);
 		
 		int index =1;
-		this.runAllFile = new File(scriptDir.getAbsolutePath() + File.separator + "runAll_" + 
-				System.currentTimeMillis() + 	".sh");
+		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(this.runAllFile));
 		

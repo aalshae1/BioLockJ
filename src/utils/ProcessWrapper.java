@@ -11,7 +11,7 @@ public class ProcessWrapper
 		for ( int x=0; x < cmdArgs.length; x++ )
 				System.out.print(cmdArgs[x] + " " );
 			
-			System.out.println();	
+			LOG.info();	
 		
 		Runtime r = Runtime.getRuntime();
 		Process p = r.exec(cmdArgs);
@@ -22,7 +22,7 @@ public class ProcessWrapper
 		
 		while ((s = br.readLine ())!= null)
 		{
-    		System.out.println (s);
+    		LOG.info (s);
 		}
 				
 		p.waitFor();

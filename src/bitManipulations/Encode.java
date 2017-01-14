@@ -1,7 +1,11 @@
 package bitManipulations;
 
+import org.slf4j.*;
+
 public class Encode
 {
+	protected static Logger LOG = LoggerFactory.getLogger(Encode.class);
+	
 	private static final Long A_INT = new Long(0x0000l);
 	private static final Long C_INT = new Long(0x0001l);
 	private static final Long G_INT = new Long(0x0002l);
@@ -36,7 +40,7 @@ public class Encode
 		return buff.toString();
 	}
 	
-	public static Long makeLong( String s) throws Exception
+	public static Long makeLong(String s) throws Exception
  	{
 		long val =0;
 		
@@ -75,15 +79,15 @@ public class Encode
 	
 		String s = "CTAGCTACTATGCGACTACCCTACTATGCAAA";
 		long aLong = makeLong(s);
-		System.out.println( Long.toBinaryString(aLong));
+		LOG.info( Long.toBinaryString(aLong));
 		
 		String kmer = getKmer(aLong, s.length());
-		System.out.println(kmer);
+		LOG.info(kmer);
 		
 		if( ! kmer.equals(s) )
 			throw new Exception("FAIL!!!!");
 		
-		System.out.println("pass");
+		LOG.info("pass");
 	
 	}
 }

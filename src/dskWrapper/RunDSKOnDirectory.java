@@ -34,25 +34,24 @@ public class RunDSKOnDirectory extends BioLockJExecutor
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{	
 		BioLockJUtils.requireString(cReader, ConfigReader.DSK_INPUT_DIRECTORY);
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_OUTPUT_DIRECTORY);
 		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		BioLockJUtils.requireString(cReader, ConfigReader.DSK_BINARY_DIRECTORY);
-		BioLockJUtils.requireString(cReader, ConfigReader.DSK_SCRIPT_DIR);
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		this.scripts = new ArrayList<File>();
 		String dskBinaryPath = BioLockJUtils.requireString(cReader, ConfigReader.DSK_BINARY_DIRECTORY);
-		File dskInputDirectory = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_INPUT_DIRECTORY);
-		File dskOuputDirectory= BioLockJUtils.requireExistingFile(cReader, ConfigReader.DSK_OUTPUT_DIRECTORY);
-		File scriptDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_SCRIPT_DIR);
 		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		File dskInputDirectory = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_INPUT_DIRECTORY);
+		File dskOuputDirectory = getOutputDir(cReader);
+		File scriptDir = getScriptDir(cReader);
 		
 		int index =1;
-		this.runAllFile = new File(scriptDir.getAbsolutePath() + File.separator + "runAll_" + 
-				System.currentTimeMillis() + 	".sh");
+		
+		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());
+
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(this.runAllFile));
 		
@@ -66,7 +65,7 @@ public class RunDSKOnDirectory extends BioLockJExecutor
 			{
 				File script = new File(
 						scriptDir.getAbsolutePath() + File.separator + "run_" + index + "_" +
-								System.currentTimeMillis() + 	"_.sh");
+								BioLockJUtils.getDateString() + "_.sh");
 				
 				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				

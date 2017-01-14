@@ -82,7 +82,7 @@ public class GatherBlastHits extends BioLockJExecutor
 		BioLockJUtils.requireBoolean(cReader, ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
 	}
 	
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File blastOutputDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
 		File topHitsFile = new File( BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));

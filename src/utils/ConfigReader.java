@@ -111,11 +111,11 @@ public class ConfigReader
 	
 	public static final String PROJECT_NAME = "PROJECT_NAME"; 
 	
-	public static final String BLJ_ROOT = "BLJ_ROOT"; 
-	public static final String PROJECT_DIR = "PROJECT_DIR"; 
-	public static final String SCRIPT_DIR = "SCRIPT_DIR"; 
-	public static final String SUMMARY_DIR = "SUMMARY_DIR"; 
-	public static final String OUTPUT_DIR = "OUTPUT_DIR"; 
+	public static final String PATH_TO_BLJ_ROOT = "PATH_TO_BLJ_ROOT"; 
+	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR"; 
+	public static final String PATH_TO_SCRIPT_DIR = "PATH_TO_SCRIPT_DIR"; 
+	public static final String PATH_TO_SUMMARY_DIR = "PATH_TO_SUMMARY_DIR"; 
+	public static final String PATH_TO_OUTPUT_DIR = "PATH_TO_OUTPUT_DIR"; 
 	public static final String LOG_FILE = "LOG_FILE"; 
 	
 	
@@ -150,16 +150,17 @@ public class ConfigReader
 		props = new Properties();
 		props.load(in);
 		in.close();
-		
+				
 		String bljRoot = getBLJRoot();
 		String projectDir = createProjectDir(bljRoot);
-		
-		props.setProperty(BLJ_ROOT, bljRoot);
-		props.setProperty(PROJECT_DIR, projectDir);
-		props.setProperty(OUTPUT_DIR, createSubDir(projectDir, "output"));
-		props.setProperty(SCRIPT_DIR, createSubDir(projectDir, "scripts"));
-		props.setProperty(SUMMARY_DIR, createSubDir(projectDir, "summary"));
+		props.setProperty(PATH_TO_BLJ_ROOT, bljRoot);
+		props.setProperty(PATH_TO_PROJECT_DIR, projectDir);
+		props.setProperty(PATH_TO_OUTPUT_DIR, createSubDir(projectDir, "output"));
+		props.setProperty(PATH_TO_SCRIPT_DIR, createSubDir(projectDir, "scripts"));
+		props.setProperty(PATH_TO_SUMMARY_DIR, createSubDir(projectDir, "summary"));
 		props.setProperty(LOG_FILE, getLogName(projectDir));
+		
+		verifyProjectDirs();
 	}
 	
 	
@@ -174,9 +175,18 @@ public class ConfigReader
 		return map;
 	}
 	
+	private void verifyProjectDirs() throws Exception
+	{
+		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_BLJ_ROOT);
+		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_PROJECT_DIR);
+		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_OUTPUT_DIR);
+		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_SUMMARY_DIR);
+		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_SCRIPT_DIR);
+	}
+	
 	private String getLogName(String projectDir)
 	{
-		return projectDir + projectDateString + ".log";
+		return projectDir + ".log";
 	}
 	
 	private String createSubDir(String projectDir, String name)
@@ -193,8 +203,7 @@ public class ConfigReader
 		File projectDir = null;
 		while(projectDir == null || projectDir.exists())
 		{
-			projectDateString = BioLockJUtils.getDateString();
-			projectDir = new File(pd + "_" +  projectDateString);
+			projectDir = new File(pd + "_" +  BioLockJUtils.getDateString());
 			if(projectDir.exists()) Thread.sleep(1000);
 		}
 		
@@ -211,6 +220,5 @@ public class ConfigReader
 		return f.getParent() + File.separator;
 	}
 	
-	private String projectDateString;
-	
+
 }

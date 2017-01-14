@@ -259,7 +259,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 				throw new Exception("Error!  Duplicate header");
 			
 			returnMap.put(header, originalHeader);
-			//System.out.println(header);
+			//LOG.info(header);
 			
 			nextLine = reader.readLine();
 			

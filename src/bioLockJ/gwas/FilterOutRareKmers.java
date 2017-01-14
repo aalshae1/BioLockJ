@@ -20,7 +20,7 @@ public class FilterOutRareKmers extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File inFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
 		

@@ -66,7 +66,7 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File outputDir= 
 				BioLockJUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);

@@ -28,7 +28,7 @@ public class BioLockJ
 		ConfigReader cReader = new ConfigReader(propFile);
 		List<BioLockJExecutor> list = getListToRun(propFile);
 		
-		String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PROJECT_DIR);
+		String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
 				
 		
 		BioLockJUtils.logConfigFileSettings(cReader);
@@ -52,7 +52,7 @@ public class BioLockJ
 			
 			BioLockJUtils.noteEndToLogWriter(e);
 //			BioLockJUtils.appendSuccessToPropertyFile(propFile, e.getClass().getName(), 
-//					BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PROJECT_DIR));
+//					BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_PROJECT_DIR));
 		}
 		
 		LOG.info(BioLockJUtils.LOG_SPACER);

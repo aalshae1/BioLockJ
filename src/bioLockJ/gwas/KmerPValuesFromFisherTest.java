@@ -30,8 +30,7 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 	{
 		HashMap<Integer, String> map = new HashMap<Integer,String>();
 		
-		BufferedReader reader = new BufferedReader(new FileReader(genomeToIntegerFile
-				));
+		BufferedReader reader = new BufferedReader(new FileReader(genomeToIntegerFile));
 		
 		for(String s=  reader.readLine(); s != null; s = reader.readLine())
 		{
@@ -96,7 +95,7 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File inKmerFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
 		File genomeToIntegerFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);

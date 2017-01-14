@@ -72,12 +72,12 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		
 		//File krakenScriptDir =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_KRAKEN_SCRIPT_DIR);
 		//File krakenOutDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_KRAKEN_OUTPUT_DIRECTORY);
-		String outputDir = BioLockJUtils.requireString(cReader, ConfigReader.OUTPUT_DIR);
-		String scriptDir = BioLockJUtils.requireString(cReader, ConfigReader.SCRIPT_DIR);
+		String outputDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_OUTPUT_DIR);
+		String scriptDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_SCRIPT_DIR);
 		
 		String[] files = fastaInDir.list();
 		
-		this.runAllFile = new File(scriptDir + "runAll.sh");
+		this.runAllFile = createRunAllFile(cReader, scriptDir);
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
 		int countNum=0;

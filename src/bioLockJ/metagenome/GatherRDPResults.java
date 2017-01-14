@@ -28,34 +28,31 @@ public class GatherRDPResults extends BioLockJExecutor
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_OUTPUT_RDP_DIRECTORY);
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.RDP_SUMMARY_DIRECTORY);
 		BioLockJUtils.requirePositiveInteger(cReader,  ConfigReader.RDP_THRESHOLD);
-		
 	}
 	
 	@Override
 	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
-		File rdpOutDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_OUTPUT_RDP_DIRECTORY);
-		File summaryDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.RDP_SUMMARY_DIRECTORY);
+		File rdpOutDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_OUTPUT_DIR);
+		File summaryDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_SUMMARY_DIR);
 		int rdpThreshold = BioLockJUtils.requirePositiveInteger(cReader,  ConfigReader.RDP_THRESHOLD);
 		
 		HashMap<String, BufferedWriter> taxaWriters = new HashMap<String, BufferedWriter>();
 		
 		for( int x=1; x < NewRDPParserFileLine.TAXA_ARRAY.length; x++)
 		{
-			 BufferedWriter writer = new BufferedWriter(
-					 	new FileWriter(new File(
+			 BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 					 summaryDir.getAbsolutePath() + File.separator + 
 					 		NewRDPParserFileLine.TAXA_ARRAY[x] + THREE_COL_SUFFIX)));
 			 taxaWriters.put(NewRDPParserFileLine.TAXA_ARRAY[x], writer);
 		}
 		
+		int fileCount = 0;
 		for(String s : rdpOutDir.list())
 		{
-			System.out.println(s);
-				List<NewRDPParserFileLine> list = NewRDPParserFileLine.getRdpListSingleThread(
+			LOG.info("RDP OUTPUT FILE # (" + new Integer(fileCount++ +1) + "):  " + s );
+			List<NewRDPParserFileLine> list = NewRDPParserFileLine.getRdpListSingleThread(
 					rdpOutDir.getAbsoluteFile() + File.separator + s	);
 				
 			for( int x=1; x < NewRDPParserFileLine.TAXA_ARRAY.length; x++)
@@ -99,9 +96,8 @@ public class GatherRDPResults extends BioLockJExecutor
 	}
 	
 
-	private static List<String> getOTUSAtThreshold(
-			HashMap<String, HashMap<String, Integer>>  map,
-									int threshold) throws Exception
+	private static List<String> getOTUSAtThreshold(HashMap<String, 
+			HashMap<String, Integer>>  map, int threshold) 
 	{
 		
 		HashMap<String, Integer> countMap = new HashMap<String, Integer>();
@@ -136,8 +132,7 @@ public class GatherRDPResults extends BioLockJExecutor
 	public static void writeResults(HashMap<String, HashMap<String, Integer>>  map, String filepath ) 
 							throws Exception
 	{
-		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-			filepath)));
+		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filepath)));
 		
 		writer.write("sample");
 		List<String> otuList = getOTUSAtThreshold(map, 0);
@@ -188,8 +183,7 @@ public class GatherRDPResults extends BioLockJExecutor
 		BufferedReader reader = filePath.toLowerCase().endsWith("gz") ? 
 				new BufferedReader(new InputStreamReader( 
 						new GZIPInputStream( new FileInputStream( filePath)))) : 
-				new BufferedReader(new FileReader(new File(filePath
-				)));
+				new BufferedReader(new FileReader(new File(filePath)));
 				
 		String nextLine = reader.readLine();
 		
@@ -217,17 +211,15 @@ public class GatherRDPResults extends BioLockJExecutor
 			innerMap.put(taxa, count);
 			nextLine = reader.readLine();
 			
-			numDone++;
-			
-			if( numDone % 1000000 == 0 )
-				System.out.println(numDone);
+			if( ++numDone % 1000000 == 0 )
+				LOG.info("RDP numDone# " + numDone );
 		}
 		
 		return map;
 	}
 
 	private static HashMap<String, Integer> getCount( String level, 
-					List<NewRDPParserFileLine>  rdpList , int threshold) throws Exception
+					List<NewRDPParserFileLine>  rdpList , int threshold)
 	{
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		

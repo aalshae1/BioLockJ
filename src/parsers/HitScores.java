@@ -201,7 +201,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 							int minQueryAlignmentLength) 
 			throws Exception
 	{
-		System.out.println("PARSING: " + file.getAbsolutePath());
+		LOG.info("PARSING: " + file.getAbsolutePath());
 		BufferedReader reader = 
 			gzipped ?
 				new BufferedReader(new InputStreamReader( 
@@ -298,7 +298,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 			nextLine= reader.readLine();
 			
 			//if( index % 100000==0)
-				//System.out.println(index + " " + map.size());
+				//LOG.info(index + " " + map.size());
 			
 			//index++;
 		}
@@ -333,7 +333,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 			nextLine= reader.readLine();
 			
 			//if( index % 100000==0)
-				//System.out.println(index + " " + map.size());
+				//LOG.info(index + " " + map.size());
 			
 			//index++;
 		}
@@ -429,7 +429,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 						
 						queryIds.add(id);
 						
-						//System.out.println(hs.getQueryId() + " " +  id);
+						//LOG.info(hs.getQueryId() + " " +  id);
 					}
 			}
 			
@@ -447,7 +447,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 	@SuppressWarnings("unused")
 	public static List<HitScores> getAsList(  File file, boolean gzipped) throws Exception
 	{
-		System.out.println("PARSING: " + file.getAbsolutePath());
+		LOG.info("PARSING: " + file.getAbsolutePath());
 		BufferedReader reader = 
 			gzipped ?
 				new BufferedReader(new InputStreamReader( 

@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.StringTokenizer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import utils.ConfigReader;
@@ -16,6 +19,8 @@ import utils.TabReader;
 
 public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 {
+	static Logger LOG = LoggerFactory.getLogger(AddMBGDGeneAnnotationsToGTF.class);
+	
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
@@ -46,7 +51,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			lineNumber++;
 			
 			if(lineNumber % 1000 == 0)
-				System.out.println("Reading annotations " + lineNumber);
+				LOG.info("Reading annotations " + lineNumber);
 		}
 		
 		reader.close();
@@ -56,7 +61,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 	private static HashMap<String, HashSet<Integer>>  getFileLineMap( File extendedFile,
 			HashSet<String> included) throws Exception
 	{
-		System.out.println("Reading annotations...");
+		LOG.info("Reading annotations...");
 		HashMap<String, HashSet<Integer>> map = new HashMap<String, HashSet<Integer>>();
 		
 		BufferedReader reader = new BufferedReader(new FileReader( 
@@ -106,7 +111,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			lineNumber++;
 			
 			if( lineNumber % 100 == 0 )
-				System.out.println(lineNumber + " " + map.size());
+				LOG.info(lineNumber + " " + map.size());
 				
 		}
 		
@@ -134,11 +139,11 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			
 			String key = sToken.nextToken().replaceAll("\"", "").replace("gene_id ", "");
 			
-			//System.out.println("Searching " + key);
+			//LOG.info("Searching " + key);
 			
 			String protKey = geneIdToProtMap.get(key);
 			
-			//System.out.println("found " + protKey);
+			//LOG.info("found " + protKey);
 			
 			StringBuffer description = new StringBuffer();
 			
@@ -180,7 +185,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			if( map.containsKey(splits[0]))
 				throw new Exception("duplicate " + splits[0]);
 			
-			//System.out.println("Adding " + splits[0] + " " + splits[1]);
+			//LOG.info("Adding " + splits[0] + " " + splits[1]);
 			map.put(splits[0], splits[1]);
 		}
 		
@@ -206,7 +211,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File inputFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.INPUT_GTF_FILE);
 		File mbdgFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.MBGD_EXTENDED_PATH);

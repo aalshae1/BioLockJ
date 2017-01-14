@@ -22,13 +22,12 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{	
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_OUTPUT_DIRECTORY);
 		BioLockJUtils.requireString(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);
 		BioLockJUtils.requireString(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);		
 	}
 	
-	private HashMap<Long, BitSet> getBigBitSet(File inDirectory, BufferedWriter logWriter,
-					HashMap<String, Integer> nameMap) throws Exception
+	private HashMap<Long, BitSet> getBigBitSet(File inDirectory, 
+			HashMap<String, Integer> nameMap) throws Exception
 	{
 		long startTime = System.currentTimeMillis();
 		
@@ -40,10 +39,9 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		
 		for(String s : names)
 		{
-			logWriter.write(index + " of " + names.length + " "+  
+			LOG.info(index + " of " + names.length + " "+  
 					"Starting " + s + " at " + (System.currentTimeMillis() - startTime)/1000f 
 								+ " with " + Runtime.getRuntime().freeMemory() + " free \n");
-			logWriter.flush();
 			
 			index++;
 			
@@ -54,39 +52,39 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 				if(keyValue == null)
 					throw new Exception("Could not find " + s.replaceAll(SUFFIX_TO_REMOVE, ""));
 				
-				File inFile = new File(inDirectory.getAbsolutePath() + File.separator +
-											s);
+				File inFile = new File(inDirectory.getAbsolutePath() + File.separator + s);
 				
-				BufferedReader reader = new BufferedReader( new FileReader(inFile));
-				
-				for(String s2= reader.readLine(); s2 != null ; s2 = reader.readLine())
-				{
-					StringTokenizer sToken = new StringTokenizer(s2);
-					
-					String kmer = sToken.nextToken();
-					
-					if( kmer.length() != KMER_SIZE)
-						throw new Exception("Initial implementation is for k=31 only \n" + 
-								"Parsing error " + inFile.getAbsolutePath() + " " +s);
-					
-					long aVal = Encode.makeLong(kmer);
-					
-					sToken.nextToken();
-					
-					if( sToken.hasMoreTokens())
-						throw new Exception("Parsing error " + inFile.getAbsolutePath() + " " +s2);
-					
-					BitSet bSet = bigMap.get(aVal);
-					
-					if( bSet == null)
+				BufferedReader reader = new BufferedReader(new FileReader(inFile));
+				try{
+					for(String s2= reader.readLine(); s2 != null ; s2 = reader.readLine())
 					{
-						bSet = new BitSet(nameMap.size());
-						bigMap.put(aVal, bSet);
+						StringTokenizer sToken = new StringTokenizer(s2);
+						
+						String kmer = sToken.nextToken();
+						
+						if( kmer.length() != KMER_SIZE)
+							throw new Exception("Initial implementation is for k=31 only \n" + 
+									"Parsing error " + inFile.getAbsolutePath() + " " +s);
+						
+						long aVal = Encode.makeLong(kmer);
+						
+						sToken.nextToken();
+						
+						if( sToken.hasMoreTokens())
+							throw new Exception("Parsing error " + inFile.getAbsolutePath() + " " +s2);
+						
+						BitSet bSet = bigMap.get(aVal);
+						
+						if( bSet == null)
+						{
+							bSet = new BitSet(nameMap.size());
+							bigMap.put(aVal, bSet);
+						}
+						
+						bSet.set(keyValue);
+						
 					}
-					
-					bSet.set(keyValue);
-					
-				}
+				}finally{ reader.close(); }
 			}
 		}
 		
@@ -150,16 +148,16 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		writer.flush();  writer.close();
 	}
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File genomeToIndexFile = new File(
 				BioLockJUtils.requireString(cReader, ConfigReader.GENOME_TO_INTEGER_FILE));
 		File kmerToGenomeFile = new File(
 				BioLockJUtils.requireString(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE));	
-		File dirToParse = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.DSK_OUTPUT_DIRECTORY);
+		File dirToParse = getOutputDir(cReader);
 		
 		HashMap<String, Integer> nameMap= getNameToIntegerMap(dirToParse, genomeToIndexFile);
-		HashMap<Long, BitSet> bigMap = getBigBitSet(dirToParse, logWriter, nameMap);
+		HashMap<Long, BitSet> bigMap = getBigBitSet(dirToParse, nameMap);
 		writeResults(kmerToGenomeFile, bigMap, nameMap);
 	}
 }

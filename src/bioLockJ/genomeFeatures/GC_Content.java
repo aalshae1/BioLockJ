@@ -46,7 +46,7 @@ public class GC_Content extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		File referenceGenome = BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);
 		File outputFile =new File( BioLockJUtils.requireString(cReader, ConfigReader.GC_CONTENT_IGV_OUTPUT_FILE));

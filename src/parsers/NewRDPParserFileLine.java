@@ -171,7 +171,7 @@ public class NewRDPParserFileLine
 	
 	private NewRDPParserFileLine(String fileLine) throws Exception
 	{
-		//System.out.println(fileLine);
+		//LOG.info(fileLine);
 		HashMap<String, NewRDPNode> tempMap = new LinkedHashMap<String, NewRDPNode>();
 		StringTokenizer sToken = new StringTokenizer(fileLine, "\t");
 		
@@ -186,7 +186,7 @@ public class NewRDPParserFileLine
 			
 			String rank = sToken.nextToken();
 			String scoreString = sToken.nextToken();
-			//System.out.println(name + " " + rank + " " + scoreString);
+			//LOG.info(name + " " + rank + " " + scoreString);
 			NewRDPNode rdpNode = new NewRDPNode(name, scoreString);
 			tempMap.put( rank, rdpNode );
 		}
@@ -319,14 +319,14 @@ public class NewRDPParserFileLine
 		
 		while( nextLine != null)
 		{
-			//System.out.println(nextLine);
+			//LOG.info(nextLine);
 			list.add(new NewRDPParserFileLine(nextLine));
 			nextLine= reader.readLine();
 		}
 		
 		reader.close();
 		long endTime = System.currentTimeMillis();
-		System.out.println( "Parse time = " + (endTime - startTime)/1000f + " seconds " );
+		LOG.info( "Parse time = " + (endTime - startTime)/1000f + " seconds " );
 		
 		return list;
 	}
@@ -334,10 +334,10 @@ public class NewRDPParserFileLine
 	public static List<NewRDPParserFileLine> getRdpList(File rdpFile, int numCPUs) 
 		throws Exception
 	{
-		System.out.println("Parsing with " + numCPUs + " cpus ");
-		System.out.println("Workers started at " + (System.currentTimeMillis() - startTime)/1000f);
+		LOG.info("Parsing with " + numCPUs + " cpus ");
+		LOG.info("Workers started at " + (System.currentTimeMillis() - startTime)/1000f);
 		List<SubFileParser> workers = getCompletedWorkers(rdpFile, numCPUs);
-		System.out.println("Workers finished at " + (System.currentTimeMillis() - startTime)/1000f);
+		LOG.info("Workers finished at " + (System.currentTimeMillis() - startTime)/1000f);
 		
 		//single threaded
 		List<NewRDPParserFileLine> returnList = new ArrayList<NewRDPParserFileLine>();
@@ -351,7 +351,7 @@ public class NewRDPParserFileLine
 		}
 		
 		long endTime = System.currentTimeMillis();
-		System.out.println( "Parse time = " + (endTime - startTime)/1000f + " seconds " );
+		LOG.info( "Parse time = " + (endTime - startTime)/1000f + " seconds " );
 		
 		return Collections.unmodifiableList(returnList);
 		
@@ -487,7 +487,7 @@ public class NewRDPParserFileLine
 			finally
 			{
 				long endTime= System.currentTimeMillis();
-				System.out.println("Thread finished " + (endTime - startTime)/1000f);
+				LOG.info("Thread finished " + (endTime - startTime)/1000f);
 			}	
 		}
 	}

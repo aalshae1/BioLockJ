@@ -56,7 +56,7 @@ public class Translate
 	    
 	    for ( int x=0; x < frames.length; x++ )
 	    {
-	        System.out.println(x + " " + frames[x]);
+	        LOG.info(x + " " + frames[x]);
 	    }
 	    
 	}
@@ -74,7 +74,7 @@ public class Translate
 		{
 			String key = sToken.nextToken();
 			String value = sToken.nextToken().toUpperCase();
-			//System.out.println( key + " " + value );
+			//LOG.info( key + " " + value );
 			
 			translationMap.put(key, value);
 		}
@@ -393,7 +393,7 @@ public class Translate
 			currentPos++;		
 		}
 		
-		System.out.println( currentPos );
+		LOG.info( currentPos );
 		
 		writer.write("\n\n");
 		
@@ -402,7 +402,7 @@ public class Translate
 			writeProteinLine(writer, dnaSequence, currentPos);
 			writeDnaLine(writer, dnaSequence,currentPos);
 			currentPos += NUM_PROTEIN_RESIDUES_PER_LINE *3;
-			System.out.println( currentPos );
+			LOG.info( currentPos );
 			writer.write("\n");
 		}	
 		
@@ -524,9 +524,9 @@ public class Translate
 		String downPrimer = "AGAGTTATCATCCTTGTTGGA";
 		downPrimer = reverseTranslate(downPrimer);
 		
-		System.out.println( getProteinSequence(downPrimer) );
+		LOG.info( getProteinSequence(downPrimer) );
 		
-		System.out.println ( sequence.indexOf(downPrimer) - sequence.indexOf(upPrimer) );
+		LOG.info ( sequence.indexOf(downPrimer) - sequence.indexOf(upPrimer) );
 		
 		
 		
@@ -551,9 +551,9 @@ public class Translate
 		{
 			if ( allFrames[x].indexOf(queryString) != -1 ) 
 			{
-				System.out.println("Frame " + x );
-				System.out.println( allFrames[x] + "\n\n\n" );
-				System.out.println( "" + allFrames[x].indexOf(queryString) );
+				LOG.info("Frame " + x );
+				LOG.info( allFrames[x] + "\n\n\n" );
+				LOG.info( "" + allFrames[x].indexOf(queryString) );
 			}
 		}
 	}
@@ -570,9 +570,9 @@ public class Translate
 		String subSequence = "tagtggaagaaagcacattgtagtctgt";
 		
 		subSequence = subSequence.toUpperCase();
-		System.out.println( subSequence );
+		LOG.info( subSequence );
 		
-		System.out.println( sequence.indexOf(subSequence));
+		LOG.info( sequence.indexOf(subSequence));
 	}
 	*/
 	
@@ -600,8 +600,8 @@ public class Translate
 		String sequence = readSequenceFromFastaFile( new File(
 				"C:\\Documents and Settings\\Anthony\\Desktop\\mouseRefSeqRna.txt"));
 				
-		System.out.println( sequence );
-		System.out.println( getProteinSequence(sequence));
+		LOG.info( sequence );
+		LOG.info( getProteinSequence(sequence));
 	}
 	*/
 	
@@ -611,7 +611,7 @@ public class Translate
 		String aSequence = readSequenceFromFastaFile(new 
 			File("C:\\Documents and Settings\\Anthony\\Desktop\\VectorStuff\\July28Sequences\\89-M9-10-T7_T7-A12.seq"));
 			
-		System.out.println( reverseTranscribe(aSequence) );	
+		LOG.info( reverseTranscribe(aSequence) );	
 	}
 	*/
 	
@@ -623,7 +623,7 @@ public class Translate
 			File("C:\\Documents and Settings\\Anthony\\Desktop\\VectorStuff\\1963\\53-M7-8-7_UBACUP2691-E07.seq"));
 		
 		
-		System.out.println( reverseTranscribe(aSequence));
+		LOG.info( reverseTranscribe(aSequence));
 		
 		ClustalAlignment cAlignment = new ClustalAlignment(new File( "c:\\cygwin\\clustalw\\Seq2.aln"));
 		cAlignment.writeHtmlFile(new File("c:\\cygwin\\clustalw\\Seq2.html"));
@@ -637,9 +637,9 @@ public class Translate
 			"C:\\Documents and Settings\\Anthony\\Desktop\\VectorStuff\\mbr5ss_protein.txt"));
 			
 		String subSequence = "IPPIREVED";
-		System.out.println( (aSequence.indexOf(subSequence)) + 1 + subSequence.length() - 1 );
-		System.out.println( aSequence.length() );
-		//System.out.println( (aSequence.indexOf(subSequence)) + 1 );
+		LOG.info( (aSequence.indexOf(subSequence)) + 1 + subSequence.length() - 1 );
+		LOG.info( aSequence.length() );
+		//LOG.info( (aSequence.indexOf(subSequence)) + 1 );
 			
 				
 	}
@@ -660,7 +660,7 @@ public class Translate
 				
 		aSequence = aSequence.substring(0, threePrimePos + downstreamPrimer.length());
 		
-		System.out.println( Translate.getProteinSequence(aSequence) );
+		LOG.info( Translate.getProteinSequence(aSequence) );
 	}
 	*/
 	
@@ -675,12 +675,12 @@ public class Translate
 		aSequence = aSequence.toUpperCase();
 		aSequence = reverseTranslate(aSequence);
 				
-		System.out.println( aSequence );
-		System.out.println( Translate.getProteinSequence(aSequence));
+		LOG.info( aSequence );
+		LOG.info( Translate.getProteinSequence(aSequence));
 		//String[] allFrames = getAllFrames(aSequence);
-		//System.out.println( allFrames[0] );
-		//System.out.println( getGCContent(aSequence));
-		//System.out.println( vectorSequence.indexOf(aSequence));
+		//LOG.info( allFrames[0] );
+		//LOG.info( getGCContent(aSequence));
+		//LOG.info( vectorSequence.indexOf(aSequence));
 	}
 	*/
 	
@@ -695,17 +695,17 @@ public class Translate
 		String primer2 = "CACTCTCCAGAGTAATGTGTCCA";
 		vectorSequence = vectorSequence.toUpperCase();
 		
-		System.out.println( vectorSequence.indexOf(primer1));
-		System.out.println ( Translate.reverseTranscribe( vectorSequence).indexOf(primer2));
+		LOG.info( vectorSequence.indexOf(primer1));
+		LOG.info ( Translate.reverseTranscribe( vectorSequence).indexOf(primer2));
 		
 		//aSequence = reverseTranslate(aSequence);
 				
-		//System.out.println( aSequence );
-		//System.out.println( Translate.getProteinSequence(aSequence));
+		//LOG.info( aSequence );
+		//LOG.info( Translate.getProteinSequence(aSequence));
 		//String[] allFrames = getAllFrames(aSequence);
-		//System.out.println( allFrames[0] );
-		//System.out.println( getGCContent(aSequence));
-		//System.out.println( vectorSequence.indexOf(aSequence));
+		//LOG.info( allFrames[0] );
+		//LOG.info( getGCContent(aSequence));
+		//LOG.info( vectorSequence.indexOf(aSequence));
 	}
 	*/
 	
@@ -718,12 +718,12 @@ public class Translate
 		String[] frames = Translate.getAllFrames(aSeq);
 		
 		for ( int x=0; x < frames.length; x++ ) 
-			System.out.println( frames[x] );
+			LOG.info( frames[x] );
 			
 		TranslateAlignedSequences tas = new TranslateAlignedSequences( aSeq.substring(2)
 				, aSeq.substring(2) );
 		
-		System.out.println( "\n\n" +  tas.getTranslatedSequence() );
+		LOG.info( "\n\n" +  tas.getTranslatedSequence() );
 		  
 		 
 	}
@@ -747,9 +747,9 @@ public class Translate
 		{
 			if ( allFrames[x].indexOf(queryString) != -1 ) 
 			{
-				System.out.println("Frame " + x );
-				System.out.println( allFrames[x] + "\n\n\n" );
-				System.out.println( "" + allFrames[x].indexOf(queryString) );
+				LOG.info("Frame " + x );
+				LOG.info( allFrames[x] + "\n\n\n" );
+				LOG.info( "" + allFrames[x].indexOf(queryString) );
 			}
 		}	
 	}

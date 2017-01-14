@@ -251,7 +251,7 @@ public class OtuWrapper
 			}
 		}
 		
-		//System.out.println("Including " + toInclude);
+		//LOG.info("Including " + toInclude);
 		
 		if(toInclude.contains("other"))
 			throw new Exception("Other already defined");
@@ -902,7 +902,7 @@ public class OtuWrapper
 		for( int x=0; x< getOtuNames().size(); x++)
 			sum = sum.multiply( new BigDecimal(getDataPointsUnnormalized().get(sampleIndex).get(x) + 1.0));
 		
-		System.out.println(sum.toString());
+		LOG.info(sum.toString());
 		
 		return sum.
 		
@@ -2029,7 +2029,7 @@ public class OtuWrapper
 			} else
 			{
 				skipColumns.add(x);
-				System.out.println("Wrapper excluding taxa " + taxaName);
+				LOG.info("Wrapper excluding taxa " + taxaName);
 			}
 
 			x++;
@@ -2080,7 +2080,7 @@ public class OtuWrapper
 				}
 			} else
 			{
-				System.out.println("Wrapper excluding " + sampleName);
+				LOG.info("Wrapper excluding " + sampleName);
 			}
 
 			if (x != skipColumns.size() + otuNames.size())
@@ -2089,7 +2089,7 @@ public class OtuWrapper
 			nextLine = reader.readLine();
 		}
 
-		// System.out.println( sampleNames.size() + " " + otuNames.size());
+		// LOG.info( sampleNames.size() + " " + otuNames.size());
 		assertNum(totalCounts, dataPointsUnnormalized);
 		removeThreshold(otuNames, dataPointsUnnormalized, threshold);
 
@@ -2140,7 +2140,7 @@ public class OtuWrapper
 			if( dataPointsUnnormalized.get(x).get(taxaIndex) < 0.001  )
 				f = f +1;
 		
-		//System.out.println( getOtuNames().get(taxaIndex) + " " + f + " " + getSampleNames().size() );
+		//LOG.info( getOtuNames().get(taxaIndex) + " " + f + " " + getSampleNames().size() );
 		return f / getSampleNames().size();
 	}
 

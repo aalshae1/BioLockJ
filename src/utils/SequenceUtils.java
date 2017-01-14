@@ -238,7 +238,7 @@ public class SequenceUtils
 	{
 		for ( int x=0; x< MapResiduesToIndex.NUM_VALID_RESIDUES; x++ ) 
 		{
-			System.out.println( MapResiduesToIndex.getChar(x) + " " + getMaxSurfaceArea(x) );
+			LOG.info( MapResiduesToIndex.getChar(x) + " " + getMaxSurfaceArea(x) );
 		}
 	}
 	

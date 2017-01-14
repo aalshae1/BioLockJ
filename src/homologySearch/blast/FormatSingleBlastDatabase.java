@@ -38,7 +38,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		this.scripts = new ArrayList<File>();
 		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
@@ -50,8 +50,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		String dbType = BioLockJUtils.requireDBType(cReader);
 		
-		this.runAllFile = new File(scriptDir.getAbsolutePath() + File.separator + "runAll_" + 
-				System.currentTimeMillis() +	".sh");
+		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(this.runAllFile));
 		

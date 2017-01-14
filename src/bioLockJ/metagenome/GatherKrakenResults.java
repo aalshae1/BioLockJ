@@ -14,8 +14,6 @@ import org.slf4j.*;
 
 public class GatherKrakenResults extends BioLockJExecutor
 {
-	static Logger LOG = LoggerFactory.getLogger(GatherKrakenResults.class);
-	
 	public static final String[] KRAKEN_TAXONOMY = 
 			 {"domain","phylum", "class", "order", "family", "genus", "species"};
 	
@@ -30,8 +28,8 @@ public class GatherKrakenResults extends BioLockJExecutor
 		for( int x=0; x < KRAKEN_TAXONOMY.length; x++)
 		{
 			HashMap<String, HashMap<String, Integer>> map = getAllSamples(cReader, x+2);
-			File summaryFile = new File(cReader.getAProperty(ConfigReader.SUMMARY_DIR) + 
-					"kraken_" + KRAKEN_TAXONOMY[x] + ".txt");
+			File summaryFile = new File(getSummaryDir(cReader) + "kraken_" + 
+					KRAKEN_TAXONOMY[x] + ".txt");
 			GatherRDPResults.writeResults(map, summaryFile.getAbsolutePath());
 		}
 	}
@@ -40,7 +38,7 @@ public class GatherKrakenResults extends BioLockJExecutor
 			ConfigReader cReader, int parseLevel ) throws Exception
 	{
 		HashMap<String, HashMap<String, Integer>>  map = new HashMap<String,HashMap<String,Integer>>();
-		File outputDir = new File(cReader.getAProperty(ConfigReader.OUTPUT_DIR));
+		File outputDir = getOutputDir(cReader);
 		for(String s : outputDir.list())
 		{
 			if(s.endsWith("toKrakenTranslate.txt"))
@@ -63,7 +61,7 @@ public class GatherKrakenResults extends BioLockJExecutor
 
 	private static HashMap<String, Integer> getCounts( File inFile, int parseNum ) throws Exception
 	{
-		LOG.debug("GatherKrakenResults.getCounts from file: " + inFile.getAbsolutePath());
+		LOG.info("GatherKrakenResults.getCounts from file: " + inFile.getAbsolutePath());
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		BufferedReader reader = new BufferedReader(new FileReader(inFile));
 		for(String s= reader.readLine(); s != null; s= reader.readLine())

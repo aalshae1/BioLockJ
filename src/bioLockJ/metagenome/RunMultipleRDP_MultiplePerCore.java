@@ -36,9 +36,7 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 	{	
 		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_OUTPUT_RDP_DIRECTORY);
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_RDP_JAR);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.RDP_SCRIPT_DIR);
 		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 	}
 	
@@ -49,7 +47,6 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 				countNum + "_" + System.currentTimeMillis() +  ".sh");
 	
 		this.scriptFiles.add(runFile);
-		
 		
 		allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() + 
 				" " + (clusterParams == null ?  "": clusterParams ) +   "\n"  );
@@ -73,21 +70,18 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader, BufferedWriter logWriter) throws Exception
+	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
 		String clusterCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 	 	File fastaInDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
-		File rdpOutDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_OUTPUT_RDP_DIRECTORY);
 		File rdpBinary =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_RDP_JAR);
-		File rdpScriptDir =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.RDP_SCRIPT_DIR);
 		int numJobsPerCore = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 		String clusterParams = BioLockJUtils.getStringOrNull(cReader, ConfigReader.CLUSTER_PARAMS);
-		
+		File rdpOutDir =  getOutputDir(cReader);
+		File rdpScriptDir =  getScriptDir(cReader);
 		String[] files = fastaInDir.list();
 	
-		this.runAllFile = 
-				new File(
-						rdpScriptDir.getAbsoluteFile() + File.separator + "runAll.sh");
+		this.runAllFile = createRunAllFile(cReader, rdpScriptDir.getAbsolutePath());
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
 		

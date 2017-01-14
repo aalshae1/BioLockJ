@@ -198,17 +198,16 @@ public class BioLockJUtils
 	{
 		String val = reader.getAProperty(propertyName);
 		
-		if( val == null)
+		if( val == null || val.trim().isEmpty() )
 			throw new Exception(propertyName + " is not defined in " 
 								+ reader.getPropertiesFile().getAbsolutePath());
 		
 		File aFile = new File(reader.getAProperty(propertyName));
 		
-		if( ! aFile.exists() || ! aFile.isDirectory())
+		if( ! aFile.exists() || ! aFile.isDirectory() )
 			throw new Exception(aFile.getAbsolutePath() + " is not a valid directory ");
 		
 		return aFile;
-		
 	}
 	
 	public static int requirePositiveInteger( ConfigReader reader, String propertyName )
@@ -278,6 +277,8 @@ public class BioLockJUtils
 		}
 		LOG.info(LOG_SPACER);
 	}
+	
+	
 
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
 	private static void copyFile(File sourceFile, File destFile) throws Exception 

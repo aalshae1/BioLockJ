@@ -82,6 +82,6 @@ public class OrderedSequenceRange
 	{
 		OrderedSequenceRange osr = new OrderedSequenceRange(1,100);
 		
-		System.out.println( osr.getOverlap(new OrderedSequenceRange(50,150))  );
+		LOG.info( osr.getOverlap(new OrderedSequenceRange(50,150))  );
 	}
 }
