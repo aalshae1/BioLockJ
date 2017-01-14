@@ -13,8 +13,13 @@
 
 package utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class OrderedSequenceRange
 {
+	protected static Logger LOG = LoggerFactory.getLogger(OrderedSequenceRange.class);
+	
 	private final int startPosition;
 	private final int endPosition;
 	private boolean originallyForward;
@@ -82,6 +87,6 @@ public class OrderedSequenceRange
 	{
 		OrderedSequenceRange osr = new OrderedSequenceRange(1,100);
 		
-		LOG.info( osr.getOverlap(new OrderedSequenceRange(50,150))  );
+		LOG.info(new Integer(osr.getOverlap(new OrderedSequenceRange(50,150))).toString());
 	}
 }

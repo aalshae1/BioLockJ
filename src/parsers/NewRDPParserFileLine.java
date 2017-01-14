@@ -29,10 +29,14 @@ import java.util.StringTokenizer;
 import java.util.concurrent.BlockingQueue;	
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.zip.GZIPInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class NewRDPParserFileLine
 {
+	protected static Logger LOG = LoggerFactory.getLogger(NewRDPParserFileLine.class);
+	
 	private String sequenceId;
 	private Map<String, NewRDPNode> taxaMap;
 	private static long startTime;

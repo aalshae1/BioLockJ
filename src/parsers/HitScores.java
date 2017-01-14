@@ -29,7 +29,8 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.OrderedSequenceRange;
 import utils.TabReader;
 
@@ -38,6 +39,8 @@ import utils.TabReader;
  */
 public class HitScores implements Comparable<HitScores>
 {
+	protected static Logger LOG = LoggerFactory.getLogger(HitScores.class);
+	
 	//# Fields: Query id, Subject id, % identity, alignment length, mismatches, gap op
 	//enings, q. start, q. end, s. start, s. end, e-value, bit score
 	private String queryId;

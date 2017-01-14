@@ -2,17 +2,21 @@ package utils;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ProcessWrapper
 {
+	protected static Logger LOG = LoggerFactory.getLogger(ProcessWrapper.class);
 	
 	public ProcessWrapper( String[] cmdArgs ) throws Exception
 	{
+		StringBuffer sb = new StringBuffer();
 		for ( int x=0; x < cmdArgs.length; x++ )
-				System.out.print(cmdArgs[x] + " " );
-			
-			LOG.info();	
-		
+				sb.append(cmdArgs[x] + " " );
+				
+		LOG.info(sb.toString());	
+
 		Runtime r = Runtime.getRuntime();
 		Process p = r.exec(cmdArgs);
 		

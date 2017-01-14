@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import bioLockJ.BioLockJUtils;
@@ -27,6 +28,10 @@ public class ConfigReader
 {
 	private final Properties props;
 	private final File propertiesFile;
+	private String runTimeStamp;
+	
+	public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_kkmmss");
+	
 	
 	public File getPropertiesFile()
 	{
@@ -110,6 +115,7 @@ public class ConfigReader
 	public static final String PATH_TO_KRAKEN_SUMMARY_DIR = "PATH_TO_KRAKEN_SUMMARY_DIR";
 	
 	public static final String PROJECT_NAME = "PROJECT_NAME"; 
+	public static final String RUN_TIMESTAMP = "RUN_TIMESTAMP";
 	
 	public static final String PATH_TO_BLJ_ROOT = "PATH_TO_BLJ_ROOT"; 
 	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR"; 
@@ -153,12 +159,15 @@ public class ConfigReader
 				
 		String bljRoot = getBLJRoot();
 		String projectDir = createProjectDir(bljRoot);
+		
+		props.setProperty(RUN_TIMESTAMP, runTimeStamp);
 		props.setProperty(PATH_TO_BLJ_ROOT, bljRoot);
 		props.setProperty(PATH_TO_PROJECT_DIR, projectDir);
 		props.setProperty(PATH_TO_OUTPUT_DIR, createSubDir(projectDir, "output"));
 		props.setProperty(PATH_TO_SCRIPT_DIR, createSubDir(projectDir, "scripts"));
 		props.setProperty(PATH_TO_SUMMARY_DIR, createSubDir(projectDir, "summary"));
 		props.setProperty(LOG_FILE, getLogName(projectDir));
+		
 		
 		verifyProjectDirs();
 	}
@@ -203,14 +212,17 @@ public class ConfigReader
 		File projectDir = null;
 		while(projectDir == null || projectDir.exists())
 		{
-			projectDir = new File(pd + "_" +  BioLockJUtils.getDateString());
+			runTimeStamp = DATE_FORMAT.format(new Date());
+			projectDir = new File(pd + "_" + runTimeStamp);
 			if(projectDir.exists()) Thread.sleep(1000);
 		}
 		
 		projectDir.mkdirs();
 		return projectDir.getAbsolutePath() + File.separator;
-		
 	}
+	
+	
+	
 	
 	
 	private static String getBLJRoot() throws IOException, URISyntaxException

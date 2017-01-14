@@ -13,7 +13,7 @@ import utils.ProcessWrapper;
 public class BioLockJUtils
 {
 	static Logger LOG = LoggerFactory.getLogger(BioLockJUtils.class);
-	public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_kkmmss");
+
 
 		
 	public static void executeAndWaitForScriptsIfAny(ConfigReader cReader, BioLockJExecutor bje) throws Exception
@@ -258,11 +258,6 @@ public class BioLockJUtils
 		throws Exception
 	{
 		copyFile(propsFile, new File(projectDir + propsFile.getName()));
-	}
-	
-	public static String getDateString()
-	{
-		return DATE_FORMAT.format(new Date()); 
 	}
 	
 	public static void logConfigFileSettings(ConfigReader reader) throws Exception 

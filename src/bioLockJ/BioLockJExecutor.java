@@ -10,15 +10,19 @@ import utils.ConfigReader;
 
 public abstract class BioLockJExecutor
 {
-	protected static Logger LOG = LoggerFactory.getLogger(BioLockJExecutor.class);
-	
+
 	public abstract void executeProjectFile(ConfigReader cReader) throws Exception;
 	public abstract void checkDependencies(ConfigReader cReader) throws Exception;
 	
 	public static final String FINISHED_SUFFIX = "_succesfullyFinished";
 	public static final String FAILED_TO_PROCESS = "_failedToProcess";
 	public static final String RUN_BIOLOCK_J = "#RUN_BIOLOCK_J";
+	
 
+	protected static Logger LOG = LoggerFactory.getLogger(BioLockJExecutor.class);
+	
+	
+	
 	public boolean poll(){
 		return true;
 	}
@@ -36,6 +40,12 @@ public abstract class BioLockJExecutor
 	} 
 	
 	//private File runAllFile;
+	
+
+	public static String getTimeStamp(ConfigReader cReader)
+	{
+		return cReader.getAProperty(ConfigReader.RUN_TIMESTAMP);
+	}
 	
 	public static File getBLJRoot(ConfigReader cReader) throws Exception
 	{
@@ -77,7 +87,7 @@ public abstract class BioLockJExecutor
 		}
 		
 		return new File(pathToScriptDir + File.separator + "runAll_" + 
-				BioLockJUtils.getDateString() + ".sh");
+				getTimeStamp(cReader) + ".sh");
 	}
 	
 }

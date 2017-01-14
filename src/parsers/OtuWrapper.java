@@ -29,12 +29,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.Avevar;
 import utils.TabReader;
 
 public class OtuWrapper
 {
+	protected static Logger LOG = LoggerFactory.getLogger(OtuWrapper.class);
+	
 	/*
 	 * All of these lists will be made unmodifiable (and hence thread safe) in
 	 * the constructor

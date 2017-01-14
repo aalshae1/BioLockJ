@@ -31,7 +31,6 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	{
 		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
 		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 	}
 	
@@ -41,9 +40,9 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 		this.scripts = new ArrayList<File>();
 		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		File fastaDirToFormat = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
-		File scriptDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.SCRIPTS_DIR_FOR_BLAST_FORMAT);
 		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
-
+		File scriptDir = getScriptDir(cReader);
+		
 		int index =1;
 		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());
 		
@@ -59,7 +58,7 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 			{
 				File script = new File(
 						scriptDir.getAbsolutePath() + File.separator + "run_" + index + "_" +
-								System.currentTimeMillis() + 	"_.sh");
+								getTimeStamp(cReader) + 	"_.sh");
 				
 				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				

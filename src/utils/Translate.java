@@ -23,9 +23,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.StringTokenizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Translate
 {
+	protected static Logger LOG = LoggerFactory.getLogger(Translate.class);
+	
 	private static final int NUM_PROTEIN_RESIDUES_PER_LINE=15;
 	//private static final Random random= new Random(39425435);
 	private static final Random random= new Random(System.currentTimeMillis());
@@ -393,7 +397,7 @@ public class Translate
 			currentPos++;		
 		}
 		
-		LOG.info( currentPos );
+		LOG.info( new Integer(currentPos).toString() );
 		
 		writer.write("\n\n");
 		
@@ -402,7 +406,7 @@ public class Translate
 			writeProteinLine(writer, dnaSequence, currentPos);
 			writeDnaLine(writer, dnaSequence,currentPos);
 			currentPos += NUM_PROTEIN_RESIDUES_PER_LINE *3;
-			LOG.info( currentPos );
+			LOG.info( new Integer(currentPos).toString() );
 			writer.write("\n");
 		}	
 		

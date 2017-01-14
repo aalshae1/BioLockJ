@@ -65,7 +65,7 @@ public class RunDSKOnDirectory extends BioLockJExecutor
 			{
 				File script = new File(
 						scriptDir.getAbsolutePath() + File.separator + "run_" + index + "_" +
-								BioLockJUtils.getDateString() + "_.sh");
+								getTimeStamp(cReader) + "_.sh");
 				
 				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				

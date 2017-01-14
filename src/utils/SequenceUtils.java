@@ -18,9 +18,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.StringWriter;
 import java.util.StringTokenizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SequenceUtils
 {
+	protected static Logger LOG = LoggerFactory.getLogger(SequenceUtils.class);
+	
 		private static float[] maxSurfaceAreas = { 
 		188.789f,
 		200.211f,

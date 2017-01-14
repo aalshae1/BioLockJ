@@ -77,14 +77,13 @@ public class GatherBlastHits extends BioLockJExecutor
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
 		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
 		BioLockJUtils.requireBoolean(cReader, ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
 	}
 	
 	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
-		File blastOutputDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_OUTPUT_DIRECTORY);
+		File blastOutputDir = getOutputDir(cReader);
 		File topHitsFile = new File( BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
 		boolean useQueryCoordiantes = BioLockJUtils.requireBoolean(cReader, ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
 		
@@ -98,8 +97,7 @@ public class GatherBlastHits extends BioLockJExecutor
 		}
 		else
 		{
-			logWriter.write(ConfigReader.GTF_GATHERED_TOP_HITS_FILE + " not defined so skipping GTF\n");
-			logWriter.flush();
+			LOG.info(ConfigReader.GTF_GATHERED_TOP_HITS_FILE + " not defined so skipping GTF\n");
 		}
 	}
 	

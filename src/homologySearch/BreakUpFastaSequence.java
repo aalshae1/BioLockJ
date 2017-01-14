@@ -43,10 +43,8 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 			
 			writer.write(fs.getHeader() + "\n");
 			writer.write(fs.getSequence() + "\n");
-			
-			index++;
 
-			if( index == numClusters)
+			if( ++index == numClusters)
 				index = 0;
 		}
 		

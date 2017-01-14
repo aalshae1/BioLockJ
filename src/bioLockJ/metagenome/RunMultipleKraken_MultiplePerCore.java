@@ -41,10 +41,10 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 	}
 	
-	private File makeNewRunFile(String scriptDir, BufferedWriter allWriter, 
+	private File makeNewRunFile(ConfigReader cReader, String scriptDir, BufferedWriter allWriter, 
 			String clusterCommand, int countNum) throws Exception
 	{
-		File runFile = new File(scriptDir + "run_" + countNum + "_" + BioLockJUtils.getDateString() +  ".sh");
+		File runFile = new File(scriptDir + "run_" + countNum + "_" + getTimeStamp(cReader) +  ".sh");
 		this.scriptFiles.add(runFile);
 		allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() + "\n"  );
 		allWriter.flush();
@@ -82,7 +82,7 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
 		int countNum=0;
 		int numToDo = numJobsPerCore;
-		File runFile = makeNewRunFile(scriptDir, allWriter, clusterCommand, countNum);
+		File runFile = makeNewRunFile(cReader, scriptDir, allWriter, clusterCommand, countNum);
 		BufferedWriter aWriter = new BufferedWriter(new FileWriter(runFile));
 		
 		for(String s : files)
@@ -111,7 +111,7 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			{
 				numToDo = numJobsPerCore;
 				closeARunFile(aWriter, runFile);
-				runFile = makeNewRunFile(scriptDir, allWriter, clusterCommand, countNum);
+				runFile = makeNewRunFile(cReader, scriptDir, allWriter, clusterCommand, countNum);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
 			}
 		}

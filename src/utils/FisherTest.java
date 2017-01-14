@@ -1,7 +1,11 @@
 package utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FisherTest
 {
+	protected static Logger LOG = LoggerFactory.getLogger(FisherTest.class);
 	
 	public static double choose(int n, int k) 
 	{
@@ -28,15 +32,15 @@ public class FisherTest
 	
 	public static void main(String[] args) throws Exception
 	{
-		LOG.info(choose(5,2));
+		LOG.info(new Double(choose(5,2)).toString());
 		
-		LOG.info(choose(300,12));
+		LOG.info(new Double(choose(300,12)).toString());
 		
-		LOG.info(choose(600,234));
+		LOG.info(new Double(choose(600,234)).toString());
 		
-		LOG.info( getFisherP(60, 20, 7, 3) );
+		LOG.info(new Double(getFisherP(60, 20, 7, 3)).toString());
 		
 		// see slide # 8 here http://afodor.github.io/classes/stats2016/Lecture07.pptx
-		LOG.info( getFisherPSum(34, 16, 15, 13));
+		LOG.info(new Double(getFisherPSum(34, 16, 15, 13)).toString());
 	}
 }
