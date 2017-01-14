@@ -16,7 +16,7 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	 * Takes in FASTA_DIR_TO_FORMAT which should only contain fasta files
 	 * (sub-directories are allowed but will be ignored)
 	 * 
-	 * Writes scripts to SCRIPTS_DIR_FOR_BLAST_FORMAT
+	 * Writes scripts to SCRIPTS_DIR/SCRIPTS_DIR_FOR_BLAST_FORMAT
 	 * 
 	 * will issue BLAST_PRELIMINARY_STRING if defined
 	 * requires BLAST_BIN_DIR to be defined
@@ -41,7 +41,8 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		File fastaDirToFormat = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
 		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
-		File scriptDir = getScriptDir(cReader);
+
+		File scriptDir = getScriptDir(cReader, "formatBlastDB");
 		
 		int index =1;
 		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());

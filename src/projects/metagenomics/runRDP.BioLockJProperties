@@ -12,9 +12,6 @@ NUMBER_CLUSTERS=100
 POLL_TIME = 10
 
 PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/sangMay2016/fastaOut
-PATH_TO_OUTPUT_RDP_DIRECTORY=/nobackup/afodor_research/sangMay2016/fastaOut/biolockJ/rdpOut
 PATH_TO_RDP_JAR=/users/afodor/rdp/rdp_classifier_2.10.1/dist/classifier.jar
-RDP_SCRIPT_DIR=/nobackup/afodor_research/sangMay2016/fastaOut/biolockJ/scripts/runRDP
 
-RDP_SUMMARY_DIRECTORY=/nobackup/afodor_research/sangMay2016/fastaOut/biolockJ/scripts/summary
 RDP_THRESHOLD=50

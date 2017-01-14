@@ -13,11 +13,8 @@ NUMBER_CLUSTERS=100
 POLL_TIME = 10
 
 PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/topeSep15/splitFiles
-PATH_TO_OUTPUT_RDP_DIRECTORY=/nobackup/afodor_research/topeSep15/rdpOut
 PATH_TO_RDP_JAR=/users/afodor/rdp/rdp_classifier_2.10.1/dist/classifier.jar
-RDP_SCRIPT_DIR=/users/afodor/topeAdenomasScripts/runRDP
 
-RDP_SUMMARY_DIRECTORY=/nobackup/afodor_research/topeSep15/rdpSummary
 RDP_THRESHOLD=50
 
 # Run 8 RDP jobs (one after the other) on each core

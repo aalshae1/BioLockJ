@@ -13,8 +13,8 @@ import parsers.HitScores;
 import utils.ConfigReader;
 
 /**
- * Gathers the top hits in BLAST_OUTPUT_DIRECTORY.
- * There should be other files in BLAST_OUTPUT_DIRECTORY (sub-directories are ignored)
+ * Gathers the top hits in PATH_TO_OUTPUT_DIR.
+ * There should be other files in PATH_TO_OUTPUT_DIR (sub-directories are ignored)
  * and writes them all to BLAST_GATHERED_TOP_HITS_FILE
  * 
  * if GTF_GATHERED_TOP_HITS_FILE is defined, then a GTF file is written to that path

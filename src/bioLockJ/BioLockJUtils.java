@@ -273,7 +273,10 @@ public class BioLockJUtils
 		LOG.info(LOG_SPACER);
 	}
 	
-	
+	public static String removeLastChar(String val)
+	{
+		return val.substring(0, val.trim().length()-1);
+	}
 
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
 	private static void copyFile(File sourceFile, File destFile) throws Exception 

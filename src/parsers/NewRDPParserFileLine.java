@@ -31,6 +31,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.zip.GZIPInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import bioLockJ.BioLockJUtils;
 
 
 public class NewRDPParserFileLine
@@ -275,7 +276,7 @@ public class NewRDPParserFileLine
 			return ";";
 		
 		if(inString.charAt(inString.length()-1) == ';')
-			inString = inString.substring(0, inString.length() -1);
+			inString = BioLockJUtils.removeLastChar(inString);
 		
 		return inString;
 	}

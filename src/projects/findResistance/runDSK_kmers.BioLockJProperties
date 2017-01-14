@@ -17,8 +17,6 @@ NUMBER_CLUSTERS=100
 POLL_TIME = 10
 
 DSK_INPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/kpneu
-DSK_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/dskOut
-DSK_SCRIPT_DIR=/nobackup/afodor_research/bioLockJProjects/scripts
 DSK_BINARY_DIRECTORY=/nobackup/afodor_research/dsk/dsk-2.1.0-Linux/bin
 
 # will be passed to JVM as -Xms20g not currently implemented

@@ -13,8 +13,8 @@ import utils.ConfigReader;
 /**
  * Takes in a BLAST_QUERY_DIRECTORY that should only contain FASTA files (subdirectories are ignored)
  * Takes in a FASTA_FILE_TO_FORMAT_FOR_BLAST_DB (assuming formatted for example by FormatSingleBlastDatabase)
- * Writes multiple scripts to SCRIPTS_DIR_FOR_BLAST_QUERY
- * Writes results to BLAST_OUTPUT_DIRECTORY
+ * Writes multiple scripts to PATH_TO_SCRIPTS_DIR/SCRIPTS_DIR_FOR_BLAST_QUERY
+ * Writes results to PATH_TO_OUTPUT_DIR
  * 
  * will issue BLAST_PRELIMINARY_STRING if defined
  * requires BLAST_BIN_DIR to be defined
@@ -46,7 +46,7 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		String blastAllCommand = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_ALL_COMMAND);
 		File blastOutputDirectory = getOutputDir(cReader);
-		File scriptDir = getScriptDir(cReader);
+		File scriptDir = getScriptDir(cReader, "queryBlastDB");
 		
 		int index =1;
 		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());

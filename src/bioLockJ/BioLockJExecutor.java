@@ -30,16 +30,7 @@ public abstract class BioLockJExecutor
 	public List<File> getScriptFiles() { return null; } 
 	
 	
-	public File getRunAllFile() 
-	{ 
-//		if (runAllFile==null)
-//		{
-//			
-//		}
-		return null; 
-	} 
-	
-	//private File runAllFile;
+	public File getRunAllFile() { return null; } 
 	
 
 	public static String getTimeStamp(ConfigReader cReader)
@@ -72,6 +63,18 @@ public abstract class BioLockJExecutor
 		return BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_SCRIPT_DIR);
 	}
 	
+	public static File getScriptDir(ConfigReader cReader, String subDirName) throws Exception
+	{
+		String subDirPath = cReader.getAProperty(ConfigReader.PATH_TO_SCRIPT_DIR) + cReader.getAProperty(subDirName);
+		File subDir = new File(subDirPath);
+		if(!subDir.exists())
+		{
+			subDir.mkdir();
+		}
+		
+		return BioLockJUtils.requireExistingDirectory(cReader, subDirPath);
+	}
+	
 	/**
 	 * Create the RunAllFile.  If the script path value end with File.separator, trim it off.
 	 *  
@@ -83,7 +86,7 @@ public abstract class BioLockJExecutor
 	public static File createRunAllFile(ConfigReader cReader, String pathToScriptDir) throws Exception
 	{
 		if(pathToScriptDir!=null && pathToScriptDir.trim().endsWith(File.separator)){
-			pathToScriptDir = pathToScriptDir.substring(0, pathToScriptDir.trim().length()-1);
+			pathToScriptDir = BioLockJUtils.removeLastChar(pathToScriptDir);
 		}
 		
 		return new File(pathToScriptDir + File.separator + "runAll_" + 

@@ -24,10 +24,6 @@ FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/bioLockJProjects/resistantAnnotati
 SPLIT_FASTA_DIR=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/querySeqs
 BLAST_QUERY_DIRECTORY=$SPLIT_FASTA_DIR
 
-# script dirs must exist before the program is run
-SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/scripts/formatdb
-SCRIPTS_DIR_FOR_BLAST_QUERY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/scripts/queryBlast
-
 # our target database
 # mbgd_2016-01
 # 2016/05/19
@@ -35,7 +31,6 @@ SCRIPTS_DIR_FOR_BLAST_QUERY=/nobackup/afodor_research/bioLockJProjects/resistant
 FASTA_FILE_TO_FORMAT_FOR_BLAST_DB=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/mbgd/allProts.txt
 
 # the output directories and files for blasted results
-BLAST_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/blastOutDir
 BLAST_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/protRef11Blast.txt
 
 # in seconds - how long to wait before checking to see if queued jobs have finished

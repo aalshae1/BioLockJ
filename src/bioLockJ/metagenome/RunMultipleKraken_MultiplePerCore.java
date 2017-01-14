@@ -70,8 +70,6 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		int numJobsPerCore = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 		String clusterParams = BioLockJUtils.getStringOrNull(cReader, ConfigReader.CLUSTER_PARAMS);
 		
-		//File krakenScriptDir =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_KRAKEN_SCRIPT_DIR);
-		//File krakenOutDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_KRAKEN_OUTPUT_DIRECTORY);
 		String outputDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_OUTPUT_DIR);
 		String scriptDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_SCRIPT_DIR);
 		
@@ -89,9 +87,6 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		{
 			countNum++;
 			File fastaFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
-			
-			//File krakenOutFile = new File(krakenOutDir.getAbsolutePath() + File.separator + s  + "toKraken.txt");
-			//File krakenTranslateFile = new File(krakenOutDir.getAbsolutePath() + File.separator + s  + "toKrakenTranslate.txt");
 			
 			String krakenOutput = outputDir + s + "toKraken.txt";
 			String krakenTranslate = outputDir + s + "toKrakenTranslate.txt";

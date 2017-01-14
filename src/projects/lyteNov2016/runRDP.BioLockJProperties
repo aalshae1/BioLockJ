@@ -13,9 +13,6 @@ POLL_TIME = 10
 NUMBER_OF_JOBS_PER_CORE=4
 
 PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/lyte_Nov10_2016/forwardReadsDemultiplexed
-PATH_TO_OUTPUT_RDP_DIRECTORY=/nobackup/afodor_research/lyte_Nov10_2016/forwardRDP
 PATH_TO_RDP_JAR=/users/afodor/rdp/rdp_classifier_2.10.1/dist/classifier.jar
-RDP_SCRIPT_DIR=/nobackup/afodor_research/lyte_Nov10_2016/rdpScript
 
-RDP_SUMMARY_DIRECTORY=/nobackup/afodor_research/lyte_Nov10_2016/spreadsheets
 RDP_THRESHOLD=50

@@ -14,7 +14,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 {
 	/**
 	 * Takes in FASTA_FILE_TO_FORMAT_FOR_BLAST_DB
-	 * Writes a single script to SCRIPTS_DIR_FOR_BLAST_FORMAT
+	 * Writes a single script to SCRIPTS_DIR/SCRIPTS_DIR_FOR_BLAST_FORMAT
 	 * 
 	 * will issue BLAST_PRELIMINARY_STRING if defined
 	 * requires BLAST_BIN_DIR to be defined
@@ -31,7 +31,6 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
 		BioLockJUtils.requireExistingFile(
 						cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
-		
 		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		BioLockJUtils.requireDBType(cReader);
 	}
@@ -44,7 +43,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		File fastaFileToFormat= BioLockJUtils.requireExistingFile(
 						cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
 		
-		File scriptDir = getScriptDir(cReader);
+		File scriptDir = getScriptDir(cReader, "formatdb");
 		
 		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 		String dbType = BioLockJUtils.requireDBType(cReader);

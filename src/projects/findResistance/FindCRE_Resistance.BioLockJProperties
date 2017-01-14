@@ -29,15 +29,10 @@ FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/all_nucleotide_fasta.fasta
 SPLIT_FASTA_DIR=/nobackup/afodor_research/card/allFastaSplits
 BLAST_QUERY_DIRECTORY=$SPLIT_FASTA_DIR
 
-# script dirs must exist before the program is run
-SCRIPTS_DIR_FOR_BLAST_FORMAT=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/formatGenome11ForBlast
-SCRIPTS_DIR_FOR_BLAST_QUERY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/scripts/blastQueryCardsToGenome11
-
 # our target database
 FASTA_FILE_TO_FORMAT_FOR_BLAST_DB = /nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta
 
 # the output directories and files for blasted results
-BLAST_OUTPUT_DIRECTORY=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardsToRef11BlastOut
 BLAST_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardsToChs11.txt
 GTF_GATHERED_TOP_HITS_FILE=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/cardToChs11.gtf
 
