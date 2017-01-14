@@ -41,14 +41,6 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 	}
 	
-	private void closeARunFile(BufferedWriter aWriter , File runFile)
-		throws Exception
-	{
-		File touchFile = new File(runFile.getAbsolutePath() + FINISHED_SUFFIX );
-		if( touchFile.exists() ) touchFile.delete();
-		aWriter.write("touch " + touchFile.getAbsolutePath() + "\n");
-		aWriter.flush();  aWriter.close();
-	}
 	
 	@Override
 	public void executeProjectFile(ConfigReader cReader) throws Exception
@@ -61,10 +53,7 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 		String[] files = fastaInDir.list();
 	
 		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());
-		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
-		
-		
 		
 		int countNum=0;
 		int numToDo = numJobsPerCore;
@@ -77,10 +66,8 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 		{
 			countNum++;
 			File fastaFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
-			
 			File rdpOutFile = new File(rdpOutDir.getAbsolutePath() + File.separator + 
 					s  + "toRDP.txt");
-			
 			
 			aWriter.write("java -jar "  + rdpBinary.getAbsolutePath() + " " +  
 					"-o \"" + rdpOutFile.getAbsolutePath()  + "\" -q \"" + fastaFile + "\"\n" );
@@ -92,17 +79,15 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 			if( numToDo == 0 )
 			{
 				numToDo = numJobsPerCore;
-				closeARunFile(aWriter, runFile);
+				BioLockJUtils.closeRunFile(aWriter, runFile);
 				runFile = BioLockJUtils.makeNewRunFile(cReader, 
 						scriptDir.getAbsolutePath(), allWriter, countNum);
 				this.scriptFiles.add(runFile);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
 			}
-			
 		}
 
-		closeARunFile(aWriter, runFile);
+		BioLockJUtils.closeRunFile(aWriter, runFile);
 		allWriter.flush();  allWriter.close();
-
 	}
 }

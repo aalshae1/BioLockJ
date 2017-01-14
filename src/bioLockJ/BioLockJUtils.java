@@ -11,7 +11,7 @@ import utils.ProcessWrapper;
 public class BioLockJUtils
 {
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJUtils.class);
-
+	
 	public static void executeAndWaitForScriptsIfAny(ConfigReader cReader, 
 			BioLockJExecutor bje) throws Exception
 	{
@@ -291,6 +291,13 @@ public class BioLockJUtils
 		return runFile;
 	}
 	
+	public static void closeRunFile(BufferedWriter aWriter, File runFile) throws Exception
+	{
+		File touchFile = new File(runFile.getAbsolutePath() + BioLockJExecutor.FINISHED_SUFFIX );
+		if( touchFile.exists()) touchFile.delete();
+		aWriter.write("touch " + touchFile.getAbsolutePath() + "\n");
+		aWriter.flush();  aWriter.close();
+	}
 	
 	
 	

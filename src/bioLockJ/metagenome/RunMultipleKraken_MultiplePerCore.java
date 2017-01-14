@@ -42,24 +42,6 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 	}
 	
-	private File makeNewRunFile(ConfigReader cReader, String scriptDir, BufferedWriter allWriter, 
-			String clusterCommand, int countNum) throws Exception
-	{
-		File runFile = new File(scriptDir + "run_" + countNum + "_" + getTimeStamp(cReader) +  ".sh");
-		this.scriptFiles.add(runFile);
-		allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() + "\n"  );
-		allWriter.flush();
-		return runFile;
-	}
-	
-	private void closeARunFile(BufferedWriter aWriter , File runFile)
-		throws Exception
-	{
-		File touchFile = new File(runFile.getAbsolutePath() + FINISHED_SUFFIX );
-		if( touchFile.exists()) touchFile.delete();
-		aWriter.write("touch " + touchFile.getAbsolutePath() + "\n");
-		aWriter.flush();  aWriter.close();
-	}
 	
 	@Override
 	public void executeProjectFile(ConfigReader cReader) throws Exception
@@ -73,7 +55,6 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		String scriptDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_SCRIPT_DIR);
 		
 		String[] files = fastaInDir.list();
-		
 		this.runAllFile = createRunAllFile(cReader, scriptDir);
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
@@ -82,7 +63,6 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 
 		File runFile = BioLockJUtils.makeNewRunFile(cReader, scriptDir, allWriter, countNum);
 		this.scriptFiles.add(runFile);
-		
 		
 		BufferedWriter aWriter = new BufferedWriter(new FileWriter(runFile));
 		
@@ -104,14 +84,14 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			if( --numToDo == 0 )
 			{
 				numToDo = numJobsPerCore;
-				closeARunFile(aWriter, runFile);
+				BioLockJUtils.closeRunFile(aWriter, runFile);
 				runFile = BioLockJUtils.makeNewRunFile(cReader, scriptDir, allWriter, countNum);
 				this.scriptFiles.add(runFile);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
 			}
 		}
 
-		closeARunFile(aWriter, runFile);
+		BioLockJUtils.closeRunFile(aWriter, runFile);
 		allWriter.flush();  allWriter.close();
 	}
 }
