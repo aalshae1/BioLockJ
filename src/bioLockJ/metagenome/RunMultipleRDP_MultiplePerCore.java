@@ -35,53 +35,32 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 	public void checkDependencies(ConfigReader cReader) throws Exception
 	{	
 		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_PARAMS);
 		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_RDP_JAR);
 		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
-	}
-	
-	private File makeNewRunFile( File rdpScriptDir, BufferedWriter allWriter,
-					String clusterCommand, String clusterParams, int countNum) throws Exception
-	{
-		File runFile = new File(rdpScriptDir.getAbsoluteFile() + File.separator + "run_" + 
-				countNum + "_" + System.currentTimeMillis() +  ".sh");
-	
-		this.scriptFiles.add(runFile);
-		
-		allWriter.write(clusterCommand + " " +  runFile.getAbsolutePath() + 
-				" " + (clusterParams == null ?  "": clusterParams ) +   "\n"  );
-		allWriter.flush();
-	
-		return runFile;
 	}
 	
 	private void closeARunFile(BufferedWriter aWriter , File runFile)
 		throws Exception
 	{
 		File touchFile = new File(runFile.getAbsolutePath() + FINISHED_SUFFIX );
-		
-		if( touchFile.exists())
-			touchFile.delete();
-		
+		if( touchFile.exists() ) touchFile.delete();
 		aWriter.write("touch " + touchFile.getAbsolutePath() + "\n");
-		
 		aWriter.flush();  aWriter.close();
-		
 	}
 	
 	@Override
 	public void executeProjectFile(ConfigReader cReader) throws Exception
 	{
-		String clusterCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 	 	File fastaInDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
 		File rdpBinary =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_RDP_JAR);
 		int numJobsPerCore = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
-		String clusterParams = BioLockJUtils.getStringOrNull(cReader, ConfigReader.CLUSTER_PARAMS);
 		File rdpOutDir =  getOutputDir(cReader);
-		File rdpScriptDir =  getScriptDir(cReader);
+		File scriptDir =  getScriptDir(cReader);
 		String[] files = fastaInDir.list();
 	
-		this.runAllFile = createRunAllFile(cReader, rdpScriptDir.getAbsolutePath());
+		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
 		
@@ -89,7 +68,9 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 		
 		int countNum=0;
 		int numToDo = numJobsPerCore;
-		File runFile = makeNewRunFile(rdpScriptDir, allWriter, clusterCommand, clusterParams,countNum);
+		File runFile = BioLockJUtils.makeNewRunFile(cReader, 
+				scriptDir.getAbsolutePath(), allWriter, countNum);
+		this.scriptFiles.add(runFile);
 		BufferedWriter aWriter = new BufferedWriter(new FileWriter(runFile));
 		
 		for(String s : files)
@@ -102,7 +83,7 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 			
 			
 			aWriter.write("java -jar "  + rdpBinary.getAbsolutePath() + " " +  
-					"-o \"" + rdpOutFile.getAbsolutePath()  + "\" -q \"" + fastaFile+ "\"\n" );
+					"-o \"" + rdpOutFile.getAbsolutePath()  + "\" -q \"" + fastaFile + "\"\n" );
 			
 			aWriter.write("gzip \"" + rdpOutFile.getAbsolutePath() + "\" \n");
 			
@@ -112,7 +93,9 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 			{
 				numToDo = numJobsPerCore;
 				closeARunFile(aWriter, runFile);
-				runFile = makeNewRunFile(rdpScriptDir, allWriter, clusterCommand,clusterParams,countNum);
+				runFile = BioLockJUtils.makeNewRunFile(cReader, 
+						scriptDir.getAbsolutePath(), allWriter, countNum);
+				this.scriptFiles.add(runFile);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
 			}
 			

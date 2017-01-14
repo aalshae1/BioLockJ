@@ -14,7 +14,7 @@ import utils.ConfigReader;
 /*
  * Takes in FASTA_TO_SPLIT_PATH
  * Writes out to SPLIT_FASTA_DIR
- * Splits into NUMBER_CLUSTERS individual files
+ * Splits into NUMBER_OF_JOBS_PER_CORE individual files
  */
 public class BreakUpFastaSequence extends BioLockJExecutor
 {
@@ -60,7 +60,7 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 	{
 		BioLockJUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
 		BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
-		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_CLUSTERS);
+		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 	}
 	
 	@Override
@@ -70,7 +70,7 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 				BioLockJUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
 		File fileToParse = 
 				BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
-		int numChunks = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_CLUSTERS);
+		int numChunks = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 		
 		breakUpSequences(fileToParse, outputDir, numChunks);
 	}

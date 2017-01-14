@@ -19,7 +19,7 @@ public abstract class BioLockJExecutor
 	public static final String RUN_BIOLOCK_J = "#RUN_BIOLOCK_J";
 	
 
-	protected static Logger LOG = LoggerFactory.getLogger(BioLockJExecutor.class);
+	protected static final Logger log = LoggerFactory.getLogger(BioLockJExecutor.class);
 	
 	
 	
@@ -65,7 +65,8 @@ public abstract class BioLockJExecutor
 	
 	public static File getScriptDir(ConfigReader cReader, String subDirName) throws Exception
 	{
-		String subDirPath = cReader.getAProperty(ConfigReader.PATH_TO_SCRIPT_DIR) + cReader.getAProperty(subDirName);
+		String subDirPath = cReader.getAProperty(ConfigReader.PATH_TO_SCRIPT_DIR) + 
+				cReader.getAProperty(subDirName);
 		File subDir = new File(subDirPath);
 		if(!subDir.exists())
 		{
@@ -77,11 +78,6 @@ public abstract class BioLockJExecutor
 	
 	/**
 	 * Create the RunAllFile.  If the script path value end with File.separator, trim it off.
-	 *  
-	 * @param cReader
-	 * @param pathToScriptDir
-	 * @return
-	 * @throws Exception
 	 */
 	public static File createRunAllFile(ConfigReader cReader, String pathToScriptDir) throws Exception
 	{

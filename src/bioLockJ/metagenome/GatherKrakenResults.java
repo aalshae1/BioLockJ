@@ -61,7 +61,7 @@ public class GatherKrakenResults extends BioLockJExecutor
 
 	private static HashMap<String, Integer> getCounts( File inFile, int parseNum ) throws Exception
 	{
-		LOG.info("GatherKrakenResults.getCounts from file: " + inFile.getAbsolutePath());
+		log.info("GatherKrakenResults.getCounts from file: " + inFile.getAbsolutePath());
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		BufferedReader reader = new BufferedReader(new FileReader(inFile));
 		for(String s= reader.readLine(); s != null; s= reader.readLine())

@@ -52,7 +52,6 @@ public class GC_Content extends BioLockJExecutor
 		File outputFile =new File( BioLockJUtils.requireString(cReader, ConfigReader.GC_CONTENT_IGV_OUTPUT_FILE));
 		int windowSize =
 				BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_WINDOW_SIZE);
-		
 		int stepSize = 
 				BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_STEP_SIZE);
 		

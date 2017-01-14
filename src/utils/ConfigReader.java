@@ -42,7 +42,6 @@ public class ConfigReader
 
 	public static final String CLUSTER_NAME = "CLUSTER_NAME";
 	public static final String BLAST_PRELIMINARY_STRING = "BLAST_PRELIMINARY_STRING";
-	public static final String NUMBER_CLUSTERS = "NUMBER_CLUSTERS";
 	public static final String CLUSTER_BATCH_COMMAND = "CLUSTER_BATCH_COMMAND";
 	public static final String CLUSTER_PARAMS = "CLUSTER_PARAMS";
 	public static final String CHMOD_STRING = "CHMOD_STRING";

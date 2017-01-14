@@ -19,7 +19,7 @@ import utils.TabReader;
 
 public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 {
-	static Logger LOG = LoggerFactory.getLogger(AddMBGDGeneAnnotationsToGTF.class);
+	protected static final Logger log = LoggerFactory.getLogger(AddMBGDGeneAnnotationsToGTF.class);
 	
 	@Override
 	public void checkDependencies(ConfigReader cReader) throws Exception
@@ -51,7 +51,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			lineNumber++;
 			
 			if(lineNumber % 1000 == 0)
-				LOG.info("Reading annotations " + lineNumber);
+				log.info("Reading annotations " + lineNumber);
 		}
 		
 		reader.close();
@@ -61,7 +61,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 	private static HashMap<String, HashSet<Integer>>  getFileLineMap( File extendedFile,
 			HashSet<String> included) throws Exception
 	{
-		LOG.info("Reading annotations...");
+		log.info("Reading annotations...");
 		HashMap<String, HashSet<Integer>> map = new HashMap<String, HashSet<Integer>>();
 		
 		BufferedReader reader = new BufferedReader(new FileReader( 
@@ -111,7 +111,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			lineNumber++;
 			
 			if( lineNumber % 100 == 0 )
-				LOG.info(lineNumber + " " + map.size());
+				log.info(lineNumber + " " + map.size());
 				
 		}
 		
@@ -139,11 +139,11 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			
 			String key = sToken.nextToken().replaceAll("\"", "").replace("gene_id ", "");
 			
-			//LOG.info("Searching " + key);
+			//log.info("Searching " + key);
 			
 			String protKey = geneIdToProtMap.get(key);
 			
-			//LOG.info("found " + protKey);
+			//log.info("found " + protKey);
 			
 			StringBuffer description = new StringBuffer();
 			
@@ -185,7 +185,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			if( map.containsKey(splits[0]))
 				throw new Exception("duplicate " + splits[0]);
 			
-			//LOG.info("Adding " + splits[0] + " " + splits[1]);
+			//log.info("Adding " + splits[0] + " " + splits[1]);
 			map.put(splits[0], splits[1]);
 		}
 		

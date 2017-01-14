@@ -39,7 +39,7 @@ import utils.TabReader;
  */
 public class HitScores implements Comparable<HitScores>
 {
-	protected static Logger LOG = LoggerFactory.getLogger(HitScores.class);
+	protected static final Logger log = LoggerFactory.getLogger(HitScores.class);
 	
 	//# Fields: Query id, Subject id, % identity, alignment length, mismatches, gap op
 	//enings, q. start, q. end, s. start, s. end, e-value, bit score
@@ -204,7 +204,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 							int minQueryAlignmentLength) 
 			throws Exception
 	{
-		LOG.info("PARSING: " + file.getAbsolutePath());
+		log.info("PARSING: " + file.getAbsolutePath());
 		BufferedReader reader = 
 			gzipped ?
 				new BufferedReader(new InputStreamReader( 
@@ -301,7 +301,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 			nextLine= reader.readLine();
 			
 			//if( index % 100000==0)
-				//LOG.info(index + " " + map.size());
+				//log.info(index + " " + map.size());
 			
 			//index++;
 		}
@@ -336,7 +336,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 			nextLine= reader.readLine();
 			
 			//if( index % 100000==0)
-				//LOG.info(index + " " + map.size());
+				//log.info(index + " " + map.size());
 			
 			//index++;
 		}
@@ -432,7 +432,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 						
 						queryIds.add(id);
 						
-						//LOG.info(hs.getQueryId() + " " +  id);
+						//log.info(hs.getQueryId() + " " +  id);
 					}
 			}
 			
@@ -450,7 +450,7 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 	@SuppressWarnings("unused")
 	public static List<HitScores> getAsList(  File file, boolean gzipped) throws Exception
 	{
-		LOG.info("PARSING: " + file.getAbsolutePath());
+		log.info("PARSING: " + file.getAbsolutePath());
 		BufferedReader reader = 
 			gzipped ?
 				new BufferedReader(new InputStreamReader( 

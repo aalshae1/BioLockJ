@@ -11,13 +11,13 @@ import utils.ConfigReader;
  */
 public class BioLockJ
 {
-	static Logger LOG = LoggerFactory.getLogger(BioLockJ.class);
+	protected static final Logger log = LoggerFactory.getLogger(BioLockJ.class);
 	
 	public static void main(String[] args) throws Exception
 	{
 		if( args.length != 1)
 		{
-			LOG.info("Usage " + BioLockJ.class.getName() + " pathToPropertiesFile.txt");
+			log.info("Usage " + BioLockJ.class.getName() + " pathToPropertiesFile.txt");
 			System.exit(1);
 		}
 		
@@ -30,7 +30,6 @@ public class BioLockJ
 		
 		String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
 				
-		
 		BioLockJUtils.logConfigFileSettings(cReader);
 		BioLockJUtils.copyPropertiesFile(propFile, projectDir);
 
@@ -51,13 +50,11 @@ public class BioLockJ
 			}
 			
 			BioLockJUtils.noteEndToLogWriter(e);
-//			BioLockJUtils.appendSuccessToPropertyFile(propFile, e.getClass().getName(), 
-//					BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_PROJECT_DIR));
 		}
 		
-		LOG.info(BioLockJUtils.LOG_SPACER);
-		LOG.info("PROGRAM COMPLETE");
-		LOG.info(BioLockJUtils.LOG_SPACER);
+		log.info(BioLockJUtils.LOG_SPACER);
+		log.info("PROGRAM COMPLETE");
+		log.info(BioLockJUtils.LOG_SPACER);
 	}
 	
 	private static List<BioLockJExecutor> getListToRun( File propFile ) throws Exception

@@ -36,7 +36,7 @@ import bioLockJ.BioLockJUtils;
 
 public class NewRDPParserFileLine
 {
-	protected static Logger LOG = LoggerFactory.getLogger(NewRDPParserFileLine.class);
+	protected static final Logger log = LoggerFactory.getLogger(NewRDPParserFileLine.class);
 	
 	private String sequenceId;
 	private Map<String, NewRDPNode> taxaMap;
@@ -176,7 +176,7 @@ public class NewRDPParserFileLine
 	
 	private NewRDPParserFileLine(String fileLine) throws Exception
 	{
-		//LOG.info(fileLine);
+		//log.info(fileLine);
 		HashMap<String, NewRDPNode> tempMap = new LinkedHashMap<String, NewRDPNode>();
 		StringTokenizer sToken = new StringTokenizer(fileLine, "\t");
 		
@@ -191,7 +191,7 @@ public class NewRDPParserFileLine
 			
 			String rank = sToken.nextToken();
 			String scoreString = sToken.nextToken();
-			//LOG.info(name + " " + rank + " " + scoreString);
+			//log.info(name + " " + rank + " " + scoreString);
 			NewRDPNode rdpNode = new NewRDPNode(name, scoreString);
 			tempMap.put( rank, rdpNode );
 		}
@@ -324,14 +324,14 @@ public class NewRDPParserFileLine
 		
 		while( nextLine != null)
 		{
-			//LOG.info(nextLine);
+			//log.info(nextLine);
 			list.add(new NewRDPParserFileLine(nextLine));
 			nextLine= reader.readLine();
 		}
 		
 		reader.close();
 		long endTime = System.currentTimeMillis();
-		LOG.info( "Parse time = " + (endTime - startTime)/1000f + " seconds " );
+		log.info( "Parse time = " + (endTime - startTime)/1000f + " seconds " );
 		
 		return list;
 	}
@@ -339,10 +339,10 @@ public class NewRDPParserFileLine
 	public static List<NewRDPParserFileLine> getRdpList(File rdpFile, int numCPUs) 
 		throws Exception
 	{
-		LOG.info("Parsing with " + numCPUs + " cpus ");
-		LOG.info("Workers started at " + (System.currentTimeMillis() - startTime)/1000f);
+		log.info("Parsing with " + numCPUs + " cpus ");
+		log.info("Workers started at " + (System.currentTimeMillis() - startTime)/1000f);
 		List<SubFileParser> workers = getCompletedWorkers(rdpFile, numCPUs);
-		LOG.info("Workers finished at " + (System.currentTimeMillis() - startTime)/1000f);
+		log.info("Workers finished at " + (System.currentTimeMillis() - startTime)/1000f);
 		
 		//single threaded
 		List<NewRDPParserFileLine> returnList = new ArrayList<NewRDPParserFileLine>();
@@ -356,7 +356,7 @@ public class NewRDPParserFileLine
 		}
 		
 		long endTime = System.currentTimeMillis();
-		LOG.info( "Parse time = " + (endTime - startTime)/1000f + " seconds " );
+		log.info( "Parse time = " + (endTime - startTime)/1000f + " seconds " );
 		
 		return Collections.unmodifiableList(returnList);
 		
@@ -492,7 +492,7 @@ public class NewRDPParserFileLine
 			finally
 			{
 				long endTime= System.currentTimeMillis();
-				LOG.info("Thread finished " + (endTime - startTime)/1000f);
+				log.info("Thread finished " + (endTime - startTime)/1000f);
 			}	
 		}
 	}

@@ -41,7 +41,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 
-		LOG.info("Writing results " + outFile.getAbsolutePath());
+		log.info("Writing results: " + outFile.getAbsolutePath());
 		writer.write("Chromosome\tStart\tEnd\tFeature\tratioConsereved\n");
 		
 		for(FastaSequence fs : list)
@@ -102,7 +102,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 			map.put(Long.parseLong(splits[0]), numOnes/bitMap.length());
 			
 			if( map.size() %1000000 == 0)
-				LOG.info(new Integer(map.size()).toString());
+				log.info(new Integer(map.size()).toString());
 		}
 		
 		return map;

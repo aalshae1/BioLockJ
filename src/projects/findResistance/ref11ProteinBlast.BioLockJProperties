@@ -13,7 +13,7 @@ CHMOD_STRING = chmod 744
 
 # these are set for our UNCC cluster
 CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
-NUMBER_CLUSTERS=100
+NUMBER_OF_JOBS_PER_CORE=100
 
 # the query file to split into NUMBER_CLUSTER query files
 # this comes from MetagenomicTools creOrthologs.QuickTranslate

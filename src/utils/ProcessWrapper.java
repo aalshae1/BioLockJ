@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public class ProcessWrapper
 {
-	protected static Logger LOG = LoggerFactory.getLogger(ProcessWrapper.class);
+	protected static final Logger log = LoggerFactory.getLogger(ProcessWrapper.class);
 	
 	public ProcessWrapper( String[] cmdArgs ) throws Exception
 	{
@@ -15,7 +15,7 @@ public class ProcessWrapper
 		for ( int x=0; x < cmdArgs.length; x++ )
 				sb.append(cmdArgs[x] + " " );
 				
-		LOG.info(sb.toString());	
+		log.info(sb.toString());	
 
 		Runtime r = Runtime.getRuntime();
 		Process p = r.exec(cmdArgs);
@@ -26,7 +26,7 @@ public class ProcessWrapper
 		
 		while ((s = br.readLine ())!= null)
 		{
-    		LOG.info (s);
+    		log.info (s);
 		}
 				
 		p.waitFor();

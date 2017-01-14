@@ -39,7 +39,7 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		
 		for(String s : names)
 		{
-			LOG.info(index + " of " + names.length + " "+  
+			log.info(index + " of " + names.length + " "+  
 					"Starting " + s + " at " + (System.currentTimeMillis() - startTime)/1000f 
 								+ " with " + Runtime.getRuntime().freeMemory() + " free \n");
 			

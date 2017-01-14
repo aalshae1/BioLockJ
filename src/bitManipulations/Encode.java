@@ -4,7 +4,7 @@ import org.slf4j.*;
 
 public class Encode
 {
-	protected static Logger LOG = LoggerFactory.getLogger(Encode.class);
+	protected static final Logger log = LoggerFactory.getLogger(Encode.class);
 	
 	private static final Long A_INT = new Long(0x0000l);
 	private static final Long C_INT = new Long(0x0001l);
@@ -79,15 +79,15 @@ public class Encode
 	
 		String s = "CTAGCTACTATGCGACTACCCTACTATGCAAA";
 		long aLong = makeLong(s);
-		LOG.info( Long.toBinaryString(aLong));
+		log.info( Long.toBinaryString(aLong));
 		
 		String kmer = getKmer(aLong, s.length());
-		LOG.info(kmer);
+		log.info(kmer);
 		
 		if( ! kmer.equals(s) )
 			throw new Exception("FAIL!!!!");
 		
-		LOG.info("pass");
+		log.info("pass");
 	
 	}
 }

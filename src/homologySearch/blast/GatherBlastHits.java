@@ -97,7 +97,7 @@ public class GatherBlastHits extends BioLockJExecutor
 		}
 		else
 		{
-			LOG.info(ConfigReader.GTF_GATHERED_TOP_HITS_FILE + " not defined so skipping GTF\n");
+			log.info(ConfigReader.GTF_GATHERED_TOP_HITS_FILE + " not defined so skipping GTF\n");
 		}
 	}
 	

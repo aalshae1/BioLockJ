@@ -52,7 +52,7 @@ public class RunMultipleRDP extends BioLockJExecutor
 		File rdpOutDir =  getOutputDir(cReader);
 		File rdpScriptDir =  getScriptDir(cReader);
 		
-		LOG.debug("Cluster parms = " + clusterParams);
+		log.debug("Cluster parms = " + clusterParams);
 		
 		String[] files = fastaInDir.list();
 	

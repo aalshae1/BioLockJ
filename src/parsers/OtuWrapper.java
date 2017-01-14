@@ -37,7 +37,7 @@ import utils.TabReader;
 
 public class OtuWrapper
 {
-	protected static Logger LOG = LoggerFactory.getLogger(OtuWrapper.class);
+	protected static final Logger log = LoggerFactory.getLogger(OtuWrapper.class);
 	
 	/*
 	 * All of these lists will be made unmodifiable (and hence thread safe) in
@@ -255,7 +255,7 @@ public class OtuWrapper
 			}
 		}
 		
-		//LOG.info("Including " + toInclude);
+		//log.info("Including " + toInclude);
 		
 		if(toInclude.contains("other"))
 			throw new Exception("Other already defined");
@@ -906,7 +906,7 @@ public class OtuWrapper
 		for( int x=0; x< getOtuNames().size(); x++)
 			sum = sum.multiply( new BigDecimal(getDataPointsUnnormalized().get(sampleIndex).get(x) + 1.0));
 		
-		LOG.info(sum.toString());
+		log.info(sum.toString());
 		
 		return sum.
 		
@@ -2033,7 +2033,7 @@ public class OtuWrapper
 			} else
 			{
 				skipColumns.add(x);
-				LOG.info("Wrapper excluding taxa " + taxaName);
+				log.info("Wrapper excluding taxa " + taxaName);
 			}
 
 			x++;
@@ -2084,7 +2084,7 @@ public class OtuWrapper
 				}
 			} else
 			{
-				LOG.info("Wrapper excluding " + sampleName);
+				log.info("Wrapper excluding " + sampleName);
 			}
 
 			if (x != skipColumns.size() + otuNames.size())
@@ -2093,7 +2093,7 @@ public class OtuWrapper
 			nextLine = reader.readLine();
 		}
 
-		// LOG.info( sampleNames.size() + " " + otuNames.size());
+		// log.info( sampleNames.size() + " " + otuNames.size());
 		assertNum(totalCounts, dataPointsUnnormalized);
 		removeThreshold(otuNames, dataPointsUnnormalized, threshold);
 
@@ -2144,7 +2144,7 @@ public class OtuWrapper
 			if( dataPointsUnnormalized.get(x).get(taxaIndex) < 0.001  )
 				f = f +1;
 		
-		//LOG.info( getOtuNames().get(taxaIndex) + " " + f + " " + getSampleNames().size() );
+		//log.info( getOtuNames().get(taxaIndex) + " " + f + " " + getSampleNames().size() );
 		return f / getSampleNames().size();
 	}
 

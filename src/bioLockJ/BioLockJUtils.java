@@ -2,9 +2,7 @@ package bioLockJ;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.StringTokenizer;
 import org.slf4j.*;
 
 import utils.ConfigReader;
@@ -12,11 +10,10 @@ import utils.ProcessWrapper;
 
 public class BioLockJUtils
 {
-	static Logger LOG = LoggerFactory.getLogger(BioLockJUtils.class);
+	protected static final Logger log = LoggerFactory.getLogger(BioLockJUtils.class);
 
-
-		
-	public static void executeAndWaitForScriptsIfAny(ConfigReader cReader, BioLockJExecutor bje) throws Exception
+	public static void executeAndWaitForScriptsIfAny(ConfigReader cReader, 
+			BioLockJExecutor bje) throws Exception
 	{
 		bje.executeProjectFile(cReader);
 		
@@ -30,7 +27,7 @@ public class BioLockJUtils
 			}
 			catch(Exception ex)
 			{
-				LOG.warn("Could not set " + ConfigReader.POLL_TIME + " setting poll time to " + 
+				log.warn("Could not set " + ConfigReader.POLL_TIME + " setting poll time to " + 
 								pollTime +  " seconds ", ex);		
 			}
 			
@@ -42,12 +39,12 @@ public class BioLockJUtils
 	
 	public static void noteStartToLogWriter( BioLockJExecutor invoker )
 	{
-		LOG.info("starting " + invoker.getClass().getName() + "\n");
+		log.info("starting " + invoker.getClass().getName() + "\n");
 	}
 		
 	public static void noteEndToLogWriter( BioLockJExecutor invoker )
 	{
-		LOG.info("Finished " + invoker.getClass().getName() + "\n");
+		log.info("Finished " + invoker.getClass().getName() + "\n");
 	}
 	
 	public static String requireDBType(ConfigReader cReader) throws Exception
@@ -83,7 +80,7 @@ public class BioLockJUtils
 	public static void logAndRethrow(Exception ex)
 		throws Exception
 	{
-		LOG.error(ex.toString());
+		log.error(ex.toString());
 		throw ex;
 	}
 	
@@ -137,11 +134,11 @@ public class BioLockJUtils
 			}
 			else
 			{
-				LOG.info(f.getAbsolutePath() + " not succesfully finished ");
+				log.info(f.getAbsolutePath() + " not succesfully finished ");
 			}
 		}
 		
-		LOG.info("\n Finished " + numSuccess + " of " + scriptFiles.size() + "\n");
+		log.info("\n Finished " + numSuccess + " of " + scriptFiles.size() + "\n");
 		
 		return numSuccess == scriptFiles.size();
 	}
@@ -264,14 +261,38 @@ public class BioLockJUtils
 	{    
 		HashMap<String, String> map = reader.getProperties();
 		Iterator<String> it = map.keySet().iterator();
-		LOG.info(LOG_SPACER);
-		LOG.info("Property Config Settings");
+		log.info(LOG_SPACER);
+		log.info("Property Config Settings");
 		while(it.hasNext()){
 			String key = it.next();
-			LOG.info(key + " = " + map.get(key));
+			log.info(key + " = " + map.get(key));
 		}
-		LOG.info(LOG_SPACER);
+		log.info(LOG_SPACER);
 	}
+	
+	
+	public static File makeNewRunFile(ConfigReader cReader, String scriptDir, 
+			BufferedWriter allWriter, int countNum) throws Exception
+	{
+		if(scriptDir.endsWith(File.separator))
+		{
+			scriptDir = removeLastChar(scriptDir);
+		}
+		
+		File runFile = new File(scriptDir + File.separator + "run_" + countNum + ".sh");
+		
+		String clusterParams = getStringOrNull(cReader, ConfigReader.CLUSTER_PARAMS);
+		String clusterCommand = getStringOrNull(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+
+		allWriter.write((clusterCommand == null ?  "": clusterCommand + " " ) + runFile.getAbsolutePath() + 
+				" " + (clusterParams == null ?  "": clusterParams ) +   "\n"  );
+		
+		allWriter.flush();
+		return runFile;
+	}
+	
+	
+	
 	
 	public static String removeLastChar(String val)
 	{

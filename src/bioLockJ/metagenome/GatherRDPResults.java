@@ -51,7 +51,7 @@ public class GatherRDPResults extends BioLockJExecutor
 		int fileCount = 0;
 		for(String s : rdpOutDir.list())
 		{
-			LOG.info("RDP OUTPUT FILE # (" + new Integer(fileCount++ +1) + "):  " + s );
+			log.info("RDP OUTPUT FILE # (" + new Integer(fileCount++ +1) + "):  " + s );
 			List<NewRDPParserFileLine> list = NewRDPParserFileLine.getRdpListSingleThread(
 					rdpOutDir.getAbsoluteFile() + File.separator + s	);
 				
@@ -212,7 +212,7 @@ public class GatherRDPResults extends BioLockJExecutor
 			nextLine = reader.readLine();
 			
 			if( ++numDone % 1000000 == 0 )
-				LOG.info("RDP numDone# " + numDone );
+				log.info("RDP numDone# " + numDone );
 		}
 		
 		return map;

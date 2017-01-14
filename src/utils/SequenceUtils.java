@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 public class SequenceUtils
 {
-	protected static Logger LOG = LoggerFactory.getLogger(SequenceUtils.class);
+	protected static final Logger log = LoggerFactory.getLogger(SequenceUtils.class);
 	
 		private static float[] maxSurfaceAreas = { 
 		188.789f,
@@ -242,7 +242,7 @@ public class SequenceUtils
 	{
 		for ( int x=0; x< MapResiduesToIndex.NUM_VALID_RESIDUES; x++ ) 
 		{
-			LOG.info( MapResiduesToIndex.getChar(x) + " " + getMaxSurfaceArea(x) );
+			log.info( MapResiduesToIndex.getChar(x) + " " + getMaxSurfaceArea(x) );
 		}
 	}
 	
