@@ -38,6 +38,7 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		String[] files = fastaInDir.list();
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
+		allWriter.write(krakenBinary.getAbsolutePath() + " --version");
 		int countNum = 0;
 		int numToDo = numJobsPerCore;
 
@@ -69,6 +70,6 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		}
 
 		BioLockJUtils.closeRunFile(aWriter, runFile);
-		allWriter.flush();  allWriter.close();
+		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
 	}
 }

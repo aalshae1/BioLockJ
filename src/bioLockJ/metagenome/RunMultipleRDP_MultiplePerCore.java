@@ -63,6 +63,6 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 		}
 
 		BioLockJUtils.closeRunFile(aWriter, runFile);
-		allWriter.flush();  allWriter.close();
+		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
 	}
 }

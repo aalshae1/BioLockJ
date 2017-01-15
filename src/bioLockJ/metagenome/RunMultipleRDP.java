@@ -52,6 +52,6 @@ public class RunMultipleRDP extends BioLockJExecutor
 			BioLockJUtils.closeRunFile(writer, runFile);
 		}
 		
-		allWriter.flush();  allWriter.close();
+		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
 	}
 }

@@ -52,7 +52,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 								" -in " + fastaFileToFormat.getAbsolutePath() + "\n");
 				
 		BioLockJUtils.closeRunFile(writer, script);
-		allWriter.flush(); allWriter.close();
+		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
 	}
 
 }

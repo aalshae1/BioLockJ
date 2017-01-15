@@ -3,8 +3,6 @@ package homologySearch.blast;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import bioLockJ.BioLockJUtils;
 import bioLockJ.BioLockJExecutor;
@@ -65,7 +63,7 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 			}
 		}
 		
-		allWriter.flush();  allWriter.close();
+		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
 	}
 	
 }

@@ -33,7 +33,8 @@ public class RunDSKOnDirectory extends BioLockJExecutor
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
 		
-		String[] filesToRun= dskInputDirectory.list();
+		
+		String[] filesToRun = dskInputDirectory.list();
 		
 		for( String s : filesToRun)
 		{
@@ -44,22 +45,20 @@ public class RunDSKOnDirectory extends BioLockJExecutor
 				File script = makeNewRunFile(allWriter, index++);
 				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				
-				File outFile = new File( getOutputDir().getAbsolutePath() + File.separator + fastaFile.getName() + "_dsk");
+				File outFile = new File(getOutputDir().getAbsolutePath() + File.separator + 
+						fastaFile.getName() + "_dsk");
 				
-				writer.write(dskBinaryPath + "/dsk -file " + 
-						fastaFile.getAbsolutePath() + " -out " + 
-							outFile.getAbsolutePath() +  
-							" -abundance-min 1\n");
+				writer.write(dskBinaryPath + "/dsk -file " + fastaFile.getAbsolutePath() + " -out " + 
+						outFile.getAbsolutePath() + " -abundance-min 1\n");
 				
-				writer.write(dskBinaryPath + "/dsk2ascii  -file " + 
-						outFile.getAbsolutePath() + " -out " + 
-							outFile.getAbsolutePath() + ".txt\n" );
+				writer.write(dskBinaryPath + "/dsk2ascii  -file " + outFile.getAbsolutePath() + 
+						" -out " + outFile.getAbsolutePath() + ".txt\n" );
 				
 				BioLockJUtils.closeRunFile(writer, script);
 			}
 		}
 		
-		allWriter.flush();  allWriter.close();
+		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
 	}
 	
 	
