@@ -101,9 +101,9 @@ public class ConfigReader
 	
 	public static final String PATH_TO_BLJ_ROOT = "PATH_TO_BLJ_ROOT"; 
 	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR"; 
-	public static final String PATH_TO_SCRIPT_DIR = "PATH_TO_SCRIPT_DIR"; 
-	public static final String PATH_TO_SUMMARY_DIR = "PATH_TO_SUMMARY_DIR"; 
-	public static final String PATH_TO_OUTPUT_DIR = "PATH_TO_OUTPUT_DIR"; 
+//	public static final String PATH_TO_SCRIPT_DIR = "PATH_TO_SCRIPT_DIR"; 
+//	public static final String PATH_TO_SUMMARY_DIR = "PATH_TO_SUMMARY_DIR"; 
+//	public static final String PATH_TO_OUTPUT_DIR = "PATH_TO_OUTPUT_DIR"; 
 	
 	
 	
@@ -131,87 +131,56 @@ public class ConfigReader
 	}
 	
 	
-	public ConfigReader(File propertiesFile) throws Exception
+	private static Properties getPropsFromFile(File propertiesFile) throws Exception
 	{
-		this.propertiesFile = propertiesFile;
 		InputStream in = new FileInputStream(propertiesFile);
-		props = new Properties();
-		props.load(in);
+		Properties tempProps = new Properties();
+		tempProps.load(in);
 		in.close();
-				
+		return tempProps;
+	}
+	
+	
+	public ConfigReader(File file) throws Exception
+	{
+		propertiesFile = file;
+		props = getPropsFromFile(propertiesFile);
+	
 		String bljRoot = getBLJRoot();
 		String projectDir = createProjectDir(bljRoot);
 		
 		props.setProperty(RUN_TIMESTAMP, runTimeStamp);
 		props.setProperty(PATH_TO_BLJ_ROOT, bljRoot);
 		props.setProperty(PATH_TO_PROJECT_DIR, projectDir);
-		props.setProperty(PATH_TO_OUTPUT_DIR, createSubDir(projectDir, PATH_TO_OUTPUT_DIR, "output"));
-		props.setProperty(PATH_TO_SCRIPT_DIR, createSubDir(projectDir, PATH_TO_SCRIPT_DIR, "scripts"));
-		props.setProperty(PATH_TO_SUMMARY_DIR, createSubDir(projectDir, PATH_TO_SUMMARY_DIR, "summary"));
 		props.setProperty(LOG_FILE, getLogName(projectDir));
-		
-		
-		verifyProjectDirs();
 	}
 	
 	
-	public HashMap<String, String> getProperties()
+	public HashMap<String, String> getProperties() throws Exception
 	{
+		Properties tempProps = getPropsFromFile(propertiesFile);
 		HashMap<String, String> map = new HashMap<String, String>();
-		Iterator<String> it = props.stringPropertyNames().iterator();
+		Iterator<String> it = tempProps.stringPropertyNames().iterator();
 		while(it.hasNext()){
 			String key = it.next();
-			map.put(key, props.getProperty(key));
+			map.put(key, tempProps.getProperty(key));
 		}
 		return map;
 	}
 	
-	private void verifyProjectDirs() throws Exception
-	{
-		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_BLJ_ROOT);
-		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_PROJECT_DIR);
-		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_OUTPUT_DIR);
-		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_SUMMARY_DIR);
-		BioLockJUtils.requireExistingDirectory(this, ConfigReader.PATH_TO_SCRIPT_DIR);
-	}
-	
+
 	private String getLogName(String projectDir) throws Exception
 	{
 		return projectDir +  BioLockJUtils.requireString(this, PROJECT_NAME) + ".log";
 	}
 	
-	private String createSubDir(String parentDir, String propName, String subDirPath)
-	{ 
-		String subDir = getAProperty(propName);
-		if(subDir==null)
-		{
-			subDir = parentDir + subDirPath;
-		}
-		
-		File dir = new File(subDir);
-		if(!dir.exists())
-		{
-			dir.mkdir();
-		}
-		
-		return dir.getAbsolutePath() + File.separator;
-	} 
+	
 	
 	private String createProjectDir(String bljRoot) throws Exception
 	{
-		
-		String projectName = BioLockJUtils.requireString(this, PROJECT_NAME);
-		String pathToProj = getAProperty(ConfigReader.PATH_TO_PROJECT_DIR);
-		if(pathToProj==null)
-		{
-			pathToProj = bljRoot + "projects"; 
-		}
-		else if (pathToProj.trim().endsWith(File.separator))
-		{
-			pathToProj = BioLockJUtils.removeLastChar(pathToProj);
-		}
 
-		pathToProj = pathToProj + File.separator + projectName;
+		String projectName = BioLockJUtils.requireString(this, PROJECT_NAME);
+		String pathToProj = bljRoot + "projects" + File.separator + projectName;
 		
 		File projectDir = null;
 		while(projectDir == null || projectDir.exists())
@@ -221,7 +190,11 @@ public class ConfigReader
 			if(projectDir.exists()) Thread.sleep(1000);
 		}
 		
-		projectDir.mkdirs();
+		if(!projectDir.mkdir())
+		{
+			throw new Exception("ERROR: Unable to create: " + projectDir.getAbsolutePath());
+		}
+
 		return projectDir.getAbsolutePath() + File.separator;
 	}
 	

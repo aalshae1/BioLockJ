@@ -3,8 +3,6 @@ package bioLockJ.metagenome;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
@@ -16,77 +14,56 @@ import utils.ConfigReader;
  */
 public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 {
-	private File runAllFile= null;
-	private List<File> scriptFiles = new ArrayList<File>();
+	
 	
 	@Override
-	public File getRunAllFile()
-	{
-		return runAllFile;
-	}
-	
-	@Override
-	public List<File> getScriptFiles()
-	{
-		return scriptFiles;
-	}
-	
-	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{	
-		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
-		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_PARAMS);
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_KRAKEN_BINARY);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_KRAKEN_DATABASE);
-		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
+		BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_BINARY);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_DATABASE);
+		BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 	}
 	
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-	 	File fastaInDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
-		File krakenBinary =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_KRAKEN_BINARY);
-		File krakenDatabase = BioLockJUtils.requireExistingFile(cReader, ConfigReader.PATH_TO_KRAKEN_DATABASE);
-		int numJobsPerCore = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
-		
-		String outputDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_OUTPUT_DIR);
-		String scriptDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_SCRIPT_DIR);
-		
+	 	File fastaInDir =  BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
+		File krakenBinary =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_BINARY);
+		File krakenDatabase = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_DATABASE);
+		int numJobsPerCore = BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
+
+
 		String[] files = fastaInDir.list();
-		this.runAllFile = createRunAllFile(cReader, scriptDir);
 		
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(runAllFile));
-		int countNum=0;
+		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
+		int countNum = 0;
 		int numToDo = numJobsPerCore;
 
-		File runFile = BioLockJUtils.makeNewRunFile(cReader, scriptDir, allWriter, countNum);
-		this.scriptFiles.add(runFile);
+		File runFile = makeNewRunFile(allWriter, countNum++);
 		
 		BufferedWriter aWriter = new BufferedWriter(new FileWriter(runFile));
 		
 		for(String s : files)
 		{
-			countNum++;
 			File fastaFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
 			
-			String krakenOutput = outputDir + s + "toKraken.txt";
-			String krakenTranslate = outputDir + s + "toKrakenTranslate.txt";
+			String krakenOutput = getOutputDir().getAbsolutePath() + File.separator + s + "toKraken.txt";
+			String krakenTranslate = getOutputDir().getAbsolutePath() + File.separator + s + "toKrakenTranslate.txt";
 			
 			aWriter.write(krakenBinary.getAbsolutePath() + " --db " +  krakenDatabase.getAbsolutePath()  + 
 					" --output " + krakenOutput + " " +  fastaFile + "\n" );
 			aWriter.write("if [ $? –eq 0 ]; then \n" );
 			aWriter.write("    " + krakenBinary.getAbsolutePath() + "-translate " + " --db " +  
 					krakenDatabase.getAbsolutePath()  + " " + krakenOutput + " > " + krakenTranslate + "\n" );
-			aWriter.write("else touch " + outputDir + s + FAILED_TO_PROCESS + " fi \n" );
+			aWriter.write("else touch " + getOutputDir().getAbsolutePath() + File.separator + s + FAILED_TO_PROCESS + " fi \n" );
 					
 			if( --numToDo == 0 )
 			{
 				numToDo = numJobsPerCore;
 				BioLockJUtils.closeRunFile(aWriter, runFile);
-				runFile = BioLockJUtils.makeNewRunFile(cReader, scriptDir, allWriter, countNum);
-				this.scriptFiles.add(runFile);
+				runFile = makeNewRunFile(allWriter, countNum++);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
 			}
 		}

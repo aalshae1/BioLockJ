@@ -75,24 +75,24 @@ public class GatherBlastHits extends BioLockJExecutor
 	}
 	
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
-		BioLockJUtils.requireBoolean(cReader, ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
+		BioLockJUtils.requireBoolean(getConfig(), ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
 	}
 	
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		File blastOutputDir = getOutputDir(cReader);
-		File topHitsFile = new File( BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
-		boolean useQueryCoordiantes = BioLockJUtils.requireBoolean(cReader, ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
+
+		File topHitsFile = new File( BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
+		boolean useQueryCoordiantes = BioLockJUtils.requireBoolean(getConfig(), ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
 		
-		List<HitScores> hits = getHits(blastOutputDir);
+		List<HitScores> hits = getHits(getOutputDir());
 		writeResults(hits, topHitsFile);
 		
-		if( cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE) != null)
+		if( getConfig().getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE) != null)
 		{
-			writeGTFFile(hits, new File(cReader.getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE)),
+			writeGTFFile(hits, new File(getConfig().getAProperty(ConfigReader.GTF_GATHERED_TOP_HITS_FILE)),
 					useQueryCoordiantes);
 		}
 		else

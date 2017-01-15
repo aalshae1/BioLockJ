@@ -23,35 +23,27 @@ import utils.ConfigReader;
  */
 public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 {
-	private File runAllFile = null;
-	private List<File> scripts = null;
-	
+
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{	
-		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
-		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
-		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_ALL_COMMAND);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_BINARY_DIR);
+		BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.BLAST_QUERY_DIRECTORY);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_ALL_COMMAND);
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		this.scripts = new ArrayList<File>();
-		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		File blastQueryDir = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.BLAST_QUERY_DIRECTORY);
-		File blastDatabaseFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
-		String clusterBatchCommand = BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
-		String blastAllCommand = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_ALL_COMMAND);
-		File blastOutputDirectory = getOutputDir(cReader);
-		File scriptDir = getScriptDir(cReader, "queryBlastDB");
+		String blastBinDin = BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_BINARY_DIR);
+		File blastQueryDir = BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.BLAST_QUERY_DIRECTORY);
+		File blastDatabaseFile = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
+		String blastAllCommand = BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_ALL_COMMAND);
+
+		int index = 0;
 		
-		int index =1;
-		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());
-		
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(this.runAllFile));
+		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
 		
 		String[] filesToFormat = blastQueryDir.list();
 		
@@ -61,18 +53,16 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 			
 			if( ! fastaFile.isDirectory())
 			{
-				File script = new File(
-						scriptDir.getAbsolutePath() + File.separator + "run_" + index + "_" +
-								System.currentTimeMillis() + 	"_.sh");
+				File script = makeNewRunFile(allWriter, index++);
 				
 				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				
-				String prelimString = cReader.getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
+				String prelimString = getConfig().getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
 				
 				if( prelimString != null)
 					writer.write(prelimString + "\n");
 				
-				File outFile = new File( blastOutputDirectory + File.separator + fastaFile.getName() + "_to_" + 
+				File outFile = new File( getOutputDir() + File.separator + fastaFile.getName() + "_to_" + 
 							blastDatabaseFile.getName() + ".txt");
 				
 				writer.write(blastBinDin + "/" + blastAllCommand + " -db " + 
@@ -81,35 +71,11 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 							" -query " +fastaFile.getAbsolutePath() + 
 							" -outfmt 6\n");
 				
-				File touchFile = new File(script.getAbsolutePath() + FINISHED_SUFFIX );
-				
-				if( touchFile.exists())
-					touchFile.delete();
-				
-				writer.write("touch " + touchFile.getAbsolutePath() + "\n");
-				
-				writer.flush();  writer.close();
-				this.scripts.add(script);
-				
-				allWriter.write(clusterBatchCommand + " " + script.getAbsolutePath() + "\n");
-				allWriter.flush();
-				
-				index++;
+				BioLockJUtils.closeRunFile(writer, script);
 			}
 		}
 		
 		allWriter.flush();  allWriter.close();
 	}
 	
-	@Override
-	public File getRunAllFile()
-	{
-		return runAllFile;
-	}
-	
-	@Override
-	public List<File> getScriptFiles()
-	{
-		return scripts;
-	}
 }

@@ -20,20 +20,20 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 {
 
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);
-		BioLockJUtils.requireString(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
-		BioLockJUtils.requireString(cReader, ConfigReader.CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.REFERENCE_GENOME);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.KMER_TO_HAS_GENOME_FILE);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE);
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		File refGenome = BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);
-		File kmerFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
+		File refGenome = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.REFERENCE_GENOME);
+		File kmerFile = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.KMER_TO_HAS_GENOME_FILE);
 		File outFile = new File(
-				BioLockJUtils.requireString(cReader, ConfigReader.CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE));
+				BioLockJUtils.requireString(getConfig(), ConfigReader.CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE));
 		
 		HashMap<Long, Float> conservationMap = getConservationMap(kmerFile);
 		

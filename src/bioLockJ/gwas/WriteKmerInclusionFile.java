@@ -20,10 +20,10 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 	public static final String SUFFIX_TO_REMOVE = "_dsk.txt";
 
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{	
-		BioLockJUtils.requireString(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);
-		BioLockJUtils.requireString(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);		
+		BioLockJUtils.requireString(getConfig(), ConfigReader.GENOME_TO_INTEGER_FILE);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.KMER_TO_HAS_GENOME_FILE);		
 	}
 	
 	private HashMap<Long, BitSet> getBigBitSet(File inDirectory, 
@@ -148,13 +148,13 @@ public class WriteKmerInclusionFile extends BioLockJExecutor
 		writer.flush();  writer.close();
 	}
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		File genomeToIndexFile = new File(
-				BioLockJUtils.requireString(cReader, ConfigReader.GENOME_TO_INTEGER_FILE));
+				BioLockJUtils.requireString(getConfig(), ConfigReader.GENOME_TO_INTEGER_FILE));
 		File kmerToGenomeFile = new File(
-				BioLockJUtils.requireString(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE));	
-		File dirToParse = getOutputDir(cReader);
+				BioLockJUtils.requireString(getConfig(), ConfigReader.KMER_TO_HAS_GENOME_FILE));	
+		File dirToParse = getOutputDir();
 		
 		HashMap<String, Integer> nameMap= getNameToIntegerMap(dirToParse, genomeToIndexFile);
 		HashMap<Long, BitSet> bigMap = getBigBitSet(dirToParse, nameMap);

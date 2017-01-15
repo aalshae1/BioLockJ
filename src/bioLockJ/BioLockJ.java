@@ -6,9 +6,7 @@ import org.slf4j.*;
 
 import utils.ConfigReader;
 
-/**
- * Test code with BioLockJ ./testProp
- */
+
 public class BioLockJ
 {
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJ.class);
@@ -26,29 +24,20 @@ public class BioLockJ
 			throw new Exception(propFile.getAbsolutePath() + " is not a valid file");
 		
 		ConfigReader cReader = new ConfigReader(propFile);
-		List<BioLockJExecutor> list = getListToRun(propFile);
+		List<BioLockJExecutor> list = getListToRun(cReader);
 		
 		String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
 				
 		BioLockJUtils.logConfigFileSettings(cReader);
 		BioLockJUtils.copyPropertiesFile(propFile, projectDir);
 
-		for( BioLockJExecutor e : list)
-			e.checkDependencies(cReader);
+		for( BioLockJExecutor e : list )
+			e.checkDependencies();
 		
-		for( BioLockJExecutor e : list)
+		for( BioLockJExecutor e : list )
 		{
 			BioLockJUtils.noteStartToLogWriter(e);
-			
-			try
-			{
-				BioLockJUtils.executeAndWaitForScriptsIfAny(cReader, e);
-			}
-			catch(Exception ex)
-			{
-				BioLockJUtils.logAndRethrow(ex);
-			}
-			
+			BioLockJUtils.executeAndWaitForScriptsIfAny(e);
 			BioLockJUtils.noteEndToLogWriter(e);
 		}
 		
@@ -57,12 +46,13 @@ public class BioLockJ
 		log.info(BioLockJUtils.LOG_SPACER);
 	}
 	
-	private static List<BioLockJExecutor> getListToRun( File propFile ) throws Exception
+	private static List<BioLockJExecutor> getListToRun( ConfigReader cReader ) throws Exception
 	{
 		List<BioLockJExecutor> list = new ArrayList<BioLockJExecutor>();
-		BufferedReader reader =new BufferedReader(new FileReader(propFile));
+		BufferedReader reader = new BufferedReader(new FileReader(cReader.getPropertiesFile()));
 		try
 		{
+			int count = 0;
 			for(String s = reader.readLine(); s != null; s= reader.readLine())
 			{
 				if (s.startsWith(BioLockJExecutor.RUN_BIOLOCK_J))
@@ -74,8 +64,11 @@ public class BioLockJ
 						throw new Exception("Lines starting with " + BioLockJExecutor.RUN_BIOLOCK_J 
 								+ " must be followed by a Java class that is a BioLockJExecutor");
 					
-					list.add( (BioLockJExecutor) Class.forName(sToken.nextToken()).newInstance());
-					
+					String fullClassName = sToken.nextToken();
+					BioLockJExecutor blje = (BioLockJExecutor) Class.forName(fullClassName).newInstance();
+					blje.setConfig(cReader);
+					blje.setExecutorDir(getSimpleClassName(fullClassName), count++);
+					list.add(blje);
 					if( sToken.hasMoreTokens())
 						throw new Exception("Lines starting with " + BioLockJExecutor.RUN_BIOLOCK_J 
 								+ " must be followed by a Java class that is a BioLockJExecutor with no parameters");
@@ -86,5 +79,19 @@ public class BioLockJ
 		
 		return list;
 	}
+	
+	
+	private static String getSimpleClassName(String fullPathClassName) throws Exception
+	{
+		StringTokenizer st = new StringTokenizer(fullPathClassName, ".");
+		String token = st.nextToken();
+		while(st.hasMoreTokens())
+		{
+			token = st.nextToken();
+		}
+		
+		return token;
+	}
+	
 	
 }

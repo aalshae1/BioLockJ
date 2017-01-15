@@ -23,30 +23,22 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	 * 
 	 * CLUSTER_BATCH_COMMAND must be defined (e.g. qsub -q "viper" ) where viper is the name of the cluster
 	 */
-	private File runAllFile = null;
-	private List<File> scripts = null;
-	
+
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
-		BioLockJUtils.requireString(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_BINARY_DIR);
+		BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.FASTA_DIR_TO_FORMAT);
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		this.scripts = new ArrayList<File>();
-		String blastBinDin = BioLockJUtils.requireString(cReader, ConfigReader.BLAST_BINARY_DIR);
-		File fastaDirToFormat = BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.FASTA_DIR_TO_FORMAT);
-
-		File scriptDir = getScriptDir(cReader, "formatBlastDB");
-		
+		String blastBinDin = BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_BINARY_DIR);
+		File fastaDirToFormat = BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.FASTA_DIR_TO_FORMAT);
 		int index = 0;
-		this.runAllFile = createRunAllFile(cReader, scriptDir.getAbsolutePath());
 		
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(this.runAllFile));
+		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
 		
 		String[] filesToFormat = fastaDirToFormat.list();
 		
@@ -57,13 +49,11 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 			if( !fastaFile.isDirectory() )
 			{
 				
-				File script = BioLockJUtils.makeNewRunFile(cReader, 
-						scriptDir.getAbsolutePath(), allWriter, index++ );
-				this.scripts.add(script);
+				File script = makeNewRunFile(allWriter, index++);
 				
 				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				
-				String prelimString = cReader.getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
+				String prelimString = getConfig().getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
 				
 				if( prelimString != null)
 					writer.write(prelimString + "\n");
@@ -78,15 +68,4 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 		allWriter.flush();  allWriter.close();
 	}
 	
-	@Override
-	public File getRunAllFile()
-	{
-		return runAllFile;
-	}
-	
-	@Override
-	public List<File> getScriptFiles()
-	{
-		return scripts;
-	}
 }

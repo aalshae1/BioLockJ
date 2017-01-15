@@ -26,34 +26,32 @@ public class GatherRDPResults extends BioLockJExecutor
 	public static final String THREE_COL_SUFFIX = "_SparseThreeCol.txt";
 	
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requirePositiveInteger(cReader,  ConfigReader.RDP_THRESHOLD);
+		BioLockJUtils.requirePositiveInteger(getConfig(),  ConfigReader.RDP_THRESHOLD);
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		File rdpOutDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_OUTPUT_DIR);
-		File summaryDir =  BioLockJUtils.requireExistingDirectory(cReader, ConfigReader.PATH_TO_SUMMARY_DIR);
-		int rdpThreshold = BioLockJUtils.requirePositiveInteger(cReader,  ConfigReader.RDP_THRESHOLD);
+		int rdpThreshold = BioLockJUtils.requirePositiveInteger(getConfig(),  ConfigReader.RDP_THRESHOLD);
 		
 		HashMap<String, BufferedWriter> taxaWriters = new HashMap<String, BufferedWriter>();
 		
 		for( int x=1; x < NewRDPParserFileLine.TAXA_ARRAY.length; x++)
 		{
 			 BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-					 summaryDir.getAbsolutePath() + File.separator + 
+					 getSummaryDir().getAbsolutePath() + File.separator + 
 					 		NewRDPParserFileLine.TAXA_ARRAY[x] + THREE_COL_SUFFIX)));
 			 taxaWriters.put(NewRDPParserFileLine.TAXA_ARRAY[x], writer);
 		}
 		
 		int fileCount = 0;
-		for(String s : rdpOutDir.list())
+		for(String s : getOutputDir().list())
 		{
 			log.info("RDP OUTPUT FILE # (" + new Integer(fileCount++ +1) + "):  " + s );
 			List<NewRDPParserFileLine> list = NewRDPParserFileLine.getRdpListSingleThread(
-					rdpOutDir.getAbsoluteFile() + File.separator + s	);
+					getOutputDir().getAbsoluteFile() + File.separator + s	);
 				
 			for( int x=1; x < NewRDPParserFileLine.TAXA_ARRAY.length; x++)
 			{
@@ -64,7 +62,7 @@ public class GatherRDPResults extends BioLockJExecutor
 				
 				for(String key: countMap.keySet())
 				{
-					writer.write( s.replaceAll(RunMultipleRDP.FINISHED_SUFFIX, "") + "\t" + 
+					writer.write( s.replaceAll(BioLockJUtils.FINISHED_SUFFIX, "") + "\t" + 
 								key + "\t" + countMap.get(key) + "\n");
 				}
 				
@@ -79,19 +77,16 @@ public class GatherRDPResults extends BioLockJExecutor
 		
 		for( int x=1; x < NewRDPParserFileLine.TAXA_ARRAY.length; x++)
 		{
-			File file = new File(
-					 summaryDir.getAbsolutePath() + File.separator + 
+			File file = new File(getSummaryDir().getAbsolutePath() + File.separator + 
 					 		NewRDPParserFileLine.TAXA_ARRAY[x] + THREE_COL_SUFFIX);
 			
 			HashMap<String, HashMap<String, Integer>> map = getMapFromFile(file.getAbsolutePath());
-			File outFile = new File(
-					 summaryDir.getAbsolutePath() + File.separator + 
+			File outFile = new File(getSummaryDir().getAbsolutePath() + File.separator + 
 				 		NewRDPParserFileLine.TAXA_ARRAY[x] + "_taxaAsColumns.txt");
 			writeResults(map, outFile.getAbsolutePath());
 			OtuWrapper wrapper = new OtuWrapper(outFile);
-			wrapper.writeNormalizedLoggedDataToFile(summaryDir
-					+ File.separator + "pivoted_" + 
-			NewRDPParserFileLine.TAXA_ARRAY[x] + "asColumnsLogNormal.txt");
+			wrapper.writeNormalizedLoggedDataToFile(getSummaryDir().getAbsolutePath() + File.separator + 
+					"pivoted_" + NewRDPParserFileLine.TAXA_ARRAY[x] + "asColumnsLogNormal.txt");
 		}
 	}
 	

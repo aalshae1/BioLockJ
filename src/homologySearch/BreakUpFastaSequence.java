@@ -56,21 +56,21 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 	}
 	
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
-		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
+		BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.SPLIT_FASTA_DIR);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.FASTA_TO_SPLIT_PATH);
+		BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		File outputDir= 
-				BioLockJUtils.requireExistingDirectory( cReader, ConfigReader.SPLIT_FASTA_DIR);
+				BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.SPLIT_FASTA_DIR);
 		File fileToParse = 
-				BioLockJUtils.requireExistingFile(cReader, ConfigReader.FASTA_TO_SPLIT_PATH);
-		int numChunks = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.NUMBER_OF_JOBS_PER_CORE);
+				BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.FASTA_TO_SPLIT_PATH);
+		int numChunks = BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 		
 		breakUpSequences(fileToParse, outputDir, numChunks);
 	}

@@ -13,18 +13,18 @@ import utils.ConfigReader;
 public class FilterOutRareKmers extends BioLockJExecutor
 {
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
-		BioLockJUtils.requirePositiveInteger( cReader, ConfigReader.MIN_NUMBER_OF_DIFFERENT_KMERS);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.KMER_TO_HAS_GENOME_FILE);
+		BioLockJUtils.requirePositiveInteger( getConfig(), ConfigReader.MIN_NUMBER_OF_DIFFERENT_KMERS);
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		File inFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
+		File inFile = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.KMER_TO_HAS_GENOME_FILE);
 		
-		int minNumber = BioLockJUtils.requirePositiveInteger( cReader, ConfigReader.MIN_NUMBER_OF_DIFFERENT_KMERS);
+		int minNumber = BioLockJUtils.requirePositiveInteger( getConfig(), ConfigReader.MIN_NUMBER_OF_DIFFERENT_KMERS);
 		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
 				inFile.getAbsolutePath() + "_filteredTo_" +  minNumber + ".txt")));

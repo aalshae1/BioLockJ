@@ -11,11 +11,10 @@ import utils.ProcessWrapper;
 public class BioLockJUtils
 {
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJUtils.class);
-	
-	public static void executeAndWaitForScriptsIfAny(ConfigReader cReader, 
-			BioLockJExecutor bje) throws Exception
+	public static final String FINISHED_SUFFIX = "_succesfullyFinished";
+	public static void executeAndWaitForScriptsIfAny(BioLockJExecutor bje) throws Exception
 	{
-		bje.executeProjectFile(cReader);
+		bje.executeProjectFile();
 		
 		if( bje.getRunAllFile() != null)
 		{
@@ -23,15 +22,15 @@ public class BioLockJUtils
 			
 			try
 			{
-				pollTime = BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.POLL_TIME);
+				pollTime = BioLockJUtils.requirePositiveInteger(bje.getConfig(), ConfigReader.POLL_TIME);
 			}
 			catch(Exception ex)
 			{
-				log.warn("Could not set " + ConfigReader.POLL_TIME + " setting poll time to " + 
+				log.warn("Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + 
 								pollTime +  " seconds ", ex);		
 			}
 			
-			BioLockJUtils.executeCHMOD_ifDefined(cReader, bje.getRunAllFile());
+			BioLockJUtils.executeCHMOD_ifDefined(bje.getConfig(), bje.getRunAllFile());
 			BioLockJUtils.executeFile(bje.getRunAllFile());
 			BioLockJUtils.pollAndSpin(bje.getScriptFiles(), pollTime );
 		}
@@ -77,12 +76,12 @@ public class BioLockJUtils
 								ConfigReader.FALSE);	
 	}
 	
-	public static void logAndRethrow(Exception ex)
-		throws Exception
-	{
-		log.error(ex.toString());
-		throw ex;
-	}
+//	public static void logAndRethrow(Exception ex)
+//		throws Exception
+//	{
+//		log.error(ex.toString());
+//		throw ex;
+//	}
 	
 		
 	public static void executeCHMOD_ifDefined(ConfigReader cReader, File file )  throws Exception
@@ -109,11 +108,11 @@ public class BioLockJUtils
 	{
 		boolean finished = false;
 		
-		while( ! finished)
+		while( !finished )
 		{
 			finished = poll(scriptFiles);
 			
-			if( ! finished)
+			if( !finished )
 			{
 				Thread.sleep(pollTime * 1000);
 			}
@@ -126,7 +125,7 @@ public class BioLockJUtils
 		
 		for(File f : scriptFiles)
 		{
-			File test = new File(f.getAbsolutePath() + BioLockJExecutor.FINISHED_SUFFIX);
+			File test = new File(f.getAbsolutePath() + FINISHED_SUFFIX);
 			
 			if(test.exists())
 			{
@@ -163,16 +162,6 @@ public class BioLockJUtils
 		return aFile;
 	}
 	
-	public static void appendSuccessToPropertyFile( File propertyFile, String invokingClass,
-			File projectDirectory) throws Exception
-	{
-		FileWriter fWriter = new FileWriter(propertyFile, true);
-		BufferedWriter writer = new BufferedWriter(fWriter);
-		PrintWriter out = new PrintWriter(writer);
-		
-		out.write("\n# ran " + invokingClass + " log to " + projectDirectory.getAbsolutePath() + "\n");
-		out.flush(); out.close();
-	}
 	
 	public static String requireString(ConfigReader reader, String propertyName) throws Exception
 	{
@@ -224,7 +213,8 @@ public class BioLockJUtils
 		}
 		catch(Exception ex)
 		{
-			
+			log.error(ex.getMessage());
+			ex.printStackTrace();
 		}
 		
 		if( aVal == null  || aVal < 1)
@@ -271,29 +261,11 @@ public class BioLockJUtils
 	}
 	
 	
-	public static File makeNewRunFile(ConfigReader cReader, String scriptDir, 
-			BufferedWriter allWriter, int countNum) throws Exception
-	{
-		if(scriptDir.endsWith(File.separator))
-		{
-			scriptDir = removeLastChar(scriptDir);
-		}
-		
-		File runFile = new File(scriptDir + File.separator + "run_" + countNum + ".sh");
-		
-		String clusterParams = getStringOrNull(cReader, ConfigReader.CLUSTER_PARAMS);
-		String clusterCommand = getStringOrNull(cReader, ConfigReader.CLUSTER_BATCH_COMMAND);
 
-		allWriter.write((clusterCommand == null ?  "": clusterCommand + " " ) + runFile.getAbsolutePath() + 
-				" " + (clusterParams == null ?  "": clusterParams ) +   "\n"  );
-		
-		allWriter.flush();
-		return runFile;
-	}
 	
 	public static void closeRunFile(BufferedWriter aWriter, File runFile) throws Exception
 	{
-		File touchFile = new File(runFile.getAbsolutePath() + BioLockJExecutor.FINISHED_SUFFIX );
+		File touchFile = new File(runFile.getAbsolutePath() + FINISHED_SUFFIX );
 		if( touchFile.exists()) touchFile.delete();
 		aWriter.write("touch " + touchFile.getAbsolutePath() + "\n");
 		aWriter.flush();  aWriter.close();
@@ -304,6 +276,20 @@ public class BioLockJUtils
 	public static String removeLastChar(String val)
 	{
 		return val.substring(0, val.trim().length()-1);
+	}
+	
+	public static String formatInt(int x)
+	{
+		if(x<1)
+		{
+			return "00";
+		}
+		else if(x<10)
+		{
+			return "0" + x;
+		}
+		
+		return new Integer(x).toString();
 	}
 
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java

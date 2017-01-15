@@ -15,14 +15,14 @@ import utils.FisherTest;
 public class KmerPValuesFromFisherTest extends BioLockJExecutor
 {
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.STRAIN_METADATA_FILE);
-		BioLockJUtils.requireString(cReader, ConfigReader.FISHER_CONDITION_1);
-		BioLockJUtils.requireString(cReader, ConfigReader.FISHER_CONDITION_2);
-		BioLockJUtils.requireString(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);
-		BioLockJUtils.requireString(cReader, ConfigReader.FISHER_PVALUES_OUTPUT_FILE );
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.KMER_TO_HAS_GENOME_FILE);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.STRAIN_METADATA_FILE);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.FISHER_CONDITION_1);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.FISHER_CONDITION_2);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.GENOME_TO_INTEGER_FILE);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.FISHER_PVALUES_OUTPUT_FILE );
 	}
 	
 	private static HashMap<Integer, String> getIntegerToGenomeMap(
@@ -95,14 +95,14 @@ public class KmerPValuesFromFisherTest extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		File inKmerFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.KMER_TO_HAS_GENOME_FILE);
-		File genomeToIntegerFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.GENOME_TO_INTEGER_FILE);
-		File strainMetadataFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.STRAIN_METADATA_FILE);
-		String condition1 =  BioLockJUtils.requireString(cReader, ConfigReader.FISHER_CONDITION_1);
-		String condition2 = BioLockJUtils.requireString(cReader, ConfigReader.FISHER_CONDITION_2);
-		File outFile = new File( BioLockJUtils.requireString(cReader, ConfigReader.FISHER_PVALUES_OUTPUT_FILE ));
+		File inKmerFile =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.KMER_TO_HAS_GENOME_FILE);
+		File genomeToIntegerFile = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.GENOME_TO_INTEGER_FILE);
+		File strainMetadataFile =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.STRAIN_METADATA_FILE);
+		String condition1 =  BioLockJUtils.requireString(getConfig(), ConfigReader.FISHER_CONDITION_1);
+		String condition2 = BioLockJUtils.requireString(getConfig(), ConfigReader.FISHER_CONDITION_2);
+		File outFile = new File( BioLockJUtils.requireString(getConfig(), ConfigReader.FISHER_PVALUES_OUTPUT_FILE ));
 		
 		HashMap<Integer,String> genomeToIntegerMap = getIntegerToGenomeMap(genomeToIntegerFile);
 		HashMap<String, String> metaMap = getMetaMap(strainMetadataFile);

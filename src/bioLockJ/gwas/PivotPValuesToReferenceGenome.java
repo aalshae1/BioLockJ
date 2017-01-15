@@ -19,11 +19,11 @@ import utils.Translate;
 public class PivotPValuesToReferenceGenome extends BioLockJExecutor
 {
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireString(cReader, ConfigReader.FISHER_PVALUES_OUTPUT_FILE);
-		BioLockJUtils.requireString(cReader, ConfigReader.FISHER_GTF_OUTPUT_FILE);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);	
+		BioLockJUtils.requireString(getConfig(), ConfigReader.FISHER_PVALUES_OUTPUT_FILE);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.FISHER_GTF_OUTPUT_FILE);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.REFERENCE_GENOME);	
 	}
 	
 	public HashMap<Long, Double> getPValueMap( File inFile ) throws Exception
@@ -46,11 +46,11 @@ public class PivotPValuesToReferenceGenome extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		File inFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.FISHER_PVALUES_OUTPUT_FILE);
-		File outFile = new File( BioLockJUtils.requireString(cReader, ConfigReader.FISHER_GTF_OUTPUT_FILE));
-		File refGenome =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);	
+		File inFile =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.FISHER_PVALUES_OUTPUT_FILE);
+		File outFile = new File( BioLockJUtils.requireString(getConfig(), ConfigReader.FISHER_GTF_OUTPUT_FILE));
+		File refGenome =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.REFERENCE_GENOME);	
 		
 		HashMap<Long, Double> pValueMap = getPValueMap(inFile);
 		

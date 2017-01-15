@@ -22,12 +22,12 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 	protected static final Logger log = LoggerFactory.getLogger(AddMBGDGeneAnnotationsToGTF.class);
 	
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.INPUT_GTF_FILE);
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.MBGD_EXTENDED_PATH);
-		BioLockJUtils.requireString(cReader, ConfigReader.OUTPUT_GTF_FILE);
-		BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.INPUT_GTF_FILE);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.MBGD_EXTENDED_PATH);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.OUTPUT_GTF_FILE);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
 	}
 	
 	private static HashMap<Integer, String> getLineDescriptions(File extendedFile) throws Exception
@@ -211,13 +211,13 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		File inputFile =  BioLockJUtils.requireExistingFile(cReader, ConfigReader.INPUT_GTF_FILE);
-		File mbdgFile = BioLockJUtils.requireExistingFile(cReader, ConfigReader.MBGD_EXTENDED_PATH);
-		File outFile = new File(BioLockJUtils.requireString(cReader, ConfigReader.OUTPUT_GTF_FILE));
+		File inputFile =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.INPUT_GTF_FILE);
+		File mbdgFile = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.MBGD_EXTENDED_PATH);
+		File outFile = new File(BioLockJUtils.requireString(getConfig(), ConfigReader.OUTPUT_GTF_FILE));
 		File topHitsFile= new File(
-				BioLockJUtils.requireString(cReader, ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
+				BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
 		
 		HashMap<String, String> geneIdtoProtMap = geneIDtoProtMap(topHitsFile);
 		HashMap<String, HashSet<Integer>> fileLineMap = getFileLineMap(mbdgFile, 

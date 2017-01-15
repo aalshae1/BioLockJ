@@ -13,12 +13,12 @@ import utils.ConfigReader;
 public class GC_Content extends BioLockJExecutor
 {
 	@Override
-	public void checkDependencies(ConfigReader cReader) throws Exception
+	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);
-		BioLockJUtils.requireString(cReader, ConfigReader.GC_CONTENT_IGV_OUTPUT_FILE);
-		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_WINDOW_SIZE);
-		BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_STEP_SIZE);
+		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.REFERENCE_GENOME);
+		BioLockJUtils.requireString(getConfig(), ConfigReader.GC_CONTENT_IGV_OUTPUT_FILE);
+		BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.GC_CONTENT_WINDOW_SIZE);
+		BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.GC_CONTENT_STEP_SIZE);
 	}
 	
 	private float getGCContent(String s )
@@ -46,14 +46,14 @@ public class GC_Content extends BioLockJExecutor
 	}
 	
 	@Override
-	public void executeProjectFile(ConfigReader cReader) throws Exception
+	public void executeProjectFile() throws Exception
 	{
-		File referenceGenome = BioLockJUtils.requireExistingFile(cReader, ConfigReader.REFERENCE_GENOME);
-		File outputFile =new File( BioLockJUtils.requireString(cReader, ConfigReader.GC_CONTENT_IGV_OUTPUT_FILE));
+		File referenceGenome = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.REFERENCE_GENOME);
+		File outputFile =new File( BioLockJUtils.requireString(getConfig(), ConfigReader.GC_CONTENT_IGV_OUTPUT_FILE));
 		int windowSize =
-				BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_WINDOW_SIZE);
+				BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.GC_CONTENT_WINDOW_SIZE);
 		int stepSize = 
-				BioLockJUtils.requirePositiveInteger(cReader, ConfigReader.GC_CONTENT_STEP_SIZE);
+				BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.GC_CONTENT_STEP_SIZE);
 		
 		List<FastaSequence> list = FastaSequence.readFastaFile(referenceGenome);
 		
