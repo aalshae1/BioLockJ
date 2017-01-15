@@ -16,7 +16,6 @@ public abstract class BioLockJExecutor
 	public abstract void executeProjectFile() throws Exception;
 	public abstract void checkDependencies() throws Exception;
 	
-	
 	public static final String FAILED_TO_PROCESS = "_failedToProcess";
 	public static final String RUN_BIOLOCK_J = "#RUN_BIOLOCK_J";
 	
@@ -176,22 +175,6 @@ public abstract class BioLockJExecutor
 		}
 		return dir;
 	} 
-	
-	
-	
-//	public File getOutputDir() throws Exception
-//	{
-//		return BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_OUTPUT_DIR);
-//	}
-//	
-//	public File getSummaryDir() throws Exception
-//	{
-//		return BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_SUMMARY_DIR);
-//	}
-//	
-//	public File getScriptDir() throws Exception
-//	{
-//		return BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_SCRIPT_DIR);
-//	}
+
 	
 }
