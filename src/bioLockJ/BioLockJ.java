@@ -2,20 +2,26 @@ package bioLockJ;
 
 import java.io.*;
 import java.util.*;
+
+import org.apache.log4j.BasicConfigurator;
 import org.slf4j.*;
 
 import utils.ConfigReader;
 
-
+/** 
+ * 
+ */
 public class BioLockJ
 {
-	protected static final Logger log = LoggerFactory.getLogger(BioLockJ.class);
-	
+
 	public static void main(String[] args) throws Exception
 	{
+
+		//log.info("...STARTING...");
+		//BasicConfigurator.configure();
 		if( args.length != 1)
 		{
-			log.info("Usage " + BioLockJ.class.getName() + " pathToPropertiesFile.txt");
+			System.out.println("Usage " + BioLockJ.class.getName() + " pathToPropertiesFile.txt");
 			System.exit(1);
 		}
 		
@@ -24,6 +30,7 @@ public class BioLockJ
 			throw new Exception(propFile.getAbsolutePath() + " is not a valid file");
 		
 		ConfigReader cReader = new ConfigReader(propFile);
+		Logger log = LoggerFactory.getLogger(BioLockJ.class);
 		List<BioLockJExecutor> list = getListToRun(cReader);
 		
 		String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
@@ -59,7 +66,6 @@ public class BioLockJ
 				{
 					StringTokenizer sToken = new StringTokenizer(s);
 					sToken.nextToken();
-					
 					if( ! sToken.hasMoreTokens())
 						throw new Exception("Lines starting with " + BioLockJExecutor.RUN_BIOLOCK_J 
 								+ " must be followed by a Java class that is a BioLockJExecutor");

@@ -52,7 +52,7 @@ public abstract class BioLockJExecutor
 		String fullPath = getProjectDir().getAbsolutePath() + File.separator + 
 				BioLockJUtils.formatInt(index) + "_" + name;
 		File dir = new File(fullPath);
-		if(!dir.mkdir())
+		if(!dir.mkdirs())
 		{
 			throw new Exception("ERROR: Unable to create: " + fullPath);
 		}
@@ -98,10 +98,6 @@ public abstract class BioLockJExecutor
 			return runAllFile;
 		}
 		runAllFile = new File(getScriptDir().getAbsolutePath() + File.separator + "runAll.sh");
-		if(!runAllFile.mkdir())
-		{
-			throw new Exception("ERROR: Unable to create: " + runAllFile);
-		}
 		return runAllFile;	
 	} 
 	

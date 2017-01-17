@@ -11,7 +11,9 @@ import utils.ProcessWrapper;
 public class BioLockJUtils
 {
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJUtils.class);
+	
 	public static final String FINISHED_SUFFIX = "_succesfullyFinished";
+	
 	public static void executeAndWaitForScriptsIfAny(BioLockJExecutor bje) throws Exception
 	{
 		bje.executeProjectFile();
@@ -22,7 +24,7 @@ public class BioLockJUtils
 			
 			try
 			{
-				pollTime = BioLockJUtils.requirePositiveInteger(bje.getConfig(), ConfigReader.POLL_TIME);
+				pollTime = requirePositiveInteger(bje.getConfig(), ConfigReader.POLL_TIME);
 			}
 			catch(Exception ex)
 			{
@@ -30,9 +32,20 @@ public class BioLockJUtils
 								pollTime +  " seconds ", ex);		
 			}
 			
-			BioLockJUtils.executeCHMOD_ifDefined(bje.getConfig(), bje.getRunAllFile());
-			BioLockJUtils.executeFile(bje.getRunAllFile());
-			BioLockJUtils.pollAndSpin(bje.getScriptFiles(), pollTime );
+			executeCHMOD_ifDefined(bje.getConfig(), bje.getRunAllFile());
+			
+			if(log!=null)
+			{
+				log.info("EXITING PROGRAM EARLY");
+			}
+			else
+			{
+				System.out.println("SysOut::EXITING PROGRAM EARLY");
+				log.info("EXITING PROGRAM EARLY");
+				executeFile(bje.getRunAllFile());
+				pollAndSpin(bje.getScriptFiles(), pollTime );
+			}
+			
 		}
 	}
 	

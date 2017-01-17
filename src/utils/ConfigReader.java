@@ -171,7 +171,9 @@ public class ConfigReader
 
 	private String getLogName(String projectDir) throws Exception
 	{
-		return projectDir +  BioLockJUtils.requireString(this, PROJECT_NAME) + ".log";
+		String val = projectDir +  getAProperty(PROJECT_NAME) + ".log";
+		System.setProperty(LOG_FILE, val);
+		return val;
 	}
 	
 	
@@ -179,7 +181,7 @@ public class ConfigReader
 	private String createProjectDir(String bljRoot) throws Exception
 	{
 
-		String projectName = BioLockJUtils.requireString(this, PROJECT_NAME);
+		String projectName = getAProperty(PROJECT_NAME);
 		String pathToProj = bljRoot + "projects" + File.separator + projectName;
 		
 		File projectDir = null;
@@ -190,7 +192,7 @@ public class ConfigReader
 			if(projectDir.exists()) Thread.sleep(1000);
 		}
 		
-		if(!projectDir.mkdir())
+		if(!projectDir.mkdirs())
 		{
 			throw new Exception("ERROR: Unable to create: " + projectDir.getAbsolutePath());
 		}

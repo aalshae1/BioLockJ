@@ -22,8 +22,7 @@ public class ProcessWrapper
 		
 		BufferedReader br = new BufferedReader (new InputStreamReader(p.getInputStream ()));
 		
-		String s;
-		
+		String s;	
 		while ((s = br.readLine ())!= null)
 		{
     		log.info (s);
