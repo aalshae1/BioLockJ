@@ -17,11 +17,9 @@ public class BioLockJUtils
 	public static void executeAndWaitForScriptsIfAny(BioLockJExecutor bje) throws Exception
 	{
 		bje.executeProjectFile();
-		
-		if( bje.getRunAllFile() != null)
+		if( bje.hasScripts() )
 		{
 			int pollTime = 15;
-			
 			try
 			{
 				pollTime = requirePositiveInteger(bje.getConfig(), ConfigReader.POLL_TIME);
@@ -34,29 +32,33 @@ public class BioLockJUtils
 			
 			executeCHMOD_ifDefined(bje.getConfig(), bje.getRunAllFile());
 			
-			if(log!=null)
-			{
-				log.info("EXITING PROGRAM EARLY");
-			}
-			else
-			{
-				System.out.println("SysOut::EXITING PROGRAM EARLY");
-				log.info("EXITING PROGRAM EARLY");
+//			if(log!=null)
+//			{
+//				log.info("EXITING PROGRAM EARLY");
+//			}
+//			else
+//			{
+//				System.out.println("SysOut::EXITING PROGRAM EARLY");
+//				log.info("EXITING PROGRAM EARLY");
 				executeFile(bje.getRunAllFile());
 				pollAndSpin(bje.getScriptFiles(), pollTime );
-			}
+//			}
 			
 		}
 	}
 	
+	
+	
+	
 	public static void noteStartToLogWriter( BioLockJExecutor invoker )
 	{
-		log.info("starting " + invoker.getClass().getName() + "\n");
+		log.info("\n");
+		log.info("Starting " + invoker.getClass().getName());
 	}
 		
 	public static void noteEndToLogWriter( BioLockJExecutor invoker )
 	{
-		log.info("Finished " + invoker.getClass().getName() + "\n");
+		log.info("Finished " + invoker.getClass().getName());
 	}
 	
 	public static String requireDBType(ConfigReader cReader) throws Exception
@@ -146,11 +148,11 @@ public class BioLockJUtils
 			}
 			else
 			{
-				log.info(f.getAbsolutePath() + " not succesfully finished ");
+				log.info(f.getAbsolutePath() + " not finished ");
 			}
 		}
 		
-		log.info("\n Finished " + numSuccess + " of " + scriptFiles.size() + "\n");
+		log.info("Finished " + numSuccess + " of " + scriptFiles.size() + "\n");
 		
 		return numSuccess == scriptFiles.size();
 	}
@@ -276,12 +278,12 @@ public class BioLockJUtils
 	
 
 	
-	public static void closeRunFile(BufferedWriter aWriter, File runFile) throws Exception
+	public static void closeRunFile(BufferedWriter writer, File runFile) throws Exception
 	{
 		File touchFile = new File(runFile.getAbsolutePath() + FINISHED_SUFFIX );
 		if( touchFile.exists()) touchFile.delete();
-		aWriter.write("touch " + touchFile.getAbsolutePath() + "\n");
-		aWriter.flush();  aWriter.close();
+		writer.write("touch " + touchFile.getAbsolutePath() + "\n");
+		writer.flush();  writer.close();
 	}
 	
 	

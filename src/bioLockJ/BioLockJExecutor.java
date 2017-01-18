@@ -32,6 +32,11 @@ public abstract class BioLockJExecutor
 	private File summaryDir;
 	private File outputDir;
 	
+	public boolean hasScripts()
+	{
+		if( scriptsDir==null ) return false;
+		return true;
+	}
 	
 	public boolean poll(){
 		return true;
@@ -119,6 +124,10 @@ public abstract class BioLockJExecutor
 	}
 
 
+	public void setInputDir(File inputDir)
+	{
+		this.inputDir = inputDir;
+	}
 	
 	public File getInputDir() throws Exception
 	{

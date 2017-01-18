@@ -21,8 +21,6 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import bioLockJ.BioLockJUtils;
-
 public class ConfigReader
 {
 	private final Properties props;
@@ -101,11 +99,6 @@ public class ConfigReader
 	
 	public static final String PATH_TO_BLJ_ROOT = "PATH_TO_BLJ_ROOT"; 
 	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR"; 
-//	public static final String PATH_TO_SCRIPT_DIR = "PATH_TO_SCRIPT_DIR"; 
-//	public static final String PATH_TO_SUMMARY_DIR = "PATH_TO_SUMMARY_DIR"; 
-//	public static final String PATH_TO_OUTPUT_DIR = "PATH_TO_OUTPUT_DIR"; 
-	
-	
 	
 	public String getAProperty(String namedProperty)
 	{
@@ -180,7 +173,6 @@ public class ConfigReader
 	
 	private String createProjectDir(String bljRoot) throws Exception
 	{
-
 		String projectName = getAProperty(PROJECT_NAME);
 		String pathToProj = bljRoot + "projects" + File.separator + projectName;
 		

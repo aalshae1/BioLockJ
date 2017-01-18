@@ -3,7 +3,6 @@ package bioLockJ;
 import java.io.*;
 import java.util.*;
 
-import org.apache.log4j.BasicConfigurator;
 import org.slf4j.*;
 
 import utils.ConfigReader;
@@ -16,12 +15,11 @@ public class BioLockJ
 
 	public static void main(String[] args) throws Exception
 	{
-
-		//log.info("...STARTING...");
-		//BasicConfigurator.configure();
+		
 		if( args.length != 1)
 		{
 			System.out.println("Usage " + BioLockJ.class.getName() + " pathToPropertiesFile.txt");
+			System.out.println("TERMINATE PROGRAM");
 			System.exit(1);
 		}
 		
@@ -60,6 +58,7 @@ public class BioLockJ
 		try
 		{
 			int count = 0;
+			BioLockJExecutor bljePrevious = null;
 			for(String s = reader.readLine(); s != null; s= reader.readLine())
 			{
 				if (s.startsWith(BioLockJExecutor.RUN_BIOLOCK_J))
@@ -74,6 +73,11 @@ public class BioLockJ
 					BioLockJExecutor blje = (BioLockJExecutor) Class.forName(fullClassName).newInstance();
 					blje.setConfig(cReader);
 					blje.setExecutorDir(getSimpleClassName(fullClassName), count++);
+					if(bljePrevious!=null)
+					{
+						blje.setInputDir(bljePrevious.getOutputDir());
+					}
+					bljePrevious = blje;
 					list.add(blje);
 					if( sToken.hasMoreTokens())
 						throw new Exception("Lines starting with " + BioLockJExecutor.RUN_BIOLOCK_J 

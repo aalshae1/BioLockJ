@@ -25,8 +25,8 @@ public class GatherKrakenResults extends BioLockJExecutor
 		for( int x=0; x < KRAKEN_TAXONOMY.length; x++)
 		{
 			HashMap<String, HashMap<String, Integer>> map = getAllSamples(x+2);
-			File summaryFile = new File(getSummaryDir() + "kraken_" + 
-					KRAKEN_TAXONOMY[x] + ".txt");
+			File summaryFile = new File(getOutputDir().getAbsolutePath() + File.separator + 
+					"kraken_" + KRAKEN_TAXONOMY[x] + ".txt");
 			GatherRDPResults.writeResults(map, summaryFile.getAbsolutePath());
 		}
 	}
@@ -34,16 +34,16 @@ public class GatherKrakenResults extends BioLockJExecutor
 	private HashMap<String, HashMap<String, Integer>> getAllSamples(int parseLevel) throws Exception
 	{
 		HashMap<String, HashMap<String, Integer>>  map = new HashMap<String,HashMap<String,Integer>>();
-		for(String s : getOutputDir().list())
+		for(String s : getInputDir().list())
 		{
 			if(s.endsWith("toKrakenTranslate.txt"))
 			{
-				File inFile= new File(getOutputDir().getAbsoluteFile() + File.separator + s);
+				File inFile= new File(getInputDir().getAbsolutePath() + File.separator + s);
 				HashMap<String, Integer> innerMap = getCounts(inFile, parseLevel);
 				
 				long sum = 0;
 				
-				for( Integer i : innerMap.values())
+				for(Integer i : innerMap.values())
 					sum += i;
 				
 				if( sum >0 )
@@ -71,7 +71,7 @@ public class GatherKrakenResults extends BioLockJExecutor
 				Integer val = map.get(splits[parseNum]);
 				
 				if( val == null)
-					val =0;
+					val = 0;
 				
 				val++;
 				
