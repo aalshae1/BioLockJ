@@ -13,6 +13,20 @@ public class BioLockJUtils
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJUtils.class);
 	
 	public static final String FINISHED_SUFFIX = "_succesfullyFinished";
+	public static final String FAILED_TO_PROCESS = "_failedToProcess";
+	
+	private static final String INDENT = "    ";
+	
+	public static void addNextLineToScript(BufferedWriter writer, String filePath, String line) throws Exception
+	{
+		writer.write("if [ $? –eq 0 ]; then \n" );
+		writer.write(INDENT + line + "\n" );
+		writer.write("else \n" );
+		writer.write(INDENT + "touch " + filePath + FAILED_TO_PROCESS + " \n" );
+		writer.write("fi \n" );
+	}
+	
+	
 	
 	public static void executeAndWaitForScriptsIfAny(BioLockJExecutor bje) throws Exception
 	{
@@ -29,21 +43,12 @@ public class BioLockJUtils
 				log.warn("Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + 
 								pollTime +  " seconds ", ex);		
 			}
-			
+
+			//log.info("EXITING PROGRAM EARLY");
 			executeCHMOD_ifDefined(bje.getConfig(), bje.getRunAllFile());
-			
-//			if(log!=null)
-//			{
-//				log.info("EXITING PROGRAM EARLY");
-//			}
-//			else
-//			{
-//				System.out.println("SysOut::EXITING PROGRAM EARLY");
-//				log.info("EXITING PROGRAM EARLY");
-				executeFile(bje.getRunAllFile());
-				pollAndSpin(bje.getScriptFiles(), pollTime );
-//			}
-			
+			executeFile(bje.getRunAllFile());
+			pollAndSpin(bje.getScriptFiles(), pollTime );
+		
 		}
 	}
 	

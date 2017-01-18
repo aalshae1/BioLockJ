@@ -46,29 +46,29 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		boolean runFileOpen = false;
 		for(String s : files)
 		{
-			if(!s.startsWith(".")) // ignore hiddend files
+			runFile = makeNewRunFile(allWriter, countNum++);
+			aWriter = new BufferedWriter(new FileWriter(runFile));
+			runFileOpen = true;
+			File fastaFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
+			
+			String krakenOutput = getOutputDir().getAbsolutePath() + File.separator + s + "toKraken.txt";
+			String krakenTranslate = getOutputDir().getAbsolutePath() + File.separator + s + "toKrakenTranslate.txt";
+			String filePath = getOutputDir().getAbsolutePath() + File.separator + s;
+			
+			String firstLine = krakenBinary.getAbsolutePath() + " --db " +  krakenDatabase.getAbsolutePath()  + 
+					" --output " + krakenOutput + " " +  fastaFile;
+			
+			String nextLine = krakenBinary.getAbsolutePath() + "-translate " + "--db " +  
+					krakenDatabase.getAbsolutePath()  + " " + krakenOutput + " > " + krakenTranslate;
+			
+			BioLockJUtils.addNextLineToScript(aWriter, filePath, firstLine);
+			BioLockJUtils.addNextLineToScript(aWriter, filePath, nextLine);
+			
+			if( --numToDo == 0 )
 			{
-				runFile = makeNewRunFile(allWriter, countNum++);
-				aWriter = new BufferedWriter(new FileWriter(runFile));
-				runFileOpen = true;
-				File fastaFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
-				
-				String krakenOutput = getOutputDir().getAbsolutePath() + File.separator + s + "toKraken.txt";
-				String krakenTranslate = getOutputDir().getAbsolutePath() + File.separator + s + "toKrakenTranslate.txt";
-				
-				aWriter.write(krakenBinary.getAbsolutePath() + " --db " +  krakenDatabase.getAbsolutePath()  + 
-						" --output " + krakenOutput + " " +  fastaFile + "\n" );
-				aWriter.write("if [ $? –eq 0 ]; then \n" );
-				aWriter.write("    " + krakenBinary.getAbsolutePath() + "-translate " + "--db " +  
-						krakenDatabase.getAbsolutePath()  + " " + krakenOutput + " > " + krakenTranslate + "\n" );
-				aWriter.write("else touch " + getOutputDir().getAbsolutePath() + File.separator + s + FAILED_TO_PROCESS + " fi \n" );
-						
-				if( --numToDo == 0 )
-				{
-					numToDo = numJobsPerCore;
-					BioLockJUtils.closeRunFile(aWriter, runFile);
-					runFileOpen = false;
-				}
+				numToDo = numJobsPerCore;
+				BioLockJUtils.closeRunFile(aWriter, runFile);
+				runFileOpen = false;
 			}
 		}
 

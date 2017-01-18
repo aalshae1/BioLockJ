@@ -18,7 +18,7 @@ public class BioLockJ
 		
 		if( args.length != 1)
 		{
-			System.out.println("Usage " + BioLockJ.class.getName() + " pathToPropertiesFile.txt");
+			System.out.println("Usage " + BioLockJ.class.getName() + " <FULL PATH TO PROP FILE>");
 			System.out.println("TERMINATE PROGRAM");
 			System.exit(1);
 		}
