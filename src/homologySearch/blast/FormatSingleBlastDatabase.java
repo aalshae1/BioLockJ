@@ -40,7 +40,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
 		
-		File script = makeNewRunFile(allWriter, 0);
+		File script = createSubScript(allWriter, 0);
 		BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				
 		String prelimString = getConfig().getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
@@ -51,8 +51,8 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		writer.write(blastBinDin + "/makeblastdb -dbtype " + dbType +  
 								" -in " + fastaFileToFormat.getAbsolutePath() + "\n");
 				
-		BioLockJUtils.closeRunFile(writer, script);
-		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
+		BioLockJUtils.closeSubScript(writer, script);
+		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
 	}
 
 }

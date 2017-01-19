@@ -42,7 +42,7 @@ public class RunDSKOnDirectory extends BioLockJExecutor
 			
 			if( ! fastaFile.isDirectory())
 			{
-				File script = makeNewRunFile(allWriter, index++);
+				File script = createSubScript(allWriter, index++);
 				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				
 				File outFile = new File(getOutputDir().getAbsolutePath() + File.separator + 
@@ -54,11 +54,11 @@ public class RunDSKOnDirectory extends BioLockJExecutor
 				writer.write(dskBinaryPath + "/dsk2ascii  -file " + outFile.getAbsolutePath() + 
 						" -out " + outFile.getAbsolutePath() + ".txt\n" );
 				
-				BioLockJUtils.closeRunFile(writer, script);
+				BioLockJUtils.closeSubScript(writer, script);
 			}
 		}
 		
-		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
+		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
 	}
 	
 	

@@ -51,7 +51,7 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 			
 			if( ! fastaFile.isDirectory())
 			{
-				File script = makeNewRunFile(allWriter, index++);
+				File script = createSubScript(allWriter, index++);
 				
 				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 				
@@ -69,11 +69,11 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 							" -query " +fastaFile.getAbsolutePath() + 
 							" -outfmt 6\n");
 				
-				BioLockJUtils.closeRunFile(writer, script);
+				BioLockJUtils.closeSubScript(writer, script);
 			}
 		}
 		
-		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
+		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
 	}
 	
 }

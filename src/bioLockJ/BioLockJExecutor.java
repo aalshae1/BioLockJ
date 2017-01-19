@@ -64,7 +64,7 @@ public abstract class BioLockJExecutor
 		executorDir = dir;
 	}
 	
-	public File makeNewRunFile(BufferedWriter allWriter, int countNum) throws Exception
+	public File createSubScript(BufferedWriter allWriter, int countNum) throws Exception
 	{
 		File runFile = new File(getScriptDir().getAbsolutePath() + 
 				File.separator + "run_" + BioLockJUtils.formatInt(countNum)  + ".sh");
@@ -102,7 +102,8 @@ public abstract class BioLockJExecutor
 		{
 			return runAllFile;
 		}
-		runAllFile = new File(getScriptDir().getAbsolutePath() + File.separator + "runAll.sh");
+		//runAllFile = new File(getScriptDir().getAbsolutePath() + File.separator + "runAll.sh");
+		runAllFile = BioLockJUtils.createRunAllFile(getScriptDir().getAbsolutePath() + File.separator + "runAll.sh");
 		return runAllFile;	
 	} 
 	

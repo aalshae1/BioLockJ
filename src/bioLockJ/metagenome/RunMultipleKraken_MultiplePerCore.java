@@ -35,20 +35,20 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		int numJobsPerCore = BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 
 		String[] files = getFiles(fastaInDir);
-		log.info("Number of files = " + files.length);
+		log.debug("Number of valid files = " + files.length);
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
-		allWriter.write(krakenBinary.getAbsolutePath() + " --version \n");
+		//allWriter.write(krakenBinary.getAbsolutePath() + " --version \n");
 		int countNum = 0;
 		int numToDo = numJobsPerCore;
-		File runFile = null;
+		File subScript = null;
 		BufferedWriter aWriter = null;
-		boolean runFileOpen = false;
+		boolean scriptOpen = false;
 		for(String s : files)
 		{
-			runFile = makeNewRunFile(allWriter, countNum++);
-			aWriter = new BufferedWriter(new FileWriter(runFile));
-			runFileOpen = true;
+			subScript = createSubScript(allWriter, countNum++);
+			aWriter = new BufferedWriter(new FileWriter(subScript));
+			scriptOpen = true;
 			File fastaFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
 			
 			String krakenOutput = getOutputDir().getAbsolutePath() + File.separator + s + "toKraken.txt";
@@ -67,13 +67,13 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			if( --numToDo == 0 )
 			{
 				numToDo = numJobsPerCore;
-				BioLockJUtils.closeRunFile(aWriter, runFile);
-				runFileOpen = false;
+				BioLockJUtils.closeSubScript(aWriter, subScript);
+				scriptOpen = false;
 			}
 		}
 
-		if(runFileOpen) BioLockJUtils.closeRunFile(aWriter, runFile);
-		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
+		if(scriptOpen) BioLockJUtils.closeSubScript(aWriter, subScript);
+		BioLockJUtils.closeRunAllFile(allWriter, getRunAllFile().getAbsolutePath());
 	}
 	
 	

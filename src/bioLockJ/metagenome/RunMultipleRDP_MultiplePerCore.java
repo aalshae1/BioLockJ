@@ -38,7 +38,7 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 		
 		int countNum = 0;
 		int numToDo = numJobsPerCore;
-		File runFile = makeNewRunFile(allWriter, countNum++);
+		File runFile = createSubScript(allWriter, countNum++);
 
 		BufferedWriter aWriter = new BufferedWriter(new FileWriter(runFile));
 		
@@ -56,13 +56,13 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 			if( --numToDo == 0 )
 			{
 				numToDo = numJobsPerCore;
-				BioLockJUtils.closeRunFile(aWriter, runFile);
-				runFile = makeNewRunFile(allWriter, countNum++);
+				BioLockJUtils.closeSubScript(aWriter, runFile);
+				runFile = createSubScript(allWriter, countNum++);
 				aWriter = new BufferedWriter(new FileWriter(runFile));
 			}
 		}
 
-		BioLockJUtils.closeRunFile(aWriter, runFile);
-		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
+		BioLockJUtils.closeSubScript(aWriter, runFile);
+		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
 	}
 }

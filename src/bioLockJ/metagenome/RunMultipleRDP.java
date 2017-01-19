@@ -40,7 +40,7 @@ public class RunMultipleRDP extends BioLockJExecutor
 			File rdpOutFile = new File(getOutputDir().getAbsolutePath() + File.separator + 
 					s  + "toRDP.txt");
 			
-			File runFile = makeNewRunFile(allWriter, countNum++);
+			File runFile = createSubScript(allWriter, countNum++);
 
 			BufferedWriter writer = new BufferedWriter( new FileWriter(runFile));
 			
@@ -49,9 +49,9 @@ public class RunMultipleRDP extends BioLockJExecutor
 			
 			writer.write("gzip " + rdpOutFile.getAbsolutePath() + " \n");
 			
-			BioLockJUtils.closeRunFile(writer, runFile);
+			BioLockJUtils.closeSubScript(writer, runFile);
 		}
 		
-		BioLockJUtils.closeRunFile(allWriter, getRunAllFile());
+		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
 	}
 }

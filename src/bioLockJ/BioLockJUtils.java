@@ -15,8 +15,31 @@ public class BioLockJUtils
 	public static final String FINISHED_SUFFIX = "_succesfullyFinished";
 	public static final String FAILED_TO_PROCESS = "_failedToProcess";
 	
+	public static final String SCRIPT_FAILED = "_FAIL";
+	public static final String SCRIPT_SUCCEEDED = "_SUCCESS";
+	
 	private static final String INDENT = "    ";
 	
+	
+	public static File createRunAllFile(String fileFullPath) throws Exception
+	{
+		File f = new File(fileFullPath);
+		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+		writer.write("### This script submits subscripts for parallel processing ### \n" );
+		writer.write("okToContinue=true \n" );
+		writer.flush();  writer.close();
+		return f;
+	}
+	
+//	public static void addNextLineToScript(BufferedWriter writer, String filePath, String line) throws Exception
+//	{
+//		writer.write("if [ $? –eq 0 ]; then \n" );
+//		writer.write(INDENT + line + "\n" );
+//		writer.write("else \n" );
+//		writer.write(INDENT + "touch " + filePath + FAILED_TO_PROCESS + " \n" );
+//		writer.write("fi \n" );
+//	}
+
 	public static void addNextLineToScript(BufferedWriter writer, String filePath, String line) throws Exception
 	{
 		writer.write("if [ $? –eq 0 ]; then \n" );
@@ -25,7 +48,6 @@ public class BioLockJUtils
 		writer.write(INDENT + "touch " + filePath + FAILED_TO_PROCESS + " \n" );
 		writer.write("fi \n" );
 	}
-	
 	
 	
 	public static void executeAndWaitForScriptsIfAny(BioLockJExecutor bje) throws Exception
@@ -281,11 +303,23 @@ public class BioLockJUtils
 	}
 	
 	
+	public static void closeRunAllFile(BufferedWriter writer, String runAllFilePath) throws Exception
+	{
+		//File touchFile = new File(runAllFile.getAbsolutePath() + SCRIPT_SUCCEEDED );
+		//if( touchFile.exists()) touchFile.delete();
+		
+		writer.write("if [[ $okToContinue == true ]]; then \n" );
+		writer.write(INDENT + "touch " + runAllFilePath + SCRIPT_SUCCEEDED + "\n" );
+		writer.write("else \n" );
+		writer.write(INDENT + "touch " + runAllFilePath + SCRIPT_FAILED + "\n" );
+		writer.write("fi \n");
+		writer.flush();  writer.close();
+	}
 
 	
-	public static void closeRunFile(BufferedWriter writer, File runFile) throws Exception
+	public static void closeSubScript(BufferedWriter writer, File script) throws Exception
 	{
-		File touchFile = new File(runFile.getAbsolutePath() + FINISHED_SUFFIX );
+		File touchFile = new File(script.getAbsolutePath() + FINISHED_SUFFIX );
 		if( touchFile.exists()) touchFile.delete();
 		writer.write("touch " + touchFile.getAbsolutePath() + "\n");
 		writer.flush();  writer.close();
