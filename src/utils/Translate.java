@@ -397,7 +397,7 @@ public class Translate
 			currentPos++;		
 		}
 		
-		log.info( new Integer(currentPos).toString() );
+		log.info(String.valueOf(currentPos));
 		
 		writer.write("\n\n");
 		
@@ -406,7 +406,7 @@ public class Translate
 			writeProteinLine(writer, dnaSequence, currentPos);
 			writeDnaLine(writer, dnaSequence,currentPos);
 			currentPos += NUM_PROTEIN_RESIDUES_PER_LINE *3;
-			log.info( new Integer(currentPos).toString() );
+			log.info(String.valueOf(currentPos));
 			writer.write("\n");
 		}	
 		

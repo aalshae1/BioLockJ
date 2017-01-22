@@ -12,10 +12,9 @@ import utils.ConfigReader;
  */
 public class BioLockJ
 {
-
+	
 	public static void main(String[] args) throws Exception
 	{
-		
 		if( args.length != 1)
 		{
 			System.out.println("Usage " + BioLockJ.class.getName() + " <FULL PATH TO PROP FILE>");
@@ -27,8 +26,25 @@ public class BioLockJ
 		if( !propFile.exists() || propFile.isDirectory() )
 			throw new Exception(propFile.getAbsolutePath() + " is not a valid file");
 		
+		Logger log = null;
+		try{
+			runProgram(propFile);
+		}catch(Exception ex){
+			log = LoggerFactory.getLogger(BioLockJ.class);
+			log.error(ex.getMessage(), ex);
+		}
+		
+		if(log==null) log = LoggerFactory.getLogger(BioLockJ.class);
+		log.info(BioLockJUtils.LOG_SPACER);
+		log.info("PROGRAM COMPLETE");
+		log.info(BioLockJUtils.LOG_SPACER);
+	}
+	
+	
+	protected static void runProgram(File propFile) throws Exception
+	{
 		ConfigReader cReader = new ConfigReader(propFile);
-		Logger log = LoggerFactory.getLogger(BioLockJ.class);
+		
 		List<BioLockJExecutor> list = getListToRun(cReader);
 		
 		String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
@@ -45,13 +61,11 @@ public class BioLockJ
 			BioLockJUtils.executeAndWaitForScriptsIfAny(e);
 			BioLockJUtils.noteEndToLogWriter(e);
 		}
-		
-		log.info(BioLockJUtils.LOG_SPACER);
-		log.info("PROGRAM COMPLETE");
-		log.info(BioLockJUtils.LOG_SPACER);
 	}
 	
-	private static List<BioLockJExecutor> getListToRun( ConfigReader cReader ) throws Exception
+	
+	
+	protected static List<BioLockJExecutor> getListToRun( ConfigReader cReader ) throws Exception
 	{
 		List<BioLockJExecutor> list = new ArrayList<BioLockJExecutor>();
 		BufferedReader reader = new BufferedReader(new FileReader(cReader.getPropertiesFile()));
@@ -77,6 +91,7 @@ public class BioLockJ
 					{
 						blje.setInputDir(bljePrevious.getOutputDir());
 					}
+
 					bljePrevious = blje;
 					list.add(blje);
 					if( sToken.hasMoreTokens())

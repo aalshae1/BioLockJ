@@ -12,42 +12,40 @@ public class BioLockJUtils
 {
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJUtils.class);
 	
-	public static final String FINISHED_SUFFIX = "_succesfullyFinished";
-	public static final String FAILED_TO_PROCESS = "_failedToProcess";
-	
+	public static final String COMPLETE = "_complete";
+
 	public static final String SCRIPT_FAILED = "_FAIL";
 	public static final String SCRIPT_SUCCEEDED = "_SUCCESS";
 	
 	private static final String INDENT = "    ";
 	
-	
-	public static File createRunAllFile(String fileFullPath) throws Exception
+	public static void addDependantLinesToScript(BufferedWriter writer, String filePath, 
+			ArrayList<String> lines, boolean exitOnError) throws Exception
 	{
-		File f = new File(fileFullPath);
-		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
-		writer.write("### This script submits subscripts for parallel processing ### \n" );
-		writer.write("okToContinue=true \n" );
-		writer.flush();  writer.close();
-		return f;
+		Iterator<String> it = lines.iterator();
+		writer.write("segmentFlag=true \n" );
+		log.debug("filePath = " + filePath);
+		while(it.hasNext())
+		{
+			String next = it.next();
+			log.debug("write to file = " + next);
+			writer.write("if [[ $segmentFlag == true ]]; then \n" );
+			writer.write(INDENT + next + "\n" );
+			writer.write(INDENT + "if [ $? –ne 0 ]; then \n");
+			writer.write(INDENT + INDENT + "segmentFlag=false \n");
+			
+			if(exitOnError)
+			{
+				//writer.write(INDENT + INDENT + "echo Script Failed: " + filePath + " \n");
+				writer.write(INDENT + INDENT + "touch " + filePath + SCRIPT_FAILED + " \n");
+				writer.write(INDENT + INDENT + "exit 1 \n");
+			}
+			
+			writer.write(INDENT + "fi \n");
+			writer.write("fi \n");
+		}
 	}
 	
-//	public static void addNextLineToScript(BufferedWriter writer, String filePath, String line) throws Exception
-//	{
-//		writer.write("if [ $? –eq 0 ]; then \n" );
-//		writer.write(INDENT + line + "\n" );
-//		writer.write("else \n" );
-//		writer.write(INDENT + "touch " + filePath + FAILED_TO_PROCESS + " \n" );
-//		writer.write("fi \n" );
-//	}
-
-	public static void addNextLineToScript(BufferedWriter writer, String filePath, String line) throws Exception
-	{
-		writer.write("if [ $? –eq 0 ]; then \n" );
-		writer.write(INDENT + line + "\n" );
-		writer.write("else \n" );
-		writer.write(INDENT + "touch " + filePath + FAILED_TO_PROCESS + " \n" );
-		writer.write("fi \n" );
-	}
 	
 	
 	public static void executeAndWaitForScriptsIfAny(BioLockJExecutor bje) throws Exception
@@ -67,7 +65,7 @@ public class BioLockJUtils
 			}
 
 			//log.info("EXITING PROGRAM EARLY");
-			executeCHMOD_ifDefined(bje.getConfig(), bje.getRunAllFile());
+			executeCHMOD_ifDefined(bje.getConfig(), bje.getScriptDir());
 			executeFile(bje.getRunAllFile());
 			pollAndSpin(bje.getScriptFiles(), pollTime );
 		
@@ -79,7 +77,7 @@ public class BioLockJUtils
 	
 	public static void noteStartToLogWriter( BioLockJExecutor invoker )
 	{
-		log.info("\n");
+		log.info("");
 		log.info("Starting " + invoker.getClass().getName());
 	}
 		
@@ -117,34 +115,41 @@ public class BioLockJUtils
 		throw new Exception(propertyName + " must be set to either " + ConfigReader.TRUE + " or " +
 								ConfigReader.FALSE);	
 	}
-	
-//	public static void logAndRethrow(Exception ex)
-//		throws Exception
-//	{
-//		log.error(ex.toString());
-//		throw ex;
-//	}
-	
-		
-	public static void executeCHMOD_ifDefined(ConfigReader cReader, File file )  throws Exception
+
+
+	public static void executeCHMOD_ifDefined(ConfigReader cReader, File scriptDir)  throws Exception
 	{
-		if( cReader.getAProperty(ConfigReader.CHMOD_STRING) != null)
+		String chmod = cReader.getAProperty(ConfigReader.CHMOD_STRING);
+		if( chmod != null )
 		{
-			StringTokenizer sToken = new StringTokenizer(cReader.getAProperty(ConfigReader.CHMOD_STRING) + " " + 
-								file.getAbsolutePath());
-			List<String> list = new ArrayList<String>();
-			
-			while(sToken.hasMoreTokens())
-				list.add(sToken.nextToken());
-			
-			String[] args = new String[list.size()];
-			
-			for( int x=0; x  < list.size(); x++)
-				args[x] = list.get(x);
-			
-			new ProcessWrapper(args);
+			File folder = new File(scriptDir.getAbsolutePath());
+			File[] listOfFiles = folder.listFiles();
+			for(File file: listOfFiles)
+			{
+				if(!file.getName().startsWith("."))
+				{
+					new ProcessWrapper(getArgs(chmod, file.getAbsolutePath()));
+				}
+			}	
 		}
 	}
+	
+	
+	private static String[] getArgs(String command, String filePath) throws Exception
+	{
+		StringTokenizer sToken = new StringTokenizer(command + " " + filePath);
+		List<String> list = new ArrayList<String>();
+		while(sToken.hasMoreTokens())
+			list.add(sToken.nextToken());
+		
+		String[] args = new String[list.size()];
+		
+		for( int x=0; x  < list.size(); x++)
+			args[x] = list.get(x);;
+		
+		return args;
+	}
+	
 	
 	public static void pollAndSpin(List<File> scriptFiles, int pollTime) throws Exception
 	{
@@ -167,7 +172,7 @@ public class BioLockJUtils
 		
 		for(File f : scriptFiles)
 		{
-			File test = new File(f.getAbsolutePath() + FINISHED_SUFFIX);
+			File test = new File(f.getAbsolutePath() + COMPLETE);
 			
 			if(test.exists())
 			{
@@ -191,20 +196,7 @@ public class BioLockJUtils
 		new ProcessWrapper(cmd);
 	}
 	
-	public static File findProperyFile(String[] args ) throws Exception
-	{
-		if( args.length != 1)
-			throw new Exception("Sole input should be property file");
-		
-		File aFile = new File(args[0]);
-		
-		if( ! aFile.exists())
-			throw new Exception("Could not find " + aFile.getAbsolutePath());
-		
-		return aFile;
-	}
-	
-	
+
 	public static String requireString(ConfigReader reader, String propertyName) throws Exception
 	{
 		String val = reader.getAProperty(propertyName);
@@ -295,6 +287,7 @@ public class BioLockJUtils
 		Iterator<String> it = map.keySet().iterator();
 		log.info(LOG_SPACER);
 		log.info("Property Config Settings");
+		log.info(LOG_SPACER);
 		while(it.hasNext()){
 			String key = it.next();
 			log.info(key + " = " + map.get(key));
@@ -305,9 +298,6 @@ public class BioLockJUtils
 	
 	public static void closeRunAllFile(BufferedWriter writer, String runAllFilePath) throws Exception
 	{
-		//File touchFile = new File(runAllFile.getAbsolutePath() + SCRIPT_SUCCEEDED );
-		//if( touchFile.exists()) touchFile.delete();
-		
 		writer.write("if [[ $okToContinue == true ]]; then \n" );
 		writer.write(INDENT + "touch " + runAllFilePath + SCRIPT_SUCCEEDED + "\n" );
 		writer.write("else \n" );
@@ -319,10 +309,33 @@ public class BioLockJUtils
 	
 	public static void closeSubScript(BufferedWriter writer, File script) throws Exception
 	{
-		File touchFile = new File(script.getAbsolutePath() + FINISHED_SUFFIX );
+		File touchFile = new File(script.getAbsolutePath() + COMPLETE );
 		if( touchFile.exists()) touchFile.delete();
 		writer.write("touch " + touchFile.getAbsolutePath() + "\n");
 		writer.flush();  writer.close();
+	}
+	
+	
+	public static String[] getFilePaths(File inputDir)
+	{
+		String[] input = inputDir.list();
+		ArrayList<String> list = new ArrayList<String>();
+		for(String s : input)
+		{
+			if(!s.startsWith(".")) // ignore hidden files
+			{
+				list.add(s);
+			}
+		}
+		
+		String[] files = new String[list.size()];
+		int index = 0;
+		for(String s : list)
+		{
+			files[index++] = s;
+		}
+		
+		return files;
 	}
 	
 	
@@ -332,18 +345,17 @@ public class BioLockJUtils
 		return val.substring(0, val.trim().length()-1);
 	}
 	
-	public static String formatInt(int x)
+	public static String formatInt(int x, int numDigits)
 	{
-		if(x<1)
+		String xString = String.valueOf(x);
+		int xLength = xString.length();
+		while(xLength<numDigits)
 		{
-			return "00";
-		}
-		else if(x<10)
-		{
-			return "0" + x;
+			xString = "0" + xString;
+			xLength = xString.length();
 		}
 		
-		return new Integer(x).toString();
+		return xString;
 	}
 
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java

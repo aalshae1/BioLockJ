@@ -24,6 +24,12 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 	}
 	
+	private static boolean needNewScript(int numToDo, int numJobsPerCore)
+	{
+		if(numToDo == numJobsPerCore) return true;
+		return false;
+	}
+	
 	
 	@Override
 	public void executeProjectFile() throws Exception
@@ -34,11 +40,11 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		File krakenDatabase = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_DATABASE);
 		int numJobsPerCore = BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 
-		String[] files = getFiles(fastaInDir);
-		log.debug("Number of valid files = " + files.length);
+		String[] files = BioLockJUtils.getFilePaths(fastaInDir);
+		log.debug("Number of valid kraken FAST files found: " + files.length);
+		setInputDir(fastaInDir);
 		
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
-		//allWriter.write(krakenBinary.getAbsolutePath() + " --version \n");
+		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile(), true));
 		int countNum = 0;
 		int numToDo = numJobsPerCore;
 		File subScript = null;
@@ -46,24 +52,33 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		boolean scriptOpen = false;
 		for(String s : files)
 		{
-			subScript = createSubScript(allWriter, countNum++);
-			aWriter = new BufferedWriter(new FileWriter(subScript));
-			scriptOpen = true;
-			File fastaFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
+			log.debug("Add input file to script = " + s);
+			if(needNewScript(numToDo, numJobsPerCore))
+			{
+				subScript = createSubScript(allWriter, countNum++);
+				aWriter = new BufferedWriter(new FileWriter(subScript, true));
+				scriptOpen = true;
+			}
 			
-			String krakenOutput = getOutputDir().getAbsolutePath() + File.separator + s + "toKraken.txt";
-			String krakenTranslate = getOutputDir().getAbsolutePath() + File.separator + s + "toKrakenTranslate.txt";
+			File inputFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
+			String krakenOutput = getOutputDir().getAbsolutePath() + File.separator + s + "_toKraken.txt";
+			String krakenTranslate = getOutputDir().getAbsolutePath() + File.separator + s + "_toKrakenTranslate.txt";
 			String filePath = getOutputDir().getAbsolutePath() + File.separator + s;
 			
-			String firstLine = krakenBinary.getAbsolutePath() + " --db " +  krakenDatabase.getAbsolutePath()  + 
-					" --output " + krakenOutput + " " +  fastaFile;
+			String exitOnErrorFlag = BioLockJUtils.getStringOrNull(getConfig(), ConfigReader.EXIT_ON_ERROR);
+			boolean exitOnError = exitOnErrorFlag!=null && exitOnErrorFlag.equals("Y"); 
 			
-			String nextLine = krakenBinary.getAbsolutePath() + "-translate " + "--db " +  
+			String firstLine = krakenBinary.getAbsolutePath() + " --db " + krakenDatabase.getAbsolutePath()  + 
+					" --output " + krakenOutput + " " + inputFile;
+			
+			String nextLine = krakenBinary.getAbsolutePath() + "-translate --db " +  
 					krakenDatabase.getAbsolutePath()  + " " + krakenOutput + " > " + krakenTranslate;
 			
-			BioLockJUtils.addNextLineToScript(aWriter, filePath, firstLine);
-			BioLockJUtils.addNextLineToScript(aWriter, filePath, nextLine);
-			
+			ArrayList<String> lines = new ArrayList<String>();
+			lines.add(firstLine);
+			lines.add(nextLine);
+			BioLockJUtils.addDependantLinesToScript(aWriter, filePath, lines, exitOnError);
+
 			if( --numToDo == 0 )
 			{
 				numToDo = numJobsPerCore;
@@ -76,26 +91,4 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		BioLockJUtils.closeRunAllFile(allWriter, getRunAllFile().getAbsolutePath());
 	}
 	
-	
-	private String[] getFiles(File inputDir)
-	{
-		String[] input = inputDir.list();
-		ArrayList<String> list = new ArrayList<String>();
-		for(String s : input)
-		{
-			if(!s.startsWith(".")) // ignore hiddend files
-			{
-				list.add(s);
-			}
-		}
-		
-		String[] files = new String[list.size()];
-		int index = 0;
-		for(String s : list)
-		{
-			files[index++] = s;
-		}
-		
-		return files;
-	}
 }

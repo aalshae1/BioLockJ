@@ -1,4 +1,4 @@
-<project name="BioLockJ" default="compile" basedir=".">
+<project name="BioLockJ" default="copy" basedir=".">
 
   <target name="clean" >
     <delete dir="bin"/>
@@ -12,9 +12,15 @@
   <target name="compile" depends="init">
     <javac includeantruntime="false" srcdir="src" destdir="bin">
        <classpath>
-          <pathelement path="lib/slf4j-api-1.7.22.jar"/>
+       		<fileset dir="lib">
+       	        <include name="**/*.jar"/>
+       	    </fileset>
        </classpath>
     </javac>
+  </target>
+	
+  <target name="copy" depends="compile">
+  	<copydir src="resources" dest="bin"/>
   </target>
 
 </project>

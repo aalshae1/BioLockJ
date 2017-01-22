@@ -102,7 +102,7 @@ public class WriteConservedKMersForReference extends BioLockJExecutor
 			map.put(Long.parseLong(splits[0]), numOnes/bitMap.length());
 			
 			if( map.size() %1000000 == 0)
-				log.info(new Integer(map.size()).toString());
+				log.info(String.valueOf(map.size()));
 		}
 		
 		return map;

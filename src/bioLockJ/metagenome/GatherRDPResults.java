@@ -62,7 +62,7 @@ public class GatherRDPResults extends BioLockJExecutor
 				
 				for(String key: countMap.keySet())
 				{
-					writer.write( s.replaceAll(BioLockJUtils.FINISHED_SUFFIX, "") + "\t" + 
+					writer.write( s.replaceAll(BioLockJUtils.COMPLETE, "") + "\t" + 
 								key + "\t" + countMap.get(key) + "\n");
 				}
 				

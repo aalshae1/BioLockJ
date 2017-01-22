@@ -32,15 +32,13 @@ public class FisherTest
 	
 	public static void main(String[] args) throws Exception
 	{
-		log.info(new Double(choose(5,2)).toString());
 		
-		log.info(new Double(choose(300,12)).toString());
-		
-		log.info(new Double(choose(600,234)).toString());
-		
-		log.info(new Double(getFisherP(60, 20, 7, 3)).toString());
+		log.info(String.valueOf(choose(5,2)));
+		log.info(String.valueOf(choose(300,12)));
+		log.info(String.valueOf(choose(600,234)));
+		log.info(String.valueOf(getFisherP(60, 20, 7, 3)));
 		
 		// see slide # 8 here http://afodor.github.io/classes/stats2016/Lecture07.pptx
-		log.info(new Double(getFisherPSum(34, 16, 15, 13)).toString());
+		log.info(String.valueOf(getFisherPSum(34, 16, 15, 13)));
 	}
 }

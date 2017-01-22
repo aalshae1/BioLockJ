@@ -37,6 +37,9 @@ public class ConfigReader
 	
 	public static final String TRUE = "TRUE";
 	public static final String FALSE= "FALSE";
+	
+	public static final String COPY_INPUT_FLAG = "COPY_INPUT_FLAG";
+	public static final String EXIT_ON_ERROR = "EXIT_ON_ERROR";
 
 	public static final String CLUSTER_NAME = "CLUSTER_NAME";
 	public static final String BLAST_PRELIMINARY_STRING = "BLAST_PRELIMINARY_STRING";
