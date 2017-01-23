@@ -15,7 +15,7 @@ public class ProcessWrapper
 		for ( int x=0; x < cmdArgs.length; x++ )
 				sb.append(cmdArgs[x] + " " );
 				
-		log.debug("START JOB: " + sb.toString());	
+		log.debug("EXECUTE COMMAND: " + sb.toString());	
 
 		Runtime r = Runtime.getRuntime();
 		Process p = r.exec(cmdArgs);

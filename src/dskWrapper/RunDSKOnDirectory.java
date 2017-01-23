@@ -1,13 +1,11 @@
 package dskWrapper;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.List;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ScriptBuilder;
 import utils.ConfigReader;
 
 /* 
@@ -29,37 +27,21 @@ public class RunDSKOnDirectory extends BioLockJExecutor
 		String dskBinaryPath = BioLockJUtils.requireString(getConfig(), ConfigReader.DSK_BINARY_DIRECTORY);
 		File dskInputDirectory = BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.DSK_INPUT_DIRECTORY);
 
-		int index = 0;
+		String[] files = BioLockJUtils.getFilePaths(dskInputDirectory);
+		log.debug("Number of valid files found: " + files.length);
+		setInputDir(dskInputDirectory);
 		
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
-		
-		
-		String[] filesToRun = dskInputDirectory.list();
-		
-		for( String s : filesToRun)
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		for( String file : files )
 		{
-			File fastaFile = new File(dskInputDirectory.getAbsolutePath() + File.separator + s);
-			
-			if( ! fastaFile.isDirectory())
-			{
-				File script = createSubScript(allWriter, index++);
-				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
-				
-				File outFile = new File(getOutputDir().getAbsolutePath() + File.separator + 
-						fastaFile.getName() + "_dsk");
-				
-				writer.write(dskBinaryPath + "/dsk -file " + fastaFile.getAbsolutePath() + " -out " + 
-						outFile.getAbsolutePath() + " -abundance-min 1\n");
-				
-				writer.write(dskBinaryPath + "/dsk2ascii  -file " + outFile.getAbsolutePath() + 
-						" -out " + outFile.getAbsolutePath() + ".txt\n" );
-				
-				BioLockJUtils.closeSubScript(writer, script);
-			}
+			String filePath = getOutputDir().getAbsolutePath() + File.separator + file + "_dsk";
+
+			ArrayList<String> lines = new ArrayList<String>(2);
+			lines.add(dskBinaryPath + "/dsk -file " + filePath + " -out " + filePath + " -abundance-min 1");
+			lines.add(dskBinaryPath + "/dsk2ascii -file " + filePath + " -out " + filePath + ".txt");
+			data.add(lines);
 		}
 		
-		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
+		ScriptBuilder.buildScripts(this, data);
 	}
-	
-	
 }

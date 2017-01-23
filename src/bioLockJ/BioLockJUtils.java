@@ -11,41 +11,7 @@ import utils.ProcessWrapper;
 public class BioLockJUtils
 {
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJUtils.class);
-	
-	public static final String COMPLETE = "_complete";
 
-	public static final String SCRIPT_FAILED = "_FAIL";
-	public static final String SCRIPT_SUCCEEDED = "_SUCCESS";
-	
-	private static final String INDENT = "    ";
-	
-	public static void addDependantLinesToScript(BufferedWriter writer, String filePath, 
-			ArrayList<String> lines, boolean exitOnError) throws Exception
-	{
-		Iterator<String> it = lines.iterator();
-		writer.write("segmentFlag=true \n" );
-		//log.debug("filePath = " + filePath);
-		while(it.hasNext())
-		{
-			writer.write("if [[ $segmentFlag == true ]]; then \n" );
-			writer.write(INDENT + it.next() + "\n" );
-			writer.write(INDENT + "if [ $? –ne 0 ]; then \n");
-			writer.write(INDENT + INDENT + "segmentFlag=false \n");
-			
-			if(exitOnError)
-			{
-				//writer.write(INDENT + INDENT + "echo Script Failed: " + filePath + " \n");
-				writer.write(INDENT + INDENT + "touch " + filePath + SCRIPT_FAILED + " \n");
-				writer.write(INDENT + INDENT + "exit 1 \n");
-			}
-			
-			writer.write(INDENT + "fi \n");
-			writer.write("fi \n");
-		}
-	}
-	
-	
-	
 	public static void executeAndWaitForScriptsIfAny(BioLockJExecutor bje) throws Exception
 	{
 		bje.executeProjectFile();
@@ -95,13 +61,15 @@ public class BioLockJUtils
 		return val;
 	}
 	
-	public static boolean requireBoolean(ConfigReader cReader, String propertyName) throws Exception
+	public static boolean getBoolean(ConfigReader cReader, String propertyName, boolean isRequired) throws Exception
 	{
 		String val = cReader.getAProperty(propertyName);
 		
-		if( val == null)
+		if( isRequired && val == null )
 			throw new Exception("Could not find " + propertyName);
-		
+		else if ( val == null )
+			return false;
+
 		if( val.equalsIgnoreCase(ConfigReader.TRUE))
 			return true;
 		
@@ -111,6 +79,23 @@ public class BioLockJUtils
 		throw new Exception(propertyName + " must be set to either " + ConfigReader.TRUE + " or " +
 								ConfigReader.FALSE);	
 	}
+	
+//	public static boolean requireBoolean(ConfigReader cReader, String propertyName) throws Exception
+//	{
+//		String val = cReader.getAProperty(propertyName);
+//		
+//		if( val == null)
+//			throw new Exception("Could not find " + propertyName);
+//		
+//		if( val.equalsIgnoreCase(ConfigReader.TRUE))
+//			return true;
+//		
+//		if( val.equalsIgnoreCase(ConfigReader.FALSE))
+//			return false;
+//		
+//		throw new Exception(propertyName + " must be set to either " + ConfigReader.TRUE + " or " +
+//								ConfigReader.FALSE);	
+//	}
 
 
 	public static void executeCHMOD_ifDefined(ConfigReader cReader, File scriptDir)  throws Exception
@@ -165,24 +150,32 @@ public class BioLockJUtils
 	public static boolean poll(List<File> scriptFiles) throws Exception
 	{
 		int numSuccess = 0;
+		int numFailed = 0;
 		
 		for(File f : scriptFiles)
 		{
-			File test = new File(f.getAbsolutePath() + COMPLETE);
+			File testSuccess = new File(f.getAbsolutePath() + ScriptBuilder.SCRIPT_SUCCEEDED);
 			
-			if(test.exists())
+			if(testSuccess.exists())
 			{
 				numSuccess++;
 			}
 			else
-			{
-				log.info(f.getAbsolutePath() + " not finished ");
+			{ 
+				File testFailure = new File(f.getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED);
+				if(testFailure.exists())
+				{
+					numFailed++;
+				}
+				else
+				{
+					log.info(f.getAbsolutePath() + " not finished ");
+				}
 			}
 		}
 		
-		log.info("Finished " + numSuccess + " of " + scriptFiles.size() + "\n");
-		
-		return numSuccess == scriptFiles.size();
+		log.info("Script Status (Total=" + scriptFiles.size() + "): Success=" + numSuccess + "; Failures=" + numFailed);
+		return (numSuccess + numFailed) == scriptFiles.size();
 	}
 	
 	public static void executeFile(File f) throws Exception
@@ -292,24 +285,7 @@ public class BioLockJUtils
 	}
 	
 	
-	public static void closeRunAllFile(BufferedWriter writer, String runAllFilePath) throws Exception
-	{
-		writer.write("if [[ $okToContinue == true ]]; then \n" );
-		writer.write(INDENT + "touch " + runAllFilePath + SCRIPT_SUCCEEDED + "\n" );
-		writer.write("else \n" );
-		writer.write(INDENT + "touch " + runAllFilePath + SCRIPT_FAILED + "\n" );
-		writer.write("fi \n");
-		writer.flush();  writer.close();
-	}
-
 	
-	public static void closeSubScript(BufferedWriter writer, File script) throws Exception
-	{
-		File touchFile = new File(script.getAbsolutePath() + COMPLETE );
-		if( touchFile.exists()) touchFile.delete();
-		writer.write("touch " + touchFile.getAbsolutePath() + "\n");
-		writer.flush();  writer.close();
-	}
 	
 	
 	public static String[] getFilePaths(File inputDir)
@@ -320,7 +296,11 @@ public class BioLockJUtils
 		{
 			if(!s.startsWith(".")) // ignore hidden files
 			{
-				list.add(s);
+				File file = new File(inputDir.getAbsolutePath() + File.separator + s);
+				if( !file.isDirectory() )
+				{
+					list.add(s);
+				}
 			}
 		}
 		

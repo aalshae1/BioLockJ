@@ -1,10 +1,10 @@
 package homologySearch.blast;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.util.ArrayList;
 
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ScriptBuilder;
 import bioLockJ.BioLockJExecutor;
 import utils.ConfigReader;
 
@@ -38,42 +38,30 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 		File blastQueryDir = BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.BLAST_QUERY_DIRECTORY);
 		File blastDatabaseFile = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB);
 		String blastAllCommand = BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_ALL_COMMAND);
-
-		int index = 0;
 		
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
+		String prelimString = getConfig().getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
 		
-		String[] filesToFormat = blastQueryDir.list();
+		String[] files = BioLockJUtils.getFilePaths(blastQueryDir);
+		log.debug("Number of valid  files found: " + files.length);
+		setInputDir(blastQueryDir);
 		
-		for( String s : filesToFormat)
-		{
-			File fastaFile = new File(blastQueryDir.getAbsolutePath() + File.separator + s);
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		for( String file : files )
+		{	
+			ArrayList<String> lines = new ArrayList<String>();
+			if( prelimString != null ) 
+				lines.add(prelimString);
 			
-			if( ! fastaFile.isDirectory())
-			{
-				File script = createSubScript(allWriter, index++);
-				
-				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
-				
-				String prelimString = getConfig().getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
-				
-				if( prelimString != null)
-					writer.write(prelimString + "\n");
-				
-				File outFile = new File( getOutputDir() + File.separator + fastaFile.getName() + "_to_" + 
-							blastDatabaseFile.getName() + ".txt");
-				
-				writer.write(blastBinDin + "/" + blastAllCommand + " -db " + 
-						blastDatabaseFile.getAbsolutePath() + " -out " + 
-							outFile.getAbsolutePath() +  
-							" -query " +fastaFile.getAbsolutePath() + 
-							" -outfmt 6\n");
-				
-				BioLockJUtils.closeSubScript(writer, script);
-			}
+			String outFile = getOutputDir() + File.separator + file + "_to_" + 
+					blastDatabaseFile.getName() + ".txt";
+			
+			lines.add(blastBinDin + "/" + blastAllCommand + " -db " + 
+					blastDatabaseFile.getAbsolutePath() + " -out " + 
+						outFile + " -query " + file + " -outfmt 6");
+		
+			data.add(lines);
 		}
 		
-		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
+		ScriptBuilder.buildScripts(this, data);
 	}
-	
 }

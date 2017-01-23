@@ -1,8 +1,6 @@
 package bioLockJ;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,14 +16,12 @@ public abstract class BioLockJExecutor
 	public abstract void executeProjectFile() throws Exception;
 	public abstract void checkDependencies() throws Exception;
 	
-	public static final String FAILED_TO_PROCESS = "_failedToProcess";
 	public static final String RUN_BIOLOCK_J = "#RUN_BIOLOCK_J";
 	
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJExecutor.class);
 	
 	private List<File> scriptFiles = new ArrayList<File>();
 	private ConfigReader config;
-	private static final String INDENT = "    ";
 	private File runAllFile;
 	private File projectDir;
 	private File executorDir;
@@ -66,32 +62,6 @@ public abstract class BioLockJExecutor
 		executorDir = dir;
 	}
 	
-	public File createSubScript(BufferedWriter allWriter, int countNum) throws Exception
-	{
-		String num = BioLockJUtils.formatInt(countNum, 3);
-		File script = new File(getScriptDir().getAbsolutePath() + 
-				File.separator + "run_" + num  + ".sh");
-
-		BufferedWriter writer = new BufferedWriter(new FileWriter(script));
-		writer.write("### Subscript #" + num + " for parallel processing ### \n" );
-		//writer.append("echo initialize_script_" + num + " \n");
-		writer.flush(); writer.close();
-
-		allWriter.write("if [[ $okToContinue == true ]]; then \n" );
-		
-		String clusterParams = getConfig().getAProperty(ConfigReader.CLUSTER_PARAMS);
-		String clusterCommand = getConfig().getAProperty(ConfigReader.CLUSTER_BATCH_COMMAND);
-		allWriter.write(INDENT + (clusterCommand == null ?  "": clusterCommand + " " ) + script.getAbsolutePath() + 
-				" " + (clusterParams == null ?  "": clusterParams ) +   "\n"  );
-		
-		allWriter.write(INDENT + "if [ $? –ne 0 ]; then \n");
-		allWriter.write(INDENT + INDENT +"okToContinue=false \n" );
-		allWriter.write(INDENT + "fi \n");
-		allWriter.write("fi \n");
-		allWriter.flush();
-		addScriptFile(script);
-		return script;
-	}
 	
 	protected File getExecutorDir()
 	{
@@ -115,20 +85,10 @@ public abstract class BioLockJExecutor
 		{
 			return runAllFile;
 		}
-		runAllFile = createRunAllFile();
+		runAllFile = ScriptBuilder.createRunAllFile(getScriptDir().getAbsolutePath());
 		return runAllFile;	
 	} 
 	
-	
-	public File createRunAllFile() throws Exception
-	{
-		File f = new File(getScriptDir().getAbsolutePath() + File.separator + "runAll.sh");
-		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
-		writer.write("### This script submits subscripts for parallel processing ### \n" );
-		writer.write("okToContinue=true \n" );
-		writer.flush(); writer.close();
-		return f;
-	}
 
 	public String getTimeStamp()
 	{
@@ -145,15 +105,13 @@ public abstract class BioLockJExecutor
 		projectDir = BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_PROJECT_DIR);
 		return projectDir; 
 	}
-
+ 
 
 	public void setInputDir(File inDir) throws Exception
 	{
 		if( !inDir.getAbsolutePath().contains(getProjectDir().getName()) )
 		{
-			String copy = getConfig().getAProperty(ConfigReader.COPY_INPUT_FLAG);
-			if (copy!=null) log.debug("copy flag = " + copy);
-			if (copy!=null && copy.equals("Y"))
+			if (BioLockJUtils.getBoolean(getConfig(), ConfigReader.COPY_INPUT_FLAG, false))
 			{
 				log.info("Copy input data to " + getExecutorDir().getAbsolutePath() +File.separator + "input");
 				FileUtils.copyDirectory(inDir, getInputDir());

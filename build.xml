@@ -20,7 +20,9 @@
   </target>
 	
   <target name="copy" depends="compile">
-  	<copydir src="resources" dest="bin"/>
+  	<copy todir="bin">
+  		<fileset dir="resources"/>
+  	</copy>
   </target>
 
 </project>

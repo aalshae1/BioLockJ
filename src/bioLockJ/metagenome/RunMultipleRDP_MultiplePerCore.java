@@ -1,11 +1,11 @@
 package bioLockJ.metagenome;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.util.ArrayList;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ScriptBuilder;
 import utils.ConfigReader;
 
 /**
@@ -31,38 +31,30 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 	{
 	 	File fastaInDir =  BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
 		File rdpBinary =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_RDP_JAR);
-		int numJobsPerCore = BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 
-		String[] files = fastaInDir.list();
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
+		String[] files = BioLockJUtils.getFilePaths(fastaInDir);
+		log.debug("Number of valid  files found: " + files.length);
+		setInputDir(fastaInDir);
 		
-		int countNum = 0;
-		int numToDo = numJobsPerCore;
-		File runFile = createSubScript(allWriter, countNum++);
-
-		BufferedWriter aWriter = new BufferedWriter(new FileWriter(runFile));
-		
-		for(String s : files)
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		for( String file : files )
 		{
-			File fastaFile = new File(fastaInDir.getAbsolutePath() + File.separator + s);
-			File rdpOutFile = new File(getOutputDir().getAbsolutePath() + File.separator + 
-					s  + "toRDP.txt");
+			String fastaFile = fastaInDir.getAbsolutePath() + File.separator + file;
+			String rdpOutFile = getOutputDir().getAbsolutePath() + File.separator + file + "toRDP.txt";
 			
-			aWriter.write("java -jar "  + rdpBinary.getAbsolutePath() + " " +  
-					"-o \"" + rdpOutFile.getAbsolutePath()  + "\" -q \"" + fastaFile + "\"\n" );
+			String firstLine = "java -jar "  + rdpBinary.getAbsolutePath() + " " +  
+					"-o \"" + rdpOutFile  + "\" -q \"" + fastaFile + "\"";
 			
-			aWriter.write("gzip \"" + rdpOutFile.getAbsolutePath() + "\" \n");
+			String nextLine = "gzip \"" + rdpOutFile + "\"";
 			
-			if( --numToDo == 0 )
-			{
-				numToDo = numJobsPerCore;
-				BioLockJUtils.closeSubScript(aWriter, runFile);
-				runFile = createSubScript(allWriter, countNum++);
-				aWriter = new BufferedWriter(new FileWriter(runFile));
-			}
+			
+			ArrayList<String> lines = new ArrayList<String>(2);
+			lines.add(firstLine);
+			lines.add(nextLine);
+			data.add(lines);
+
 		}
 
-		BioLockJUtils.closeSubScript(aWriter, runFile);
-		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
+		ScriptBuilder.buildScripts(this, data);
 	}
 }

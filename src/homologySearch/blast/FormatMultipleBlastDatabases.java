@@ -1,10 +1,10 @@
 package homologySearch.blast;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.util.ArrayList;
 
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ScriptBuilder;
 import bioLockJ.BioLockJExecutor;
 import utils.ConfigReader;
 
@@ -32,38 +32,27 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	@Override
 	public void executeProjectFile() throws Exception
 	{
-		String blastBinDin = BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_BINARY_DIR);
+		String blastBinDir = BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_BINARY_DIR);
 		File fastaDirToFormat = BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.FASTA_DIR_TO_FORMAT);
-		int index = 0;
+
+		String prelimString = getConfig().getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
 		
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
+		String[] files = BioLockJUtils.getFilePaths(fastaDirToFormat);
+		log.debug("Number of valid  files found: " + files.length);
+		setInputDir(fastaDirToFormat);
 		
-		String[] filesToFormat = fastaDirToFormat.list();
-		
-		for( String s : filesToFormat)
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		for( String file : files )
 		{
-			File fastaFile = new File(fastaDirToFormat.getAbsolutePath() + File.separator + s);
-			
-			if( !fastaFile.isDirectory() )
-			{
-				
-				File script = createSubScript(allWriter, index++);
-				
-				BufferedWriter writer = new BufferedWriter(new FileWriter(script));
-				
-				String prelimString = getConfig().getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
-				
-				if( prelimString != null)
-					writer.write(prelimString + "\n");
-				
-				writer.write(blastBinDin + "/makeblastdb -dbtype nucl " + 
-								"-in " + fastaFile.getAbsolutePath() + "\n");
-				
-				BioLockJUtils.closeSubScript(writer, script);
-			}
+			ArrayList<String> lines = new ArrayList<String>();
+			if( prelimString != null )
+				lines.add(prelimString);
+
+			lines.add(blastBinDir + "/makeblastdb -dbtype nucl -in " + file);
+			data.add(lines);
 		}
 		
-		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
+		ScriptBuilder.buildScripts(this, data);
 	}
 	
 }

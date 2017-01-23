@@ -78,14 +78,14 @@ public class GatherBlastHits extends BioLockJExecutor
 	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_GATHERED_TOP_HITS_FILE);
-		BioLockJUtils.requireBoolean(getConfig(), ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
+		BioLockJUtils.getBoolean(getConfig(), ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF, true);
 	}
 	
 	public void executeProjectFile() throws Exception
 	{
 
 		File topHitsFile = new File( BioLockJUtils.requireString(getConfig(), ConfigReader.BLAST_GATHERED_TOP_HITS_FILE));
-		boolean useQueryCoordiantes = BioLockJUtils.requireBoolean(getConfig(), ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF);
+		boolean useQueryCoordiantes = BioLockJUtils.getBoolean(getConfig(), ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF, true);
 		
 		List<HitScores> hits = getHits(getOutputDir());
 		writeResults(hits, topHitsFile);

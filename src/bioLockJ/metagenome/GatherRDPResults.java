@@ -16,6 +16,7 @@ import java.util.zip.GZIPInputStream;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ScriptBuilder;
 import parsers.NewRDPNode;
 import parsers.NewRDPParserFileLine;
 import parsers.OtuWrapper;
@@ -49,7 +50,7 @@ public class GatherRDPResults extends BioLockJExecutor
 		int fileCount = 0;
 		for(String s : getOutputDir().list())
 		{
-			log.info("RDP OUTPUT FILE # (" + new Integer(fileCount++ +1) + "):  " + s );
+			log.info("RDP OUTPUT FILE # (" + String.valueOf(fileCount++) + "):  " + s );
 			List<NewRDPParserFileLine> list = NewRDPParserFileLine.getRdpListSingleThread(
 					getOutputDir().getAbsoluteFile() + File.separator + s	);
 				
@@ -62,8 +63,17 @@ public class GatherRDPResults extends BioLockJExecutor
 				
 				for(String key: countMap.keySet())
 				{
-					writer.write( s.replaceAll(BioLockJUtils.COMPLETE, "") + "\t" + 
+					if(s.contains(ScriptBuilder.SCRIPT_SUCCEEDED))
+					{
+						writer.write( s.replaceAll(ScriptBuilder.SCRIPT_SUCCEEDED, "") + "\t" + 
 								key + "\t" + countMap.get(key) + "\n");
+					}
+					if(s.contains(ScriptBuilder.SCRIPT_FAILED))
+					{
+						writer.write( s.replaceAll(ScriptBuilder.SCRIPT_FAILED, "") + "\t" + 
+								key + "\t" + countMap.get(key) + "\n");
+					}
+					
 				}
 				
 				writer.flush();

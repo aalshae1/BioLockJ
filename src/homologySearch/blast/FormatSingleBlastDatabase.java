@@ -1,10 +1,10 @@
 package homologySearch.blast;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.util.ArrayList;
 
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ScriptBuilder;
 import bioLockJ.BioLockJExecutor;
 import utils.ConfigReader;
 
@@ -38,21 +38,23 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		
 		String dbType = BioLockJUtils.requireDBType(getConfig());
 		
-		BufferedWriter allWriter = new BufferedWriter(new FileWriter(getRunAllFile()));
+		String[] files = BioLockJUtils.getFilePaths(fastaFileToFormat);
+		log.debug("Number of valid  files found: " + files.length);
+		setInputDir(fastaFileToFormat);
 		
-		File script = createSubScript(allWriter, 0);
-		BufferedWriter writer = new BufferedWriter(new FileWriter(script));
-				
 		String prelimString = getConfig().getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
+		
+		ArrayList<String> lines = new ArrayList<String>();
+		if( prelimString != null )
+			lines.add(prelimString);
+	
+		lines.add(blastBinDin + "/makeblastdb -dbtype " + dbType +  
+								" -in " + fastaFileToFormat.getAbsolutePath());
 				
-		if( prelimString != null)
-			writer.write(prelimString + "\n");
-				
-		writer.write(blastBinDin + "/makeblastdb -dbtype " + dbType +  
-								" -in " + fastaFileToFormat.getAbsolutePath() + "\n");
-				
-		BioLockJUtils.closeSubScript(writer, script);
-		BioLockJUtils.closeSubScript(allWriter, getRunAllFile());
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		data.add(lines);
+		
+		ScriptBuilder.buildScripts(this, data);
 	}
 
 }
