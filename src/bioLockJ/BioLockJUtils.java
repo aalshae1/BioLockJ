@@ -6,36 +6,25 @@ import java.util.*;
 import org.slf4j.*;
 
 import utils.ConfigReader;
-import utils.ProcessWrapper;
+
 
 public class BioLockJUtils
 {
+	public static final String LOG_SPACER = "=================================================";
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJUtils.class);
 
-	public static void executeAndWaitForScriptsIfAny(BioLockJExecutor bje) throws Exception
+	
+	public static String getSimpleClassName(String fullPathClassName) throws Exception
 	{
-		bje.executeProjectFile();
-		if( bje.hasScripts() )
+		StringTokenizer st = new StringTokenizer(fullPathClassName, ".");
+		String token = st.nextToken();
+		while(st.hasMoreTokens())
 		{
-			int pollTime = 15;
-			try
-			{
-				pollTime = requirePositiveInteger(bje.getConfig(), ConfigReader.POLL_TIME);
-			}
-			catch(Exception ex)
-			{
-				log.warn("Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + 
-								pollTime +  " seconds ", ex);		
-			}
-
-			executeCHMOD_ifDefined(bje.getConfig(), bje.getScriptDir());
-			executeFile(bje.getRunAllFile());
-			pollAndSpin(bje.getScriptFiles(), pollTime );
+			token = st.nextToken();
 		}
+		
+		return token;
 	}
-	
-	
-	
 	
 	public static void noteStartToLogWriter( BioLockJExecutor invoker )
 	{
@@ -98,92 +87,7 @@ public class BioLockJUtils
 //	}
 
 
-	public static void executeCHMOD_ifDefined(ConfigReader cReader, File scriptDir)  throws Exception
-	{
-		String chmod = cReader.getAProperty(ConfigReader.CHMOD_STRING);
-		if( chmod != null )
-		{
-			File folder = new File(scriptDir.getAbsolutePath());
-			File[] listOfFiles = folder.listFiles();
-			for(File file: listOfFiles)
-			{
-				if(!file.getName().startsWith("."))
-				{
-					new ProcessWrapper(getArgs(chmod, file.getAbsolutePath()));
-				}
-			}	
-		}
-	}
 	
-	
-	private static String[] getArgs(String command, String filePath) throws Exception
-	{
-		StringTokenizer sToken = new StringTokenizer(command + " " + filePath);
-		List<String> list = new ArrayList<String>();
-		while(sToken.hasMoreTokens())
-			list.add(sToken.nextToken());
-		
-		String[] args = new String[list.size()];
-		
-		for( int x=0; x  < list.size(); x++)
-			args[x] = list.get(x);;
-		
-		return args;
-	}
-	
-	
-	public static void pollAndSpin(List<File> scriptFiles, int pollTime) throws Exception
-	{
-		boolean finished = false;
-		
-		while( !finished )
-		{
-			finished = poll(scriptFiles);
-			
-			if( !finished )
-			{
-				Thread.sleep(pollTime * 1000);
-			}
-		}
-	}
-	
-	public static boolean poll(List<File> scriptFiles) throws Exception
-	{
-		int numSuccess = 0;
-		int numFailed = 0;
-		
-		for(File f : scriptFiles)
-		{
-			File testSuccess = new File(f.getAbsolutePath() + ScriptBuilder.SCRIPT_SUCCEEDED);
-			
-			if(testSuccess.exists())
-			{
-				numSuccess++;
-			}
-			else
-			{ 
-				File testFailure = new File(f.getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED);
-				if(testFailure.exists())
-				{
-					numFailed++;
-				}
-				else
-				{
-					log.info(f.getAbsolutePath() + " not finished ");
-				}
-			}
-		}
-		
-		log.info("Script Status (Total=" + scriptFiles.size() + "): Success=" + numSuccess + "; Failures=" + numFailed);
-		return (numSuccess + numFailed) == scriptFiles.size();
-	}
-	
-	public static void executeFile(File f) throws Exception
-	{
-		String[] cmd = new String[1];
-		cmd[0] = f.getAbsolutePath();
-		new ProcessWrapper(cmd);
-	}
 	
 
 	public static String requireString(ConfigReader reader, String propertyName) throws Exception
@@ -354,5 +258,5 @@ public class BioLockJUtils
 	    }
 	}
 	
-	public static final String LOG_SPACER = "=================================================";
+	
 }

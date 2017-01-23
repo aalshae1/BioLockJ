@@ -124,8 +124,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 			HashMap<String, HashSet<Integer>> fileLineMap) 
 				throws Exception
 	{	
-		BufferedReader reader = new BufferedReader(new FileReader( inFile));
-		
+		BufferedReader reader = new BufferedReader(new FileReader(inFile));
 		BufferedWriter writer = new BufferedWriter(new FileWriter(outFile));
 
 		for(String s = reader.readLine(); s != null; s = reader.readLine())

@@ -6,6 +6,7 @@ import java.util.*;
 import org.slf4j.*;
 
 import utils.ConfigReader;
+import utils.ProcessWrapper;
 
 /** 
  * 
@@ -30,7 +31,7 @@ public class BioLockJ
 		try{
 			runProgram(propFile);
 		}catch(Exception ex){
-			log = LoggerFactory.getLogger(BioLockJ.class);
+			if(log==null) log = LoggerFactory.getLogger(BioLockJ.class);
 			log.error(ex.getMessage(), ex);
 		}
 		
@@ -58,10 +59,116 @@ public class BioLockJ
 		for( BioLockJExecutor e : list )
 		{
 			BioLockJUtils.noteStartToLogWriter(e);
-			BioLockJUtils.executeAndWaitForScriptsIfAny(e);
+			executeAndWaitForScriptsIfAny(e);
 			BioLockJUtils.noteEndToLogWriter(e);
 		}
 	}
+	
+	
+	protected static void executeAndWaitForScriptsIfAny(BioLockJExecutor invoker) throws Exception
+	{
+		invoker.executeProjectFile();
+		if( invoker.hasScripts() )
+		{
+			int pollTime = 15;
+			try
+			{
+				pollTime = BioLockJUtils.requirePositiveInteger(invoker.getConfig(), ConfigReader.POLL_TIME);
+			}
+			catch(Exception ex)
+			{
+				invoker.log.warn("Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + 
+								pollTime +  " seconds ", ex);		
+			}
+
+			executeCHMOD_ifDefined(invoker.getConfig(), invoker.getScriptDir());
+			executeFile(invoker.getRunAllFile());
+			pollAndSpin(invoker, pollTime );
+		}
+	}
+	
+	
+	protected static void executeCHMOD_ifDefined(ConfigReader cReader, File scriptDir)  throws Exception
+	{
+		String chmod = cReader.getAProperty(ConfigReader.CHMOD_STRING);
+		if( chmod != null )
+		{
+			File folder = new File(scriptDir.getAbsolutePath());
+			File[] listOfFiles = folder.listFiles();
+			for(File file: listOfFiles)
+			{
+				if(!file.getName().startsWith("."))
+				{
+					new ProcessWrapper(getArgs(chmod, file.getAbsolutePath()));
+				}
+			}	
+		}
+	}
+	
+	
+	
+	
+	
+	protected static void pollAndSpin(BioLockJExecutor invoker, int pollTime) throws Exception
+	{
+		
+		boolean finished = false;
+		while( !finished )
+		{
+			finished = poll(invoker);
+			
+			if( !finished )
+			{
+				Thread.sleep(pollTime * 1000);
+			}
+		}
+	}
+	
+	protected static boolean poll(BioLockJExecutor invoker) throws Exception
+	{
+		List<File> scriptFiles = invoker.getScriptFiles();
+		int numSuccess = 0;
+		int numFailed = 0;
+		
+		for(File f : scriptFiles)
+		{
+			File testSuccess = new File(f.getAbsolutePath() + ScriptBuilder.SCRIPT_SUCCEEDED);
+			
+			if(testSuccess.exists())
+			{
+				numSuccess++;
+			}
+			else
+			{ 
+				File testFailure = new File(f.getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED);
+				if(testFailure.exists())
+				{
+					numFailed++;
+				}
+				else
+				{
+					invoker.log.info(f.getAbsolutePath() + " not finished ");
+				}
+			}
+		}
+		
+		File runAllFailed = new File(invoker.getRunAllFile().getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED);
+		if(runAllFailed.exists())
+		{
+			throw new Exception("CANCEL SCRIPT EXECUTION: ERROR IN...runAll.sh");
+		}
+		
+		invoker.log.info("Script Status (Total=" + scriptFiles.size() + "): Success=" + numSuccess + "; Failures=" + numFailed);
+		return (numSuccess + numFailed) == scriptFiles.size();
+	}
+	
+	protected static void executeFile(File f) throws Exception
+	{
+		String[] cmd = new String[1];
+		cmd[0] = f.getAbsolutePath();
+		new ProcessWrapper(cmd);
+	}
+	
 	
 	
 	
@@ -86,7 +193,7 @@ public class BioLockJ
 					String fullClassName = sToken.nextToken();
 					BioLockJExecutor blje = (BioLockJExecutor) Class.forName(fullClassName).newInstance();
 					blje.setConfig(cReader);
-					blje.setExecutorDir(getSimpleClassName(fullClassName), count++);
+					blje.setExecutorDir(BioLockJUtils.getSimpleClassName(fullClassName), count++);
 					if(bljePrevious!=null)
 					{
 						blje.setInputDir(bljePrevious.getOutputDir());
@@ -105,18 +212,21 @@ public class BioLockJ
 		return list;
 	}
 	
-	
-	private static String getSimpleClassName(String fullPathClassName) throws Exception
+	private static String[] getArgs(String command, String filePath) throws Exception
 	{
-		StringTokenizer st = new StringTokenizer(fullPathClassName, ".");
-		String token = st.nextToken();
-		while(st.hasMoreTokens())
-		{
-			token = st.nextToken();
-		}
+		StringTokenizer sToken = new StringTokenizer(command + " " + filePath);
+		List<String> list = new ArrayList<String>();
+		while(sToken.hasMoreTokens())
+			list.add(sToken.nextToken());
 		
-		return token;
+		String[] args = new String[list.size()];
+		
+		for( int x=0; x  < list.size(); x++)
+			args[x] = list.get(x);;
+		
+		return args;
 	}
+	
 	
 	
 }
