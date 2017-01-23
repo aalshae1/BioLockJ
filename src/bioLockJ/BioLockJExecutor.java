@@ -149,16 +149,13 @@ public abstract class BioLockJExecutor
 
 	public void setInputDir(File inDir) throws Exception
 	{
-		log.debug("InputDir: " + inDir.getAbsolutePath());
-		log.debug("getProjectDir().getName(): " + getProjectDir().getName());
-
 		if( !inDir.getAbsolutePath().contains(getProjectDir().getName()) )
 		{
-			log.debug("Parent Dir is not from within the Project (Alien Input): ");
 			String copy = getConfig().getAProperty(ConfigReader.COPY_INPUT_FLAG);
 			if (copy!=null) log.debug("copy flag = " + copy);
 			if (copy!=null && copy.equals("Y"))
 			{
+				log.info("Copy input data to " + getExecutorDir().getAbsolutePath() +File.separator + "input");
 				FileUtils.copyDirectory(inDir, getInputDir());
 			}
 		}

@@ -24,13 +24,11 @@ public class BioLockJUtils
 	{
 		Iterator<String> it = lines.iterator();
 		writer.write("segmentFlag=true \n" );
-		log.debug("filePath = " + filePath);
+		//log.debug("filePath = " + filePath);
 		while(it.hasNext())
 		{
-			String next = it.next();
-			log.debug("write to file = " + next);
 			writer.write("if [[ $segmentFlag == true ]]; then \n" );
-			writer.write(INDENT + next + "\n" );
+			writer.write(INDENT + it.next() + "\n" );
 			writer.write(INDENT + "if [ $? –ne 0 ]; then \n");
 			writer.write(INDENT + INDENT + "segmentFlag=false \n");
 			
@@ -64,11 +62,9 @@ public class BioLockJUtils
 								pollTime +  " seconds ", ex);		
 			}
 
-			//log.info("EXITING PROGRAM EARLY");
 			executeCHMOD_ifDefined(bje.getConfig(), bje.getScriptDir());
 			executeFile(bje.getRunAllFile());
 			pollAndSpin(bje.getScriptFiles(), pollTime );
-		
 		}
 	}
 	
