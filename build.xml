@@ -24,5 +24,5 @@
   		<fileset dir="resources"/>
   	</copy>
   </target>
-
+	
 </project>
