@@ -28,16 +28,17 @@ public class ScriptBuilder
 	public static final String SCRIPT_FAILED = "_FAIL";
 	public static final String SCRIPT_SUCCEEDED = "_SUCCESS";
 	public static final String INDENT = "    ";
-	 
+	public static final String RUN_BIOLOCK_J = "#RUN_BIOLOCK_J";
 	
 	public static void buildScripts(BioLockJExecutor blje, ArrayList<ArrayList<String>> data) throws Exception
 	{
-		boolean createMultipleScripts = true;
+		boolean needMultipleScripts = true;
 		int numJobsPerCore = 0;
 		try{
 			numJobsPerCore = BioLockJUtils.requirePositiveInteger (blje.getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 		}catch(Exception ex){
-			createMultipleScripts = false;
+			log.warn("NUMBER_OF_JOBS_PER_CORE not defined, only one script will be created");
+			needMultipleScripts = false;
 		}
 		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(blje.getRunAllFile(), true));
@@ -50,9 +51,9 @@ public class ScriptBuilder
 		
 		for(ArrayList<String> lines : data)
 		{
-			if(needNewScript(numToDo, numJobsPerCore))
+			if(subScript == null || needNewScript(numToDo, numJobsPerCore))
 			{
-				if(createMultipleScripts || subScript == null )
+				if(needMultipleScripts || subScript == null )
 				{
 					subScript = createSubScript(blje, allWriter, countNum++);
 					aWriter = new BufferedWriter(new FileWriter(subScript, true));
@@ -62,7 +63,7 @@ public class ScriptBuilder
 			
 			addDependantLinesToScript(aWriter, lines, exitOnError);
 			
-			if( createMultipleScripts && --numToDo == 0 )
+			if( needMultipleScripts && --numToDo == 0 )
 			{
 				numToDo = numJobsPerCore;
 				closeSubScript(aWriter, subScript);

@@ -16,8 +16,6 @@ public abstract class BioLockJExecutor
 	public abstract void executeProjectFile() throws Exception;
 	public abstract void checkDependencies() throws Exception;
 	
-	public static final String RUN_BIOLOCK_J = "#RUN_BIOLOCK_J";
-	
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJExecutor.class);
 	
 	private List<File> scriptFiles = new ArrayList<File>();
@@ -63,7 +61,7 @@ public abstract class BioLockJExecutor
 	}
 	
 	
-	protected File getExecutorDir()
+	public File getExecutorDir()
 	{
 		return executorDir;
 	}

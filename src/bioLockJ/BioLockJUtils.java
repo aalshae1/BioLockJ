@@ -14,17 +14,7 @@ public class BioLockJUtils
 	protected static final Logger log = LoggerFactory.getLogger(BioLockJUtils.class);
 
 	
-	public static String getSimpleClassName(String fullPathClassName) throws Exception
-	{
-		StringTokenizer st = new StringTokenizer(fullPathClassName, ".");
-		String token = st.nextToken();
-		while(st.hasMoreTokens())
-		{
-			token = st.nextToken();
-		}
-		
-		return token;
-	}
+	
 	
 	public static void noteStartToLogWriter( BioLockJExecutor invoker )
 	{
@@ -236,6 +226,18 @@ public class BioLockJUtils
 		}
 		
 		return xString;
+	}
+	
+	public static String getSimpleClassName(String fullPathClassName) throws Exception
+	{
+		StringTokenizer st = new StringTokenizer(fullPathClassName, ".");
+		String token = st.nextToken();
+		while(st.hasMoreTokens())
+		{
+			token = st.nextToken();
+		}
+		
+		return token;
 	}
 
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
