@@ -467,37 +467,39 @@ public class Translate
 	public static void dumpToFile( File file, String dnaSequence, int frame )  throws Exception
 	{
 		BufferedWriter writer = new BufferedWriter( new FileWriter( file ));
-		
-		int currentPos = 0;
-		
-		for ( int x=frame; x >0; x-- ) 
-		{
-			writer.write( dnaSequence.charAt(currentPos));
-			currentPos++;		
+		try{
+			int currentPos = 0;
+			
+			for ( int x=frame; x >0; x-- ) 
+			{
+				writer.write( dnaSequence.charAt(currentPos));
+				currentPos++;		
+			}
+			
+			writer.write("\n\n");
+			
+			while ( dnaSequence.length() -3 >= currentPos )
+			{
+				String symbol = "" + dnaSequence.charAt(currentPos) + 
+								dnaSequence.charAt(currentPos + 1) + 
+								dnaSequence.charAt(currentPos + 2);
+				currentPos += 3;
+				
+				String value = (String) translationMap.get( symbol);
+				
+				if ( ! value.equals("STOP" ) ) 
+					writer.write( SequenceUtils.threeToOne( value ) + " " + value + "\n");
+				else if ( value.equals("STOP") ) 
+					writer.write("*\n");
+				else throw new Exception("Unexpected codon " + symbol );
+				
+				writer.write( symbol + "\n");
+				writer.write( currentPos + "\n\n" );
+			}
+		}finally{
+			writer.flush();  writer.close();
 		}
-		
-		writer.write("\n\n");
-		
-		while ( dnaSequence.length() -3 >= currentPos )
-		{
-			String symbol = "" + dnaSequence.charAt(currentPos) + 
-							dnaSequence.charAt(currentPos + 1) + 
-							dnaSequence.charAt(currentPos + 2);
-			currentPos += 3;
 			
-			String value = (String) translationMap.get( symbol);
-			
-			if ( ! value.equals("STOP" ) ) 
-				writer.write( SequenceUtils.threeToOne( value ) + " " + value + "\n");
-			else if ( value.equals("STOP") ) 
-				writer.write("*\n");
-			else throw new Exception("Unexpected codon " + symbol );
-			
-			writer.write( symbol + "\n");
-			writer.write( currentPos + "\n\n" );
-		}
-		
-		writer.flush();  writer.close();	
 	}
 	
 	public static String readSequenceFromFastaFile(File inFile ) throws Exception
@@ -505,19 +507,40 @@ public class Translate
 		StringBuffer buff = new StringBuffer();
 		
 		BufferedReader reader = new BufferedReader( new FileReader( inFile ));
-		
-		reader.readLine();
-		String nextLine = reader.readLine();
-		
-		while ( nextLine != null ) 
-		{
-			buff.append( nextLine.trim() );
-			nextLine = reader.readLine();
-		}
+		try{
+			reader.readLine();
+			String nextLine = reader.readLine();
 			
+			while ( nextLine != null ) 
+			{
+				buff.append( nextLine.trim() );
+				nextLine = reader.readLine();
+			}
+			
+		}finally{
+			reader.close();
+		}
 		return buff.toString();	
 	}
 	
+	
+	public static float getGCContent(String inString ) 
+	{
+		int gcNum =0;
+		int num= 0;
+		
+		inString = inString.toUpperCase();
+		
+		for ( int x=0; x< inString.length(); x++ ) 
+		{
+			num++;
+			
+			if ( inString.charAt(x) == 'G' || inString.charAt(x) == 'C' ) 
+				gcNum++;
+		}
+		
+		return (( float) gcNum )/ num;
+	}
 	
 	/*
 	public static void main(String[] args) throws Exception
@@ -580,23 +603,7 @@ public class Translate
 	}
 	*/
 	
-	public static float getGCContent(String inString ) 
-	{
-		int gcNum =0;
-		int num= 0;
-		
-		inString = inString.toUpperCase();
-		
-		for ( int x=0; x< inString.length(); x++ ) 
-		{
-			num++;
-			
-			if ( inString.charAt(x) == 'G' || inString.charAt(x) == 'C' ) 
-				gcNum++;
-		}
-		
-		return (( float) gcNum )/ num;
-	}
+	
 	
 	/*
 	public static void main(String[] args) throws Exception

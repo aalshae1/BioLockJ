@@ -153,30 +153,31 @@ public class HitScores implements Comparable<HitScores>
 	public static HashMap<String, HitScores> getUniqueQueryIDMap(File fileToParse) 
 					throws Exception
 	{
-		BufferedReader reader = new BufferedReader(new FileReader(fileToParse));
-		
 		HashMap<String, HitScores> map = new HashMap<String, HitScores>();
-		
-		reader.readLine();
-		
-		String nextLine = reader.readLine();
-		
-		while(nextLine != null)
-		{
-			if( ! nextLine.startsWith("#"))
-			{
-				HitScores hs = new HitScores(nextLine);
-				
-				if( map.get(hs.getQueryId()) != null )
-					throw new Exception("Error!  Duplicate keys for " + hs.getQueryId());
-				
-				map.put(hs.getQueryId(), hs);
-			}
+		BufferedReader reader = new BufferedReader(new FileReader(fileToParse));
+		try{
+
+			reader.readLine();
 			
-			nextLine = reader.readLine();
+			String nextLine = reader.readLine();
+			
+			while(nextLine != null)
+			{
+				if( ! nextLine.startsWith("#"))
+				{
+					HitScores hs = new HitScores(nextLine);
+					
+					if( map.get(hs.getQueryId()) != null )
+						throw new Exception("Error!  Duplicate keys for " + hs.getQueryId());
+					
+					map.put(hs.getQueryId(), hs);
+				}
+				
+				nextLine = reader.readLine();
+			}
+		}finally{
+			reader.close();
 		}
-		
-		reader.close();
 		
 		return map;
 	}
@@ -276,37 +277,39 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 		HashMap<String, HitScores> map= new HashMap<String, HitScores>();
 		
 		BufferedReader reader = new BufferedReader(new FileReader(filepath));
-		
-		String nextLine = reader.readLine();
-		
-		//int index=0;
-		while( nextLine != null)
-		{
-			String[] splits = nextLine.split("\t");
+		try{
+			String nextLine = reader.readLine();
 			
-			if( splits.length != 12)
-				throw new Exception("Parsing error");
-			
-			HitScores hs = new HitScores(nextLine);
-			HitScores oldHit= map.get(hs.getQueryId());
-			
-			if( hs.getAlignmentLength() >= minLength)
+			//int index=0;
+			while( nextLine != null)
 			{
-				if(oldHit== null || hs.getPercentIdentity() > oldHit.getPercentIdentity() )
-				{
-					map.put(hs.getQueryId(), hs);
-				}
-			}
+				String[] splits = nextLine.split("\t");
 				
-			nextLine= reader.readLine();
-			
-			//if( index % 100000==0)
-				//log.info(index + " " + map.size());
-			
-			//index++;
+				if( splits.length != 12)
+					throw new Exception("Parsing error");
+				
+				HitScores hs = new HitScores(nextLine);
+				HitScores oldHit= map.get(hs.getQueryId());
+				
+				if( hs.getAlignmentLength() >= minLength)
+				{
+					if(oldHit== null || hs.getPercentIdentity() > oldHit.getPercentIdentity() )
+					{
+						map.put(hs.getQueryId(), hs);
+					}
+				}
+					
+				nextLine= reader.readLine();
+				
+				//if( index % 100000==0)
+					//log.info(index + " " + map.size());
+				
+				//index++;
+			}
+		}finally{
+			reader.close();
 		}
 		
-		reader.close();
 		
 		return map;
 	}
@@ -415,30 +418,33 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 		HashSet<String> queryIds = new HashSet<String>();
 		
 		BufferedReader reader = new BufferedReader(new FileReader(file));
-		
-		String nextLine = reader.readLine();
-		
-		while( nextLine != null )
-		{
-			if( ! nextLine.startsWith("#"))
+		try{
+			String nextLine = reader.readLine();
+			
+			while( nextLine != null )
 			{
-				HitScores hs = new HitScores(nextLine);
+				if( ! nextLine.startsWith("#"))
+				{
+					HitScores hs = new HitScores(nextLine);
+					
+					if( hs.getEScore() <= cutoffEScore )
+						if( Math.abs(hs.getTargetEnd()-hs.getTargetStart()) <= cutoffSequenceLength )
+						{
+							String id = hs.getQueryId();
+							id = id.substring( id.lastIndexOf("|") + 1, id.length() );
+							
+							queryIds.add(id);
+							
+							//log.info(hs.getQueryId() + " " +  id);
+						}
+				}
 				
-				if( hs.getEScore() <= cutoffEScore )
-					if( Math.abs(hs.getTargetEnd()-hs.getTargetStart()) <= cutoffSequenceLength )
-					{
-						String id = hs.getQueryId();
-						id = id.substring( id.lastIndexOf("|") + 1, id.length() );
-						
-						queryIds.add(id);
-						
-						//log.info(hs.getQueryId() + " " +  id);
-					}
+				nextLine = reader.readLine();
 			}
-			
-			nextLine = reader.readLine();
+		}finally{
+			reader.close();
 		}
-			
+		
 		return queryIds;
 	}
 	
@@ -504,24 +510,28 @@ public void writeALine( PrintWriter writer, boolean endWithNewline) throws Excep
 	public static List<HitScores> getAsList(File file, double maxEScore, int minAlignmentLength) 
 		throws Exception
 	{
+		List<HitScores> list = new ArrayList<HitScores>();
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		
-		List<HitScores> list = new ArrayList<HitScores>();
-		
-		String nextLine = reader.readLine();
-		
-		while( nextLine != null )
-		{
-			if( ! nextLine.startsWith("#"))
-			{
-				HitScores hs = new HitScores(nextLine);
-				
-				if( hs.getEScore() <= maxEScore && hs.getQueryAlignmentLength() >= minAlignmentLength ) 
-					list.add(hs);
-				
-			}
+		try{
+
+			String nextLine = reader.readLine();
 			
-			nextLine = reader.readLine();
+			while( nextLine != null )
+			{
+				if( ! nextLine.startsWith("#"))
+				{
+					HitScores hs = new HitScores(nextLine);
+					
+					if( hs.getEScore() <= maxEScore && hs.getQueryAlignmentLength() >= minAlignmentLength ) 
+						list.add(hs);
+					
+				}
+				
+				nextLine = reader.readLine();
+			}
+		}finally{
+			reader.close();
 		}
 		
 		return list;

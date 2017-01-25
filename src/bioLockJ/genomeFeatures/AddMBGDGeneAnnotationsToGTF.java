@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
-import utils.ConfigReader;
+import bioLockJ.ConfigReader;
 import utils.TabReader;
 
 public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor

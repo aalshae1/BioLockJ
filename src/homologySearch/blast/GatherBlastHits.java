@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 import bioLockJ.BioLockJExecutor;
 import parsers.HitScores;
-import utils.ConfigReader;
 
 /**
  * Gathers the top hits in PATH_TO_OUTPUT_DIR.

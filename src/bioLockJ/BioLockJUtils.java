@@ -5,8 +5,6 @@ import java.nio.channels.FileChannel;
 import java.util.*;
 import org.slf4j.*;
 
-import utils.ConfigReader;
-
 
 public class BioLockJUtils
 {

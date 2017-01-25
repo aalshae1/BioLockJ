@@ -16,11 +16,11 @@ import java.util.zip.GZIPInputStream;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 import bioLockJ.ScriptBuilder;
 import parsers.NewRDPNode;
 import parsers.NewRDPParserFileLine;
 import parsers.OtuWrapper;
-import utils.ConfigReader;
 
 public class GatherRDPResults extends BioLockJExecutor
 {

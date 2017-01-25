@@ -11,9 +11,9 @@ import java.util.List;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 import bitManipulations.Encode;
 import parsers.FastaSequence;
-import utils.ConfigReader;
 import utils.Translate;
 
 public class PivotPValuesToReferenceGenome extends BioLockJExecutor

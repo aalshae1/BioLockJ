@@ -7,9 +7,6 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.*;
 
-import bioLockJ.BioLockJUtils;
-import utils.ConfigReader;
-
 public abstract class BioLockJExecutor
 {
 

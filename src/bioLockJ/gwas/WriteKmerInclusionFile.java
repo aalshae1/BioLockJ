@@ -11,8 +11,8 @@ import java.util.StringTokenizer;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 import bitManipulations.Encode;
-import utils.ConfigReader;
 
 public class WriteKmerInclusionFile extends BioLockJExecutor
 {

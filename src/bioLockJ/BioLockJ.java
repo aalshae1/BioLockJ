@@ -5,9 +5,6 @@ import java.util.*;
 
 import org.slf4j.*;
 
-import utils.ConfigReader;
-import utils.ProcessWrapper;
-
 /** 
  * To run BioLockJ program, from project root directory run:
  * 
@@ -22,7 +19,7 @@ import utils.ProcessWrapper;
  *  -----------------------------------------------------------------------------------
  *  ./projects
  *  	> PROJECT_NAME_%timestamp% (PROJECT_NAME = required property)
- *  		> 00_#RUN_BIOLOCK_J<BioLockJExecutor> - #RUN_BIOLOCK_J (required property)
+ *  		> 00_#RUN_BIOLOCK_J<BioLockJExecutor> (#RUN_BIOLOCK_J = required property)
  *  			> input - if COPY_INPUT_FLAG=TRUE (optional property)
  *  			> output 
  *  			> scripts 
@@ -42,7 +39,7 @@ public class BioLockJ
 	
 	/**
 	 * The main method is the first method called when BioLockJ is run.  Here we
-	 * read property file, copy it to project directory, init ConfigReader 
+	 * read property file, copy it to project directory, initialize ConfigReader 
 	 * and call runProgram(cReader).
 	 * 
 	 * @param args - args[0] path to property file
@@ -258,7 +255,4 @@ public class BioLockJ
 		
 		return args;
 	}
-	
-	
-	
 }

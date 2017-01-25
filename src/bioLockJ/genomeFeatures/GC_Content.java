@@ -7,8 +7,8 @@ import java.util.List;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 import parsers.FastaSequence;
-import utils.ConfigReader;
 
 public class GC_Content extends BioLockJExecutor
 {

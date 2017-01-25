@@ -6,10 +6,10 @@ import java.io.FileWriter;
 import java.util.HashMap;
 
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 import bioLockJ.BioLockJExecutor;
 import parsers.FastaSequence;
 import parsers.FastaSequenceOneAtATime;
-import utils.ConfigReader;
 
 /*
  * Takes in FASTA_TO_SPLIT_PATH

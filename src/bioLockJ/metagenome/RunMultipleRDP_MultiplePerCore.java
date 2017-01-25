@@ -5,8 +5,8 @@ import java.util.ArrayList;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 import bioLockJ.ScriptBuilder;
-import utils.ConfigReader;
 
 /**
  * 

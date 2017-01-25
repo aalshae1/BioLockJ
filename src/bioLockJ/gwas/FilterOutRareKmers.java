@@ -8,7 +8,7 @@ import java.io.FileWriter;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
-import utils.ConfigReader;
+import bioLockJ.ConfigReader;
 
 public class FilterOutRareKmers extends BioLockJExecutor
 {

@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 import bioLockJ.ScriptBuilder;
 import bioLockJ.BioLockJExecutor;
-import utils.ConfigReader;
 
 public class FormatMultipleBlastDatabases extends BioLockJExecutor
 {

@@ -10,10 +10,10 @@ import java.util.List;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 import bioLockJ.gwas.WriteKmerInclusionFile;
 import bitManipulations.Encode;
 import parsers.FastaSequence;
-import utils.ConfigReader;
 import utils.Translate;
 
 public class WriteConservedKMersForReference extends BioLockJExecutor

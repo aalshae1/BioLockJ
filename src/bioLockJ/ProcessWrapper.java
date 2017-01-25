@@ -1,4 +1,4 @@
-package utils;
+package bioLockJ;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

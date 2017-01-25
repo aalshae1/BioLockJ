@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
-import utils.ConfigReader;
+import bioLockJ.ConfigReader;
 import utils.FisherTest;
 
 public class KmerPValuesFromFisherTest extends BioLockJExecutor
