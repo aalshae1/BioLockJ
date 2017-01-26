@@ -197,6 +197,15 @@ public class BioLockJ
 	
 	protected static void executeFile(File f) throws Exception
 	{
+		File qsubOutput = new File(f.getParentFile().getParentFile().getAbsolutePath() + "qsub");
+		qsubOutput.mkdirs();
+		
+		String[] cdCmd = new String[2];
+		cdCmd[0] = "cd";
+		cdCmd[1] = qsubOutput.getAbsolutePath();
+		log.info("cd to script directory: " + cdCmd[1]);
+		new ProcessWrapper(cdCmd);
+		
 		String[] cmd = new String[1];
 		cmd[0] = f.getAbsolutePath();
 		new ProcessWrapper(cmd);
