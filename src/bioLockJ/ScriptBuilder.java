@@ -73,11 +73,13 @@ public class ScriptBuilder
 		closeRunAllFile(allWriter, blje.getRunAllFile().getAbsolutePath());
 	}
 	
-	protected static File createRunAllFile(String scriptDir) throws Exception
-	{
-		File f = new File(scriptDir + File.separator + "runAll.sh");
+	protected static File createRunAllFile(BioLockJExecutor blje) throws Exception
+	{ 
+		File f = new File(blje.getScriptDir().getAbsolutePath() + File.separator + "runAll.sh");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+		String clusterParams = blje.getConfig().getAProperty(ConfigReader.CLUSTER_PARAMS);
 		writer.write("### This script submits subscripts for parallel processing ### \n" );
+		writer.write(clusterParams == null ?  "": clusterParams + "\n" );
 		writer.write("okToContinue=true \n" );
 		writer.flush(); writer.close();
 		return f;
@@ -95,10 +97,10 @@ public class ScriptBuilder
 
 		allWriter.write("if [[ $okToContinue == true ]]; then \n" );
 		
-		String clusterParams = blje.getConfig().getAProperty(ConfigReader.CLUSTER_PARAMS);
+		
 		String clusterCommand = blje.getConfig().getAProperty(ConfigReader.CLUSTER_BATCH_COMMAND);
-		allWriter.write(INDENT + (clusterCommand == null ?  "": clusterCommand + " " ) + script.getAbsolutePath() + 
-				" " + (clusterParams == null ?  "": clusterParams ) +   "\n"  );
+		allWriter.write(INDENT + (clusterCommand == null ?  "": clusterCommand + " " ) + 
+				script.getAbsolutePath() + "\n"  );
 		
 		allWriter.write(INDENT + "if [ \"$?\" -ne \"0\" ]; then \n");
 		allWriter.write(INDENT + INDENT +"okToContinue=false \n" );

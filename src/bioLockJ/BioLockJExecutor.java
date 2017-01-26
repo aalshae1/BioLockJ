@@ -80,7 +80,7 @@ public abstract class BioLockJExecutor
 		{
 			return runAllFile;
 		}
-		runAllFile = ScriptBuilder.createRunAllFile(getScriptDir().getAbsolutePath());
+		runAllFile = ScriptBuilder.createRunAllFile(this);
 		return runAllFile;	
 	} 
 	

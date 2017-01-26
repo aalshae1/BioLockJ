@@ -8,7 +8,7 @@ import org.slf4j.*;
 /** 
  * To run BioLockJ program, from project root directory ($BLJ) run:
  * 
- * 
+ *  
  *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015	
  *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ ./resources/somePropFile.prop
  *  
@@ -38,6 +38,7 @@ public class BioLockJ
 {
 	// wait to initialize until after ConfigReader names log file.
 	protected static Logger log;  
+
 	
 	/**
 	 * The main method is the first method called when BioLockJ is run.  Here we
