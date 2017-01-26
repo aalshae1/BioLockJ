@@ -197,6 +197,7 @@ public class BioLockJ
 	
 	protected static void executeFile(File f) throws Exception
 	{
+		log.info("Calling executeFile ");
 		File qsubOutput = new File(f.getParentFile().getParentFile().getAbsolutePath() + "qsub");
 		qsubOutput.mkdirs();
 		
