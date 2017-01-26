@@ -78,6 +78,12 @@ public class ScriptBuilder
 		File f = new File(scriptDir + File.separator + "runAll.sh");
 		BufferedWriter writer = new BufferedWriter(new FileWriter(f));
 		writer.write("### This script submits subscripts for parallel processing ### \n" );
+		
+		File qsubOutput = new File(f.getParentFile().getParentFile().getAbsolutePath() + 
+				File.separator + "qsub");
+		qsubOutput.mkdirs();
+		
+		writer.write("cd " + qsubOutput.getAbsolutePath() + " \n" );
 		writer.write("okToContinue=true \n" );
 		writer.flush(); writer.close();
 		return f;

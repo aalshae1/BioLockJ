@@ -190,22 +190,21 @@ public class BioLockJ
 			throw new Exception("CANCEL SCRIPT EXECUTION: ERROR IN...runAll.sh");
 		}
 		
-		log.info("Script Status (Total=" + scriptFiles.size() + "): Success=" + numSuccess + "; Failures=" + numFailed);
+		log.info("Script Status (Total=" + scriptFiles.size() + "): Success=" + numSuccess + "; Failure=" + numFailed);
 		return (numSuccess + numFailed) == scriptFiles.size();
 	}
 	
 	
 	protected static void executeFile(File f) throws Exception
 	{
-		log.info("Calling executeFile ");
-		File qsubOutput = new File(f.getParentFile().getParentFile().getAbsolutePath() + "qsub");
-		qsubOutput.mkdirs();
+//		File qsubOutput = new File(f.getParentFile().getParentFile().getAbsolutePath() + 
+//				File.separator + "qsub");
+//		qsubOutput.mkdirs();
 		
-		String[] cdCmd = new String[2];
-		cdCmd[0] = "cd";
-		cdCmd[1] = qsubOutput.getAbsolutePath();
-		log.info("cd to script directory: " + cdCmd[1]);
-		new ProcessWrapper(cdCmd);
+//		String[] cdCmd = new String[2];
+//		cdCmd[0] = "cd";
+//		cdCmd[1] = qsubOutput.getAbsolutePath();
+//		new ProcessWrapper(cdCmd);
 		
 		String[] cmd = new String[1];
 		cmd[0] = f.getAbsolutePath();
