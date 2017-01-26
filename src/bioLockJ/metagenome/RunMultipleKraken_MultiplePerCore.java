@@ -32,7 +32,9 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 		File fastaInDir =  BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
 		File krakenBinary =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_BINARY);
 		File krakenDatabase = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_DATABASE);
-
+		String krakenSwitches = BioLockJUtils.getStringOrNull(getConfig(), ConfigReader.KRAKEN_SWITCHES);
+		
+		
 		String[] files = BioLockJUtils.getFilePaths(fastaInDir);
 		log.debug("Number of valid  files found: " + files.length);
 		setInputDir(fastaInDir);
@@ -46,7 +48,8 @@ public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
 			String krakenTranslate = getOutputDir().getAbsolutePath() + File.separator + file + "_toKrakenTranslate.txt";
 
 			String firstLine = krakenBinary.getAbsolutePath() + " --db " + krakenDatabase.getAbsolutePath()  + 
-					" --output " + krakenOutput + " " + inputFile;
+					" --output " + krakenOutput + " " + inputFile + 
+					(krakenSwitches == null ?  "": " " + krakenSwitches);
 			
 			String nextLine = krakenBinary.getAbsolutePath() + "-translate --db " +  
 					krakenDatabase.getAbsolutePath()  + " " + krakenOutput + " > " + krakenTranslate;

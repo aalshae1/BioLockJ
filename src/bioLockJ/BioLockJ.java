@@ -46,6 +46,7 @@ public class BioLockJ
 	 */
 	public static void main(String[] args)
 	{
+		System.out.println("START PROGRAM");
 		try{
 			if( args.length != 1)
 			{
@@ -57,7 +58,7 @@ public class BioLockJ
 			File propFile = new File(args[0]);
 			if( !propFile.exists() || propFile.isDirectory() )
 				throw new Exception(propFile.getAbsolutePath() + " is not a valid file");
-			
+
 			ConfigReader cReader = new ConfigReader(propFile);
 			if(log == null) log = LoggerFactory.getLogger(BioLockJ.class);
 			String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
@@ -65,9 +66,8 @@ public class BioLockJ
 			BioLockJUtils.copyPropertiesFile(propFile, projectDir);
 
 			runProgram(cReader);
-	
+
 		}catch(Exception ex){
-			ex.printStackTrace();
 			log.error(ex.getMessage(), ex);
 		}finally{
 			if(log!=null){
@@ -77,7 +77,6 @@ public class BioLockJ
 			}else{
 				System.out.println("TERMINATE PROGRAM");
 			}
-			System.exit(1);
 		}
 	}
 	

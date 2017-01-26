@@ -95,6 +95,7 @@ public class ConfigReader
 	
 	public static final String PATH_TO_KRAKEN_DATABASE = "PATH_TO_KRAKEN_DATABASE";
 	public static final String PATH_TO_KRAKEN_BINARY = "PATH_TO_KRAKEN_BINARY";
+	public static final String KRAKEN_SWITCHES = "KRAKEN_SWITCHES";
 	
 	public static final String PROJECT_NAME = "PROJECT_NAME"; 
 	public static final String RUN_TIMESTAMP = "RUN_TIMESTAMP";

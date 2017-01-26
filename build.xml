@@ -20,9 +20,7 @@
   </target>
 	
   <target name="copy" depends="compile">
-  	<copy todir="bin">
-  		<fileset dir="resources"/>
-  	</copy>
+  	<copy file="resources/log4j.properties" todir="bin"/>
   </target>
 	
 </project>
