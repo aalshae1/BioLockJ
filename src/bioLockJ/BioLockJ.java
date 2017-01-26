@@ -6,9 +6,11 @@ import java.util.*;
 import org.slf4j.*;
 
 /** 
- * To run BioLockJ program, from project root directory run:
+ * To run BioLockJ program, from project root directory ($BLJ) run:
  * 
- *  	java bioLockJ.BioLockJ ./resources/propFile.prop
+ * 
+ *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015	
+ *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ ./resources/somePropFile.prop
  *  
  *  BioLockJ is designed to run on any platform.  
  *  Each time BioLockJ runs, a new project specific directory is created in ./projects. 
