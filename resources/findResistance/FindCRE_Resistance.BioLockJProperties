@@ -16,7 +16,7 @@ BLAST_BINARY_DIR=/apps/pkg/ncbi-blast-2.2.29+/rhel7_u2-x86_64/gnu/bin/
 CHMOD_STRING = chmod 744
 
 # Run 8 RDP jobs (one after the other) on each core
-NUMBER_OF_JOBS_PER_CORE=4
+NUMBER_OF_JOBS_PER_CORE=10
 
 # these are set for our UNCC cluster
 CLUSTER_BATCH_COMMAND = qsub -q "copperhead"

@@ -38,9 +38,9 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		
 		String dbType = BioLockJUtils.requireDBType(getConfig());
 		
-		String[] files = BioLockJUtils.getFilePaths(fastaFileToFormat);
-		log.debug("Number of valid  files found: " + files.length);
-		setInputDir(fastaFileToFormat);
+		//String[] files = BioLockJUtils.getFilePaths(fastaFileToFormat);
+		//log.debug("Number of valid  files found: " + files.length);
+		//setInputDir(fastaFileToFormat);
 		
 		String prelimString = getConfig().getAProperty(ConfigReader.BLAST_PRELIMINARY_STRING);
 		
