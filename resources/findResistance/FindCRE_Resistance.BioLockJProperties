@@ -10,14 +10,17 @@
 
 # these are for all BLAST jobs (formatting and searching)
 BLAST_PRELIMINARY_STRING = module load blast
-BLAST_BINARY_DIR=/apps/pkg/ncbi-blast-2.2.29+/rhel6_u5-x86_64/gnu/bin/
+BLAST_BINARY_DIR=/apps/pkg/ncbi-blast-2.2.29+/rhel7_u2-x86_64/gnu/bin/
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
 
+# Run 8 RDP jobs (one after the other) on each core
+NUMBER_OF_JOBS_PER_CORE=4
+
 # these are set for our UNCC cluster
-CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
-NUMBER_OF_JOBS_PER_CORE=100
+CLUSTER_BATCH_COMMAND = qsub -q "copperhead"
+CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 
 # the query file to split into NUMBER_CLUSTER query files
 # the cards database was downloaded on June 15,2016
@@ -42,5 +45,8 @@ POLL_TIME = 10
 BLAST_DB_TYPE=nucl
 BLAST_ALL_COMMAND=blastn
 
+OUTPUT_QUERY_COORDINATES_TO_GTF=TRUE
 
-OUTPUT_QUERY_COORDINATES_TO_GTF=FALSE
+PROJECT_NAME=CRE_Resist_Test
+COPY_INPUT_FLAG=TRUE
+EXIT_ON_ERROR_FLAG=TRUE
