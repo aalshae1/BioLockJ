@@ -35,19 +35,30 @@ public class ConfigReader
 		return propertiesFile;
 	}
 	
-	public static final String TRUE = "TRUE";
-	public static final String FALSE= "FALSE";
 	
+	public static final String PROJECT_NAME = "PROJECT_NAME"; 
+	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR"; 
+	
+	
+	
+	// OPERATION FLAGS
 	public static final String COPY_INPUT_FLAG = "COPY_INPUT_FLAG";
 	public static final String EXIT_ON_ERROR_FLAG = "EXIT_ON_ERROR_FLAG";
 
+	// STANDARD OPTIONAL PROPERTIES
 	public static final String CLUSTER_NAME = "CLUSTER_NAME";
-	public static final String BLAST_PRELIMINARY_STRING = "BLAST_PRELIMINARY_STRING";
 	public static final String CLUSTER_BATCH_COMMAND = "CLUSTER_BATCH_COMMAND";
 	public static final String CLUSTER_PARAMS = "CLUSTER_PARAMS";
 	public static final String CHMOD_STRING = "CHMOD_STRING";
 	public static final String NUMBER_OF_JOBS_PER_CORE="NUMBER_OF_JOBS_PER_CORE";
 	public static final String POLL_TIME = "POLL_TIME";
+	
+	// PROP VALUE STRINGS
+	public static final String LOG_FILE = "LOG_FILE"; 
+	public static final String TRUE = "TRUE";
+	public static final String FALSE= "FALSE";
+	
+	public static final String BLAST_PRELIMINARY_STRING = "BLAST_PRELIMINARY_STRING";
 	
 	public static final String FASTA_TO_SPLIT_PATH = "FASTA_TO_SPLIT_PATH";
 	public static final String SPLIT_FASTA_DIR = "SPLIT_FASTA_DIR";
@@ -57,20 +68,7 @@ public class ConfigReader
 	public static final String BLAST_QUERY_DIRECTORY = "BLAST_QUERY_DIRECTORY";
 	public static final String BLAST_GATHERED_TOP_HITS_FILE = "BLAST_GATHERED_TOP_HITS_FILE";
 	public static final String GTF_GATHERED_TOP_HITS_FILE = "GTF_GATHERED_TOP_HITS_FILE";
-	public static final String JAVA_VM_ARGS= "JAVA_VM_ARGS"; 
-	public static final String GENOME_TO_INTEGER_FILE = "GENOME_TO_INTEGER_FILE";
-	public static final String KMER_TO_HAS_GENOME_FILE = "KMER_TO_HAS_GENOME_FILE";
-	
-	public static final String DSK_INPUT_DIRECTORY = "DSK_INPUT_DIRECTORY";
-	public static final String DSK_BINARY_DIRECTORY = "DSK_BINARY_DIRECTORY";
-	public static final String MIN_NUMBER_OF_DIFFERENT_KMERS = "MIN_NUMBER_OF_DIFFERENT_KMERS";
-	
-	public static final String STRAIN_METADATA_FILE = "STRAIN_METADATA_FILE";
-	public static final String FISHER_PVALUES_OUTPUT_FILE = "FISHER_PVALUES_OUTPUT_FILE";
-	public static final String FISHER_CONDITION_1 = "FISHER_CONDITION_1";
-	public static final String FISHER_CONDITION_2 = "FISHER_CONDITION_2";
-	public static final String FISHER_GTF_OUTPUT_FILE = "FISHER_GTF_OUTPUT_FILE";
-	
+
 	public static final String REFERENCE_GENOME="REFERENCE_GENOME";
 	public static final String GC_CONTENT_IGV_OUTPUT_FILE = "GC_CONTENT_IGV_OUTPUT_FILE";
 	public static final String GC_CONTENT_WINDOW_SIZE = "GC_CONTENT_WINDOW_SIZE";
@@ -86,7 +84,6 @@ public class ConfigReader
 	public static final String OUTPUT_GTF_FILE="OUTPUT_GTF_FILE";
 	
 	public static final String MBGD_EXTENDED_PATH="MBGD_EXTENDED_PATH";
-	public static final String CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE="CONSERVED_KMER_FOR_REFERENCE_OUPUT_FILE";
 	
 	public static final String PATH_TO_RDP_JAR="PATH_TO_RDP_JAR";
 	public static final String PATH_TO_INPUT_RDP_FASTA_DIRECTORY="PATH_TO_INPUT_RDP_FASTA_DIRECTORY";
@@ -97,12 +94,7 @@ public class ConfigReader
 	public static final String PATH_TO_KRAKEN_BINARY = "PATH_TO_KRAKEN_BINARY";
 	public static final String KRAKEN_SWITCHES = "KRAKEN_SWITCHES";
 	
-	public static final String PROJECT_NAME = "PROJECT_NAME"; 
-	public static final String RUN_TIMESTAMP = "RUN_TIMESTAMP";
-	public static final String LOG_FILE = "LOG_FILE"; 
-	
-	public static final String PATH_TO_BLJ_ROOT = "PATH_TO_BLJ_ROOT"; 
-	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR"; 
+
 	
 	public String getAProperty(String namedProperty)
 	{
@@ -146,8 +138,8 @@ public class ConfigReader
 		String bljRoot = getBLJRoot();
 		String projectDir = createProjectDir(bljRoot);
 		
-		props.setProperty(RUN_TIMESTAMP, runTimeStamp);
-		props.setProperty(PATH_TO_BLJ_ROOT, bljRoot);
+		//props.setProperty(RUN_TIMESTAMP, runTimeStamp);
+		//props.setProperty(PATH_TO_BLJ_ROOT, bljRoot);
 		props.setProperty(PATH_TO_PROJECT_DIR, projectDir);
 		props.setProperty(LOG_FILE, getLogName(projectDir));
 	}
@@ -195,10 +187,7 @@ public class ConfigReader
 
 		return projectDir.getAbsolutePath() + File.separator;
 	}
-	
-	
-	
-	
+
 	
 	private static String getBLJRoot() throws IOException, URISyntaxException
 	{

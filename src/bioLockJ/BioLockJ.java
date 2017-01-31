@@ -8,7 +8,6 @@ import org.slf4j.*;
 /** 
  * To run BioLockJ program, from project root directory ($BLJ) run:
  * 
- *  
  *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015	
  *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ ./resources/somePropFile.prop
  *  
@@ -196,16 +195,7 @@ public class BioLockJ
 	
 	
 	protected static void executeFile(File f) throws Exception
-	{
-//		File qsubOutput = new File(f.getParentFile().getParentFile().getAbsolutePath() + 
-//				File.separator + "qsub");
-//		qsubOutput.mkdirs();
-		
-//		String[] cdCmd = new String[2];
-//		cdCmd[0] = "cd";
-//		cdCmd[1] = qsubOutput.getAbsolutePath();
-//		new ProcessWrapper(cdCmd);
-		
+	{	
 		String[] cmd = new String[1];
 		cmd[0] = f.getAbsolutePath();
 		new ProcessWrapper(cmd);

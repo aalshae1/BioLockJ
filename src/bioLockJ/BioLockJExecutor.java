@@ -85,11 +85,11 @@ public abstract class BioLockJExecutor
 	} 
 	
 
-	public String getTimeStamp()
-	{
-		return getConfig().getAProperty(ConfigReader.RUN_TIMESTAMP);
-	}
-	
+//	public String getTimeStamp()
+//	{
+//		return getConfig().getAProperty(ConfigReader.RUN_TIMESTAMP);
+//	}
+//	
 	
 	public File getProjectDir() throws Exception
 	{
