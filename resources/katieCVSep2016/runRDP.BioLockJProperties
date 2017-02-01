@@ -3,16 +3,16 @@
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
-CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 
 # these are set for our UNCC cluster
 CLUSTER_BATCH_COMMAND = qsub -q "copperhead" 
+CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 
 # in seconds - how long to wait before checking to see if queued jobs have finished
 POLL_TIME = 10
 
-PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/katieDataSep21/inFasta
-PATH_TO_RDP_JAR=/users/afodor/rdp/rdp_classifier_2.10.1/dist/classifier.jar
+PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/msioda/input
+PATH_TO_RDP_JAR=/nobackup/afodor_research/rdp_212/rdpClassifier.jar
 
 RDP_THRESHOLD=50
 
@@ -24,3 +24,4 @@ COPY_INPUT_FLAG=TRUE
 EXIT_ON_ERROR_FLAG=TRUE
 
 PROJECT_NAME=TestRDP
+
