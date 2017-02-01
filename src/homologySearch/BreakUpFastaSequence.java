@@ -20,11 +20,11 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 {
 	public static final String NEW_SUFFIX = "PART.fasta";
 	
-	private static void breakUpSequences( File inFile, File outFile, int numClusters) throws Exception
+	private static void breakUpSequences(File inFile, File outFile, int numClusters) throws Exception
 	{
 		HashMap<Integer, BufferedWriter> writers= new HashMap<Integer, BufferedWriter>();
 		
-		for( int x=0; x < numClusters; x++)
+		for( int x=0; x < numClusters; x++ )
 		{
 			BufferedWriter writer=  new BufferedWriter(new FileWriter(new File(
 				outFile.getAbsolutePath() + File.separator + inFile.getName().replace("fasta", "").

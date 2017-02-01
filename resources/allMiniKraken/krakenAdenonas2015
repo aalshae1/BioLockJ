@@ -1,26 +1,26 @@
-#RUN_BIOLOCK_J bioLockJ.metagenome.RunMultipleKraken_MultiplePerCore
+#RUN_BIOLOCK_J bioLockJ.metagenome.KrakenClassifier
 #RUN_BIOLOCK_J bioLockJ.metagenome.GatherKrakenResults
 
 # executed before running script files on the cluster
 CHMOD_STRING=chmod 744
 
 # these are set for our UNCC cluster
-CLUSTER_BATCH_COMMAND = qsub -q "copperhead"
-CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
+# CLUSTER_BATCH_COMMAND = qsub -q "copperhead"
+# CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 
 # in seconds - how long to wait before checking to see if queued jobs have finished
 POLL_TIME=10
 
-# PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/Users/mike/input
-# PATH_TO_KRAKEN_BINARY=/Users/mike/kraken/kraken
-# PATH_TO_KRAKEN_DATABASE=/Users/mike/kraken/minikraken_db
+PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/Users/msioda/input
+PATH_TO_KRAKEN_BINARY=/Users/msioda/kraken/kraken
+PATH_TO_KRAKEN_DATABASE=/Users/msioda/kraken/minikraken_db
 
-PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/msioda/input
-PATH_TO_KRAKEN_BINARY=/nobackup/afodor_research/krakenInstallDec2016/kraken
-PATH_TO_KRAKEN_DATABASE=/nobackup/afodor_research/minikraken/minikraken_20141208
+# PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/msioda/input
+# PATH_TO_KRAKEN_BINARY=/nobackup/afodor_research/krakenInstallDec2016/kraken
+# PATH_TO_KRAKEN_DATABASE=/nobackup/afodor_research/minikraken/minikraken_20141208
 
 # Run 8 RDP jobs (one after the other) on each core
-NUMBER_OF_JOBS_PER_CORE=4
+NUMBER_OF_JOBS_PER_CORE=2
 
 PROJECT_NAME=adenomas_2015
 
@@ -32,8 +32,8 @@ PROJECT_NAME=adenomas_2015
 #	fastq-input or fasta-input
 #	gzip-compressed or bzip2-compressed
 #	paired
-# KRAKEN_SWITCHES=--fastq-input
+KRAKEN_SWITCHES=--fastq-input
 
 # Flag values must be either TRUE/FALSE
 COPY_INPUT_FLAG=TRUE
-EXIT_ON_ERROR_FLAG=TRUE
+EXIT_ON_ERROR_FLAG=FALSE

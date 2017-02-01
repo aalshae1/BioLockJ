@@ -10,21 +10,17 @@ import bioLockJ.ScriptBuilder;
 
 /**
  * 
- * Use this to have multiple RDP jobs per core
+ * Use this to run one core per RDP parser job
  */
-public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
+public class RdpClassifier extends BioLockJExecutor
 {
 	
 	@Override
 	public void checkDependencies() throws Exception
 	{	
-		BioLockJUtils.requireString(getConfig(), ConfigReader.CLUSTER_BATCH_COMMAND);
-		BioLockJUtils.requireString(getConfig(), ConfigReader.CLUSTER_PARAMS);
 		BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
 		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_RDP_JAR);
-		BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
 	}
-	
 	
 	@Override
 	public void executeProjectFile() throws Exception
@@ -45,16 +41,16 @@ public class RunMultipleRDP_MultiplePerCore extends BioLockJExecutor
 			String firstLine = "java -jar "  + rdpBinary.getAbsolutePath() + " " +  
 					"-o \"" + rdpOutFile  + "\" -q \"" + fastaFile + "\"";
 			
-			String nextLine = "gzip \"" + rdpOutFile + "\"";
+			String nextLine = "gzip " + rdpOutFile;
 			
 			
 			ArrayList<String> lines = new ArrayList<String>(2);
 			lines.add(firstLine);
 			lines.add(nextLine);
 			data.add(lines);
-
+			
 		}
-
+		
 		ScriptBuilder.buildScripts(this, data);
 	}
 }

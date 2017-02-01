@@ -1,4 +1,4 @@
-##RUN_BIOLOCK_J bioLockJ.metagenome.RunMultipleRDP
+##RUN_BIOLOCK_J bioLockJ.metagenome.RdpClassifier
 #RUN_BIOLOCK_J bioLockJ.metagenome.GatherRDPResults
 
 # executed before running script files on the cluster

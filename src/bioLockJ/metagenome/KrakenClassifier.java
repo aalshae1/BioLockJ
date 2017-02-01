@@ -12,7 +12,7 @@ import bioLockJ.ScriptBuilder;
  * 
  * Use this to have multiple kraken jobs per core
  */
-public class RunMultipleKraken_MultiplePerCore extends BioLockJExecutor
+public class KrakenClassifier extends BioLockJExecutor
 {
 	
 	
