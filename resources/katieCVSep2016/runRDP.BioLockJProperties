@@ -1,8 +1,9 @@
-##RUN_BIOLOCK_J bioLockJ.metagenome.RdpClassifier
+#RUN_BIOLOCK_J bioLockJ.metagenome.RdpClassifier
 #RUN_BIOLOCK_J bioLockJ.metagenome.GatherRDPResults
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
+CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 
 # these are set for our UNCC cluster
 CLUSTER_BATCH_COMMAND = qsub -q "copperhead" 
@@ -16,4 +17,10 @@ PATH_TO_RDP_JAR=/users/afodor/rdp/rdp_classifier_2.10.1/dist/classifier.jar
 RDP_THRESHOLD=50
 
 # Run 3 RDP jobs (one after the other) on each core
-NUMBER_OF_JOBS_PER_CORE=3
+NUMBER_OF_JOBS_PER_CORE=1
+
+# Flag values must be either TRUE/FALSE
+COPY_INPUT_FLAG=TRUE
+EXIT_ON_ERROR_FLAG=TRUE
+
+PROJECT_NAME=TestRDP
