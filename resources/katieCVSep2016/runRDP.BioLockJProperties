@@ -12,7 +12,7 @@ CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 POLL_TIME = 10
 
 PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/msioda/input
-PATH_TO_RDP_JAR=/nobackup/afodor_research/rdp_212/rdpClassifier.jar
+PATH_TO_RDP_JAR=/nobackup/afodor_research/rdp_classifier_2.12/dist/classifier.jar
 
 RDP_THRESHOLD=50
 
