@@ -1,0 +1,29 @@
+Version 1.0 - Feb 4, 2017
+
+ *  To run BioLockJ program, from project root directory ($BLJ) run:
+ * 
+ *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015	
+ *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/somePropFile.prop
+ *  
+ *  BioLockJ is designed to run on any platform.  
+ *  Each time BioLockJ runs, a new project specific directory is created in ./projects. 
+ *
+ *  PROJECT_NAME is read from propFile (required).  
+ *  NUMBER_OF_JOBS_PER_CORE = # commands/subscript for cluster compute node (optional).
+ *  
+ *  Project Structure
+ *  -----------------------------------------------------------------------------------
+ *  ./projects
+ *  	> PROJECT_NAME_%timestamp% (PROJECT_NAME = required property)
+ *  		> 00_#RUN_BIOLOCK_J<BioLockJExecutor> (#RUN_BIOLOCK_J = required property)
+ *  			> input - if COPY_INPUT_FLAG=TRUE (optional property)
+ *  			> output 
+ *  			> scripts 
+ *  				-runAll.sh (calls all run_###.sh scripts)
+ *  				-run_000.sh (at least one numbered subscript is created)
+ *  				-run_XXX.sh (as many as required byas per NUMBER_OF_JOBS_PER_CORE)
+ *  		> 01_#RUN_BIOLOCK_J<BioLockJExecutor> (additional #RUN_BIOLOCK_J = optional)
+ * 				* No input directory, uses 00_#RUN_BIOLOCK_J/output as input.
+ * 				> output
+ * 				> scripts
+ * 			> XX_#RUN_BIOLOCK_J<BioLockJExecutor> (additional #RUN_BIOLOCK_J = optional)

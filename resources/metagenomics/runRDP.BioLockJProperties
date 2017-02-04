@@ -1,16 +1,17 @@
-##RUN_BIOLOCK_J bioLockJ.metagenome.RdpClassifier
+#RUN_BIOLOCK_J bioLockJ.metagenome.RdpClassifier
 #RUN_BIOLOCK_J bioLockJ.metagenome.GatherRDPResults
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
 
 # these are set for our UNCC cluster
-CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
+CLUSTER_BATCH_COMMAND = qsub -q "copperhead"
+CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 
 # in seconds - how long to wait before checking to see if queued jobs have finished
-POLL_TIME = 10
+POLL_TIME = 30
 
-PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/sangMay2016/fastaOut
-PATH_TO_RDP_JAR=/users/afodor/rdp/rdp_classifier_2.10.1/dist/classifier.jar
+PATH_TO_INPUT_RDP_FASTA_DIRECTORY=/nobackup/afodor_research/obesity_Feb_2017
+PATH_TO_RDP_JAR=/nobackup/afodor_research/rdp_classifier_2.12/dist/classifier.jar
 
 RDP_THRESHOLD=50
