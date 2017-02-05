@@ -153,7 +153,6 @@ public class ScriptBuilder
 				indent = true; 
 				writer.write("if [[ $" + ERROR_ON_PREVIOUS_LINE + " == false ]]; then \n" );
 			}
-
 			
 			writer.write((indent ? INDENT: "") + it.next() + "\n" );
 			writer.write((indent ? INDENT: "") + "if [ \"$?\" -ne \"0\" ]; then \n");
