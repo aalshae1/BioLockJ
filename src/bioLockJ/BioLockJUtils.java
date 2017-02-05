@@ -237,6 +237,15 @@ public class BioLockJUtils
 		
 		return token;
 	}
+	
+	
+	public static void logVersion(String binaryPath) throws Exception
+	{	
+		String[] cmd = new String[2];
+		cmd[0] = binaryPath;
+		cmd[1] = "-version";
+		new ProcessWrapper(cmd);
+	}
 
 	//http://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java
 	private static void copyFile(File sourceFile, File destFile) throws Exception 

@@ -25,18 +25,8 @@ public class ProcessWrapper
 		{
     		log.info (s);
 		}
-		//int exitValue = p.exitValue();
-		//log.debug("exitValue = " + exitValue);	
+
 		p.waitFor();
 		p.destroy();
-
-	}
-	
-	public static void main(String[] args) throws Exception
-	{
-		String[] a= new String[2];
-		a[0] = "c:\\temp\\myScript.bat";
-		a[1] = "locationOfConfigFile";
-		new ProcessWrapper(a);
 	}
 }

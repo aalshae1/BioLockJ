@@ -20,7 +20,13 @@ public class MailUtil
 	{
 		if(!validEmail(cReader))
 		{
-			log.warn("Preparing to send notification email.");
+			
+			String user = cReader.getAProperty(ConfigReader.EMAIL_FROM);
+			String to = cReader.getAProperty(ConfigReader.EMAIL_TO);
+			String password = cReader.getAProperty(ConfigReader.EMAIL_PASSWORD);
+			if(password==null) password = "";
+			log.warn("Invalid email info - notifcation will not be sent.");
+			log.warn("(EmailFrom/EmailTo/PasswordLength) = (" + user + "/" + to + "/" + password.length());
 			return;
 		}
 		

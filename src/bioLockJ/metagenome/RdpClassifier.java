@@ -30,6 +30,7 @@ public class RdpClassifier extends BioLockJExecutor
 
 		String[] files = BioLockJUtils.getFilePaths(fastaInDir);
 		log.debug("Number of valid  files found: " + files.length);
+		BioLockJUtils.logVersion(rdpBinary.getAbsolutePath());
 		setInputDir(fastaInDir);
 		
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();

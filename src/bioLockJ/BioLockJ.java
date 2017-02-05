@@ -9,7 +9,7 @@ import utils.MailUtil;
 /** 
  * To run BioLockJ program, from project root directory ($BLJ) run:
  * 
- *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015 emailPassword	
+ *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/clusterKraken.properties emailPassword	
  *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ ./resources/somePropFile.prop
  *  
  *  Include 2nd param "emailPassword" to receive email notification when job is complete.
@@ -79,6 +79,8 @@ public class BioLockJ
 			}
 			
 			log = LoggerFactory.getLogger(BioLockJ.class);
+			log.info("Number of Java run parameters args[] = " + args.length);
+			
 			String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
 			BioLockJUtils.logConfigFileSettings(cReader);
 			BioLockJUtils.copyPropertiesFile(propFile, projectDir);
@@ -138,24 +140,16 @@ public class BioLockJ
 		if( invoker.hasScripts() )
 		{
 			int pollTime = 15;
-			if(MailUtil.validEmail(invoker.getConfig()))
+			try
 			{
-				BioLockJExecutor.log.warn("Since email notification will be sent, override poll time to 15 minutes.");
-				pollTime = 60 * 15; 
+				pollTime = BioLockJUtils.requirePositiveInteger(invoker.getConfig(), ConfigReader.POLL_TIME);
 			}
-			else
+			catch(Exception ex)
 			{
-				try
-				{
-					pollTime = BioLockJUtils.requirePositiveInteger(invoker.getConfig(), ConfigReader.POLL_TIME);
-				}
-				catch(Exception ex)
-				{
-					BioLockJExecutor.log.warn("Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + 
-									pollTime +  " seconds ", ex);		
-				}
+				BioLockJExecutor.log.warn("Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + 
+								pollTime +  " seconds ", ex);		
 			}
-
+			
 			executeCHMOD_ifDefined(invoker.getConfig(), invoker.getScriptDir());
 			executeFile(invoker.getRunAllFile());
 			pollAndSpin(invoker, pollTime );
@@ -183,8 +177,6 @@ public class BioLockJ
 	
 	protected static void pollAndSpin(BioLockJExecutor invoker, int pollTime) throws Exception
 	{
-		
-
 		boolean finished = false;
 		while( !finished )
 		{

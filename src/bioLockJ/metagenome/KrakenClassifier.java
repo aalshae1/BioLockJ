@@ -6,6 +6,7 @@ import java.util.*;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
+import bioLockJ.ProcessWrapper;
 import bioLockJ.ScriptBuilder;
 
 /**
@@ -36,6 +37,7 @@ public class KrakenClassifier extends BioLockJExecutor
 		
 		String[] files = BioLockJUtils.getFilePaths(fastaInDir);
 		log.debug("Number of valid  files found: " + files.length);
+		BioLockJUtils.logVersion(krakenBinary.getAbsolutePath());
 		setInputDir(fastaInDir);
 		
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
@@ -74,5 +76,4 @@ public class KrakenClassifier extends BioLockJExecutor
 
 		return formattedSwitches;
 	}
-	
 }
