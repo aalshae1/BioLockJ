@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # build/test
-
 # git clone https://github.com/mikesioda/BioLockJ.git
 # sleep 4s
 #cd ./BioLockJ

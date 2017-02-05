@@ -4,11 +4,12 @@ import java.io.*;
 import java.util.*;
 
 import org.slf4j.*;
+import utils.MailUtil;
 
 /** 
  * To run BioLockJ program, from project root directory ($BLJ) run:
  * 
- *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015	
+ *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015 Harly2go!	
  *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ ./resources/somePropFile.prop
  *  
  *  BioLockJ is designed to run on any platform.  
@@ -45,14 +46,16 @@ public class BioLockJ
 	 * and call runProgram(cReader).
 	 * 
 	 * @param args - args[0] path to property file
+	 * 				 args[1] email password (optional)
 	 */
 	public static void main(String[] args)
 	{
 		System.out.println("START PROGRAM");
+		ConfigReader cReader = null;
 		try{
-			if( args.length != 1)
+			if( args.length < 1 || args.length > 2 )
 			{
-				System.out.println("Usage " + BioLockJ.class.getName() + " <FULL PATH TO PROP FILE>");
+				System.out.println("Usage " + BioLockJ.class.getName() + " <FULL PATH TO PROP FILE> <OPTIONAL EMAIL PASSWORD>");
 				System.out.println("TERMINATE PROGRAM");
 				System.exit(1);
 			}
@@ -61,8 +64,16 @@ public class BioLockJ
 			if( !propFile.exists() || propFile.isDirectory() )
 				throw new Exception(propFile.getAbsolutePath() + " is not a valid file");
 
-			ConfigReader cReader = new ConfigReader(propFile);
-			if(log == null) log = LoggerFactory.getLogger(BioLockJ.class);
+			if ( args.length == 2 )
+			{
+				cReader = new ConfigReader(propFile, args[1]);
+			}
+			else
+			{
+				cReader = new ConfigReader(propFile);
+			}
+			
+			log = LoggerFactory.getLogger(BioLockJ.class);
 			String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
 			BioLockJUtils.logConfigFileSettings(cReader);
 			BioLockJUtils.copyPropertiesFile(propFile, projectDir);
@@ -72,14 +83,31 @@ public class BioLockJ
 		}catch(Exception ex){
 			log.error(ex.getMessage(), ex);
 		}finally{
-			if(log!=null){
-				log.info(BioLockJUtils.LOG_SPACER);
-				log.info("PROGRAM COMPLETE");
-				log.info(BioLockJUtils.LOG_SPACER);
-			}else{
-				System.out.println("TERMINATE PROGRAM");
+			
+			try
+			{
+				MailUtil.sendEmailNotification(cReader); //generateAndSendEmail(cReader);
 			}
-		}
+			catch(Exception ex)
+			{
+				if(log!=null)
+				{
+					log.error("Unable to send notification email.");
+					log.error(ex.getMessage(), ex);
+				}
+			}
+			
+			if(log!=null)
+			{
+				log.info(BioLockJUtils.LOG_SPACER);
+				log.info("MAIN PROGRAM COMPLETE");
+				log.info(BioLockJUtils.LOG_SPACER);
+			}
+			else
+			{
+				System.out.println("MAIN PROGRAM COMPLETE");
+			}
+		}	
 	}
 	
 	

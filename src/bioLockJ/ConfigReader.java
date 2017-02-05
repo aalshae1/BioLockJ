@@ -23,8 +23,8 @@ import java.util.*;
 
 public class ConfigReader
 {
-	private final Properties props;
-	private final File propertiesFile;
+	private Properties props;
+	private File propertiesFile;
 	private String runTimeStamp;
 	
 	protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_kkmmss");
@@ -39,7 +39,9 @@ public class ConfigReader
 	public static final String PROJECT_NAME = "PROJECT_NAME"; 
 	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR"; 
 	
-	
+	public static final String EMAIL_FROM = "EMAIL_FROM"; 
+	public static final String EMAIL_TO = "EMAIL_TO"; 
+	public static final String EMAIL_PASSWORD = "EMAIL_PASSWORD"; 
 	
 	// OPERATION FLAGS
 	public static final String COPY_INPUT_FLAG = "COPY_INPUT_FLAG";
@@ -129,8 +131,19 @@ public class ConfigReader
 		return tempProps;
 	}
 	
+	public ConfigReader(File file, String password) throws Exception
+	{
+		init(file, password);
+	}
+	
 	
 	public ConfigReader(File file) throws Exception
+	{
+		init(file, null);
+	}
+	
+	
+	public void init(File file, String password) throws Exception
 	{
 		propertiesFile = file;
 		props = getPropsFromFile(propertiesFile);
@@ -142,6 +155,12 @@ public class ConfigReader
 		//props.setProperty(PATH_TO_BLJ_ROOT, bljRoot);
 		props.setProperty(PATH_TO_PROJECT_DIR, projectDir);
 		props.setProperty(LOG_FILE, getLogName(projectDir));
+		
+		if(password!=null)
+		{
+			props.setProperty(EMAIL_PASSWORD, password);
+		}
+		
 	}
 	
 	

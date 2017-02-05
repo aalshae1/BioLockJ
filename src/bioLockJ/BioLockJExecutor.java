@@ -22,7 +22,6 @@ public abstract class BioLockJExecutor
 	private File executorDir;
 	private File inputDir;
 	private File scriptsDir;
-	private File summaryDir;
 	private File outputDir;
 	
 	public boolean hasScripts()
@@ -54,6 +53,8 @@ public abstract class BioLockJExecutor
 		{
 			throw new Exception("ERROR: Unable to create: " + fullPath);
 		}
+		
+		log.info(this.getClass().getSimpleName() + " Create Executor Directory: " + fullPath);
 		executorDir = dir;
 	}
 	
@@ -81,16 +82,11 @@ public abstract class BioLockJExecutor
 			return runAllFile;
 		}
 		runAllFile = ScriptBuilder.createRunAllFile(getScriptDir().getAbsolutePath());
+		log.info(this.getClass().getSimpleName() + " Create RunAllFile: " + runAllFile.getAbsolutePath());
 		return runAllFile;	
 	} 
 	
 
-//	public String getTimeStamp()
-//	{
-//		return getConfig().getAProperty(ConfigReader.RUN_TIMESTAMP);
-//	}
-//	
-	
 	public File getProjectDir() throws Exception
 	{
 		if(projectDir!=null)
@@ -98,6 +94,7 @@ public abstract class BioLockJExecutor
 			return projectDir;
 		}
 		projectDir = BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_PROJECT_DIR);
+		log.info(this.getClass().getSimpleName() + " Project Directory: " + projectDir.getAbsolutePath());
 		return projectDir; 
 	}
  
@@ -112,7 +109,9 @@ public abstract class BioLockJExecutor
 				FileUtils.copyDirectory(inDir, getInputDir());
 			}
 		}
-		this.inputDir = inDir;
+		
+		inputDir = inDir;
+		log.info(this.getClass().getSimpleName() + " Set Input Directory: " + inputDir.getAbsolutePath());
 	}
 	
 	public File getInputDir() throws Exception
@@ -132,18 +131,10 @@ public abstract class BioLockJExecutor
 			return scriptsDir;
 		}
 		scriptsDir = createSubDir("scripts");
+		log.info(this.getClass().getSimpleName() + " Create Script Directory: " + scriptsDir.getAbsolutePath());
 		return scriptsDir;	
 	}
 	
-	public File getSummaryDir() throws Exception
-	{
-		if(summaryDir!=null)
-		{
-			return summaryDir;
-		}
-		summaryDir = createSubDir("summary");
-		return summaryDir;	
-	}
 	
 	public File getOutputDir() throws Exception
 	{
@@ -152,6 +143,7 @@ public abstract class BioLockJExecutor
 			return outputDir;
 		}
 		outputDir = createSubDir("output");
+		log.info(this.getClass().getSimpleName() + " Create Output Directory: " + outputDir.getAbsolutePath());
 		return outputDir;	
 	}
 	

@@ -42,7 +42,7 @@ public class GatherRDPResults extends BioLockJExecutor
 		for( int x=1; x < NewRDPParserFileLine.TAXA_ARRAY.length; x++)
 		{
 			 BufferedWriter writer = new BufferedWriter(new FileWriter(new File(
-					 getSummaryDir().getAbsolutePath() + File.separator + 
+					 getOutputDir().getAbsolutePath() + File.separator + 
 					 		NewRDPParserFileLine.TAXA_ARRAY[x] + THREE_COL_SUFFIX)));
 			 taxaWriters.put(NewRDPParserFileLine.TAXA_ARRAY[x], writer);
 		}
@@ -87,15 +87,15 @@ public class GatherRDPResults extends BioLockJExecutor
 		
 		for( int x=1; x < NewRDPParserFileLine.TAXA_ARRAY.length; x++)
 		{
-			File file = new File(getSummaryDir().getAbsolutePath() + File.separator + 
+			File file = new File(getOutputDir().getAbsolutePath() + File.separator + 
 					 		NewRDPParserFileLine.TAXA_ARRAY[x] + THREE_COL_SUFFIX);
 			
 			HashMap<String, HashMap<String, Integer>> map = getMapFromFile(file.getAbsolutePath());
-			File outFile = new File(getSummaryDir().getAbsolutePath() + File.separator + 
+			File outFile = new File(getOutputDir().getAbsolutePath() + File.separator + 
 				 		NewRDPParserFileLine.TAXA_ARRAY[x] + "_taxaAsColumns.txt");
 			writeResults(map, outFile.getAbsolutePath());
 			OtuWrapper wrapper = new OtuWrapper(outFile);
-			wrapper.writeNormalizedLoggedDataToFile(getSummaryDir().getAbsolutePath() + File.separator + 
+			wrapper.writeNormalizedLoggedDataToFile(getOutputDir().getAbsolutePath() + File.separator + 
 					"pivoted_" + NewRDPParserFileLine.TAXA_ARRAY[x] + "asColumnsLogNormal.txt");
 		}
 	}

@@ -82,7 +82,8 @@ public class ScriptBuilder
 		File qsubOutput = new File(f.getParentFile().getParentFile().getAbsolutePath() + 
 				File.separator + "qsub");
 		qsubOutput.mkdirs();
-		
+
+		log.info("Create Qsub Directory: " + qsubOutput.getAbsolutePath());
 		writer.write("cd " + qsubOutput.getAbsolutePath() + " \n" );
 		writer.write("okToContinue=true \n" );
 		writer.flush(); writer.close();
@@ -93,7 +94,8 @@ public class ScriptBuilder
 	{
 		String num = BioLockJUtils.formatInt(countNum, 3);
 		File script = new File(blje.getScriptDir().getAbsolutePath() + File.separator + "run_" + num  + ".sh");
-
+		log.info(blje.getClass().getSimpleName() + " Create Sub Script: " + script.getAbsolutePath());
+		
 		BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 		String clusterParams = blje.getConfig().getAProperty(ConfigReader.CLUSTER_PARAMS);
 		writer.write(clusterParams == null ?  "": clusterParams + "\n" );
