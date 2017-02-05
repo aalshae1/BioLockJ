@@ -27,6 +27,8 @@ public class ScriptBuilder
 	public static final String SCRIPT_SUCCEEDED = "_SUCCESS";
 	public static final String INDENT = "    ";
 	public static final String RUN_BIOLOCK_J = "#RUN_BIOLOCK_J";
+	public static final String ERROR_DETECTED = "errorDetected";
+	public static final String ERROR_ON_PREVIOUS_LINE = "errorOnPreviousLine";
 	
 	public static void buildScripts(BioLockJExecutor blje, ArrayList<ArrayList<String>> data) throws Exception
 	{
@@ -64,13 +66,13 @@ public class ScriptBuilder
 			if( needMultipleScripts && --numToDo == 0 )
 			{
 				numToDo = numJobsPerCore;
-				closeSubScript(aWriter, subScript);
+				closeScript(aWriter, subScript.getAbsolutePath());
 				scriptOpen = false;
 			}		
 		}
 		
-		if(scriptOpen) closeSubScript(aWriter, subScript);
-		closeRunAllFile(allWriter, blje.getRunAllFile().getAbsolutePath());
+		if(scriptOpen) closeScript(aWriter, subScript.getAbsolutePath());
+		closeScript(allWriter, blje.getRunAllFile().getAbsolutePath());
 	}
 	
 	protected static File createRunAllFile(String scriptDir) throws Exception
@@ -85,7 +87,7 @@ public class ScriptBuilder
 
 		log.info("Create Qsub Directory: " + qsubOutput.getAbsolutePath());
 		writer.write("cd " + qsubOutput.getAbsolutePath() + " \n" );
-		writer.write("okToContinue=true \n" );
+		writer.write(ERROR_DETECTED + "=false \n" );
 		writer.flush(); writer.close();
 		return f;
 	}
@@ -99,17 +101,17 @@ public class ScriptBuilder
 		BufferedWriter writer = new BufferedWriter(new FileWriter(script));
 		String clusterParams = blje.getConfig().getAProperty(ConfigReader.CLUSTER_PARAMS);
 		writer.write(clusterParams == null ?  "": clusterParams + "\n" );
-		writer.write("failureDetected=false \n");
+		writer.write(ERROR_DETECTED + "=false \n");
 		writer.flush(); writer.close();
 
-		allWriter.write("if [[ $okToContinue == true ]]; then \n" );
+		allWriter.write("if [[ $" + ERROR_DETECTED + " == false ]]; then \n" );
 
 		String clusterCommand = blje.getConfig().getAProperty(ConfigReader.CLUSTER_BATCH_COMMAND);
 		allWriter.write(INDENT + (clusterCommand == null ?  "": clusterCommand + " " ) + 
 				script.getAbsolutePath() + "\n"  );
 		
 		allWriter.write(INDENT + "if [ \"$?\" -ne \"0\" ]; then \n");
-		allWriter.write(INDENT + INDENT +"okToContinue=false \n" );
+		allWriter.write(INDENT + INDENT + ERROR_DETECTED + "=true \n" );
 		allWriter.write(INDENT + "fi \n");
 		allWriter.write("fi \n");
 		allWriter.flush();
@@ -118,53 +120,48 @@ public class ScriptBuilder
 	} 
 	
 	
-	protected static void closeRunAllFile(BufferedWriter writer, String runAllFilePath) throws Exception
+	protected static void closeScript(BufferedWriter writer, String script) throws Exception
 	{
-		writer.write("if [[ $okToContinue == true ]]; then \n" );
-		writer.write(INDENT + "touch " + runAllFilePath + SCRIPT_SUCCEEDED + " \n" );
+		writer.write("if [[ $" + ERROR_DETECTED + " == false ]]; then \n" );
+		writer.write(INDENT + "touch " + script + SCRIPT_SUCCEEDED + " \n" );
 		writer.write("else \n" );
-		writer.write(INDENT + "touch " + runAllFilePath + SCRIPT_FAILED + " \n" );
-		writer.write(INDENT + "exit 1 \n");
-		writer.write("fi \n");
-		writer.flush();  writer.close();
-	}
- 
-	
-	protected static void closeSubScript(BufferedWriter writer, File script) throws Exception
-	{
-		writer.write("if [[ $failureDetected == false ]]; then \n" );
-		writer.write(INDENT + "touch " + script.getAbsolutePath() + SCRIPT_SUCCEEDED + " \n" );
-		writer.write("else \n" );
-		writer.write(INDENT + "touch " + script.getAbsolutePath() + SCRIPT_FAILED + " \n" );
+		writer.write(INDENT + "touch " + script + SCRIPT_FAILED + " \n" );
 		writer.write(INDENT + "exit 1 \n");
 		writer.write("fi \n");
 		writer.flush();  writer.close();
 	}
 	
-	
+
+
 	protected static void addDependantLinesToScript(BufferedWriter writer, 
 			ArrayList<String> lines, boolean exitOnError) throws Exception
 	{
 		Iterator<String> it = lines.iterator();
-		writer.write("okToContinue=true \n" );
-
+		writer.write(ERROR_ON_PREVIOUS_LINE + "=false \n" );
+		boolean firstLine = true;
+		boolean indent = false;
 		while(it.hasNext())
 		{ 
-			if(exitOnError)
+			if( exitOnError )
 			{
-				writer.write("if [[ $okToContinue == true && $failureDetected == false ]]; then \n" );
+				indent = true;
+				writer.write("if [[ " + (firstLine ?  "": "$" + ERROR_ON_PREVIOUS_LINE + 
+						" == false && ") + "$" + ERROR_DETECTED + " == false ]]; then \n" );
 			}
-			else
+			else if( !firstLine )
 			{
-				writer.write("if [[ $okToContinue == true ]]; then \n" );
+				indent = true; 
+				writer.write("if [[ $" + ERROR_ON_PREVIOUS_LINE + " == false ]]; then \n" );
 			}
+
 			
-			writer.write(INDENT + it.next() + "\n" );
-			writer.write(INDENT + "if [ \"$?\" -ne \"0\" ]; then \n");
-			writer.write(INDENT + INDENT + "okToContinue=false \n");
-			writer.write(INDENT + INDENT + "failureDetected=true \n");
-			writer.write(INDENT + "fi \n");
-			writer.write("fi \n");
+			writer.write((indent ? INDENT: "") + it.next() + "\n" );
+			writer.write((indent ? INDENT: "") + "if [ \"$?\" -ne \"0\" ]; then \n");
+			writer.write((indent ? INDENT: "") + INDENT + ERROR_ON_PREVIOUS_LINE + "=true \n");
+			writer.write((indent ? INDENT: "") + INDENT + ERROR_DETECTED + "=true \n");
+			writer.write((indent ? INDENT: "") + "fi \n");
+			writer.write(indent ? "fi \n": "");
+			firstLine = false;
 		}
 	}
 	
