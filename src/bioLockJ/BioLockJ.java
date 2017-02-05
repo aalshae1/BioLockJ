@@ -9,11 +9,14 @@ import utils.MailUtil;
 /** 
  * To run BioLockJ program, from project root directory ($BLJ) run:
  * 
- *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015 Harly2go!	
+ *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015 emailPassword	
  *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ ./resources/somePropFile.prop
  *  
+ *  Include 2nd param "emailPassword" to receive email notification when job is complete.
+ *  
  *  BioLockJ is designed to run on any platform.  
- *  Each time BioLockJ runs, a new project specific directory is created in ./projects. 
+ *  Each time BioLockJ runs, a new project specific directory is created in ./projects.
+ *   
  *  PROJECT_NAME is read from propFile (required).  
  *  NUMBER_OF_JOBS_PER_CORE = # commands/subscript for cluster compute node (optional).
  *  
@@ -24,6 +27,7 @@ import utils.MailUtil;
  *  		> 00_#RUN_BIOLOCK_J<BioLockJExecutor> (#RUN_BIOLOCK_J = required property)
  *  			> input - if COPY_INPUT_FLAG=TRUE (optional property)
  *  			> output 
+ *  			> qsub 
  *  			> scripts 
  *  				-runAll.sh (calls all run_###.sh scripts)
  *  				-run_000.sh (at least one numbered subscript is created)
@@ -31,7 +35,8 @@ import utils.MailUtil;
  *  		> 01_#RUN_BIOLOCK_J<BioLockJExecutor> (additional #RUN_BIOLOCK_J = optional)
  * 				* No input directory, uses 00_#RUN_BIOLOCK_J/output as input.
  * 				> output
- * 				> scripts
+ * 				> qsub (if needed)
+ * 				> scripts (if needed)
  * 			> XX_#RUN_BIOLOCK_J<BioLockJExecutor> (additional #RUN_BIOLOCK_J = optional)
  */
 public class BioLockJ
@@ -86,7 +91,7 @@ public class BioLockJ
 			
 			try
 			{
-				MailUtil.sendEmailNotification(cReader); //generateAndSendEmail(cReader);
+				MailUtil.sendEmailNotification(cReader); 
 			}
 			catch(Exception ex)
 			{
@@ -133,14 +138,22 @@ public class BioLockJ
 		if( invoker.hasScripts() )
 		{
 			int pollTime = 15;
-			try
+			if(MailUtil.validEmail(invoker.getConfig()))
 			{
-				pollTime = BioLockJUtils.requirePositiveInteger(invoker.getConfig(), ConfigReader.POLL_TIME);
+				BioLockJExecutor.log.warn("Since email notification will be sent, override poll time to 15 minutes.");
+				pollTime = 60 * 15; 
 			}
-			catch(Exception ex)
+			else
 			{
-				BioLockJExecutor.log.warn("Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + 
-								pollTime +  " seconds ", ex);		
+				try
+				{
+					pollTime = BioLockJUtils.requirePositiveInteger(invoker.getConfig(), ConfigReader.POLL_TIME);
+				}
+				catch(Exception ex)
+				{
+					BioLockJExecutor.log.warn("Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + 
+									pollTime +  " seconds ", ex);		
+				}
 			}
 
 			executeCHMOD_ifDefined(invoker.getConfig(), invoker.getScriptDir());
@@ -171,6 +184,7 @@ public class BioLockJ
 	protected static void pollAndSpin(BioLockJExecutor invoker, int pollTime) throws Exception
 	{
 		
+
 		boolean finished = false;
 		while( !finished )
 		{

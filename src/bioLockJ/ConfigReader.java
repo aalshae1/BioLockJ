@@ -29,13 +29,6 @@ public class ConfigReader
 	
 	protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_kkmmss");
 	
-	
-	public File getPropertiesFile()
-	{
-		return propertiesFile;
-	}
-	
-	
 	public static final String PROJECT_NAME = "PROJECT_NAME"; 
 	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR"; 
 	
@@ -88,7 +81,7 @@ public class ConfigReader
 	public static final String MBGD_EXTENDED_PATH="MBGD_EXTENDED_PATH";
 	
 	public static final String PATH_TO_RDP_JAR="PATH_TO_RDP_JAR";
-	public static final String PATH_TO_INPUT_RDP_FASTA_DIRECTORY="PATH_TO_INPUT_RDP_FASTA_DIRECTORY";
+	public static final String PATH_TO_INPUT_DIRECTORY="PATH_TO_INPUT_DIRECTORY";
 	public static final String RDP_THRESHOLD = "RDP_THRESHOLD";
 	
 	
@@ -96,7 +89,47 @@ public class ConfigReader
 	public static final String PATH_TO_KRAKEN_BINARY = "PATH_TO_KRAKEN_BINARY";
 	public static final String KRAKEN_SWITCHES = "KRAKEN_SWITCHES";
 	
-
+	
+	public ConfigReader(File file, String password) throws Exception
+	{
+		init(file, password);
+	}
+	
+	
+	public ConfigReader(File file) throws Exception
+	{
+		init(file, null);
+	}
+	
+	
+	protected void init(File file, String password) throws Exception
+	{
+		propertiesFile = file;
+		props = getPropsFromFile(propertiesFile);
+	
+		String bljRoot = getBLJRoot();
+		String projectDir = createProjectDir(bljRoot);
+		
+		//props.setProperty(RUN_TIMESTAMP, runTimeStamp);
+		//props.setProperty(PATH_TO_BLJ_ROOT, bljRoot);
+		props.setProperty(PATH_TO_PROJECT_DIR, projectDir);
+		props.setProperty(LOG_FILE, getLogName(projectDir));
+		
+		if(password!=null)
+		{
+			props.setProperty(EMAIL_PASSWORD, password);
+		}
+		
+	}
+	
+	
+	
+	public File getPropertiesFile()
+	{
+		return propertiesFile;
+	}
+	
+	
 	
 	public String getAProperty(String namedProperty)
 	{
@@ -122,6 +155,22 @@ public class ConfigReader
 	}
 	
 	
+	public ArrayList<String> getPropertyAsList(String namedProperty)
+	{
+		ArrayList<String> list = new ArrayList<String>();
+		String val = getAProperty(namedProperty);
+		if(val!=null && val.trim().length()>0)
+		{
+			StringTokenizer st = new StringTokenizer(val, ",");
+			while(st.hasMoreTokens())
+			{
+				list.add(st.nextToken());
+			}
+		}
+		
+		return list;
+	}
+	
 	private static Properties getPropsFromFile(File propertiesFile) throws Exception
 	{
 		InputStream in = new FileInputStream(propertiesFile);
@@ -131,37 +180,7 @@ public class ConfigReader
 		return tempProps;
 	}
 	
-	public ConfigReader(File file, String password) throws Exception
-	{
-		init(file, password);
-	}
 	
-	
-	public ConfigReader(File file) throws Exception
-	{
-		init(file, null);
-	}
-	
-	
-	public void init(File file, String password) throws Exception
-	{
-		propertiesFile = file;
-		props = getPropsFromFile(propertiesFile);
-	
-		String bljRoot = getBLJRoot();
-		String projectDir = createProjectDir(bljRoot);
-		
-		//props.setProperty(RUN_TIMESTAMP, runTimeStamp);
-		//props.setProperty(PATH_TO_BLJ_ROOT, bljRoot);
-		props.setProperty(PATH_TO_PROJECT_DIR, projectDir);
-		props.setProperty(LOG_FILE, getLogName(projectDir));
-		
-		if(password!=null)
-		{
-			props.setProperty(EMAIL_PASSWORD, password);
-		}
-		
-	}
 	
 	
 	public HashMap<String, String> getProperties() throws Exception

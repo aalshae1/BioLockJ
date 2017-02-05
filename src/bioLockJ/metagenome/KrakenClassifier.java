@@ -19,7 +19,7 @@ public class KrakenClassifier extends BioLockJExecutor
 	@Override
 	public void checkDependencies() throws Exception
 	{	
-		BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
+		BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_DIRECTORY);
 		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_BINARY);
 		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_DATABASE);
 		BioLockJUtils.requirePositiveInteger(getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE);
@@ -29,10 +29,9 @@ public class KrakenClassifier extends BioLockJExecutor
 	public void executeProjectFile() throws Exception
 	{
 
-		File fastaInDir =  BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
+		File fastaInDir =  BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_DIRECTORY);
 		File krakenBinary =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_BINARY);
 		File krakenDatabase = BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_KRAKEN_DATABASE);
-		String krakenSwitches = BioLockJUtils.getStringOrNull(getConfig(), ConfigReader.KRAKEN_SWITCHES);
 		
 		
 		String[] files = BioLockJUtils.getFilePaths(fastaInDir);
@@ -48,8 +47,7 @@ public class KrakenClassifier extends BioLockJExecutor
 			String krakenTranslate = getOutputDir().getAbsolutePath() + File.separator + file + "_toKrakenTranslate.txt";
 
 			String firstLine = krakenBinary.getAbsolutePath() + " --db " + krakenDatabase.getAbsolutePath()  + 
-					" --output " + krakenOutput + " " + inputFile + 
-					(krakenSwitches == null ?  "": " " + krakenSwitches);
+					" --output " + krakenOutput + getKrakenSwitches() + inputFile;
 			
 			String nextLine = krakenBinary.getAbsolutePath() + "-translate --db " +  
 					krakenDatabase.getAbsolutePath()  + " " + krakenOutput + " > " + krakenTranslate;
@@ -62,4 +60,19 @@ public class KrakenClassifier extends BioLockJExecutor
 		
 		ScriptBuilder.buildScripts(this, data);
 	}
+	
+	
+	protected String getKrakenSwitches() throws Exception
+	{
+		String formattedSwitches = " ";
+		ArrayList<String> switches = getConfig().getPropertyAsList(ConfigReader.KRAKEN_SWITCHES);
+		Iterator<String> it = switches.iterator();
+		while(it.hasNext())
+		{
+			formattedSwitches += "--" + it.next() + " ";
+		}
+
+		return formattedSwitches;
+	}
+	
 }

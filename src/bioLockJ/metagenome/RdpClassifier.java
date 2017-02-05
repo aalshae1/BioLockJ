@@ -18,14 +18,14 @@ public class RdpClassifier extends BioLockJExecutor
 	@Override
 	public void checkDependencies() throws Exception
 	{	
-		BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
+		BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_DIRECTORY);
 		BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_RDP_JAR);
 	}
 	
 	@Override
 	public void executeProjectFile() throws Exception
 	{
-	 	File fastaInDir =  BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_RDP_FASTA_DIRECTORY);
+	 	File fastaInDir =  BioLockJUtils.requireExistingDirectory(getConfig(), ConfigReader.PATH_TO_INPUT_DIRECTORY);
 		File rdpBinary =  BioLockJUtils.requireExistingFile(getConfig(), ConfigReader.PATH_TO_RDP_JAR);
 
 		String[] files = BioLockJUtils.getFilePaths(fastaInDir);

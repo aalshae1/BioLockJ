@@ -2,9 +2,11 @@ Version 1.0 - Feb 4, 2017
 
  *  To run BioLockJ program, from project root directory ($BLJ) run:
  * 
- *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015	
+ *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/allMiniKraken/krakenAdenonas2015 emailPassword	
  *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/somePropFile.prop
  *  
+ *  Include 2nd param "emailPassword" to receive email notification when job is complete.
+ *
  *  BioLockJ is designed to run on any platform.  
  *  Each time BioLockJ runs, a new project specific directory is created in ./projects. 
  *

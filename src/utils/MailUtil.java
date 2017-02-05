@@ -18,17 +18,16 @@ public class MailUtil
 	
 	public static void sendEmailNotification(ConfigReader cReader) throws Exception  
 	{
-
-		String user = cReader.getAProperty(ConfigReader.EMAIL_FROM);
-		String to = cReader.getAProperty(ConfigReader.EMAIL_TO);
-		String logFilePath = cReader.getAProperty(ConfigReader.LOG_FILE);
-		String password = cReader.getAProperty(ConfigReader.EMAIL_PASSWORD);
-		
-		if(!validEmail(user, to, password))
+		if(!validEmail(cReader))
 		{
 			log.warn("Preparing to send notification email.");
 			return;
 		}
+		
+		String user = cReader.getAProperty(ConfigReader.EMAIL_FROM);
+		String to = cReader.getAProperty(ConfigReader.EMAIL_TO);
+		String logFilePath = cReader.getAProperty(ConfigReader.LOG_FILE);
+		String password = cReader.getAProperty(ConfigReader.EMAIL_PASSWORD);
 		
 		log.info("Preparing to send notification email with attachment: " + logFilePath);
 		
@@ -79,8 +78,13 @@ public class MailUtil
 		return " BioLockJ job complete.  Review attached log file for details. " + "\n\n Regards, \n BioLockJ Admin";
 	}
 	
-	protected static boolean validEmail(String emailFrom, String emailTo, String emailPass)
+	public static boolean validEmail(ConfigReader cReader)
 	{
+		
+		String emailFrom = cReader.getAProperty(ConfigReader.EMAIL_FROM);
+		String emailTo = cReader.getAProperty(ConfigReader.EMAIL_TO);
+		String emailPass = cReader.getAProperty(ConfigReader.EMAIL_PASSWORD);
+		
 		if(emailFrom==null || emailTo==null || emailPass==null || 
 				emailFrom.trim().length()<1 || emailTo.trim().length()<1  || emailPass.trim().length()<1 )
 		{
