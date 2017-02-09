@@ -156,10 +156,11 @@ public class BioLockJUtils
 		return aFile;
 	}
 	
-	public static void copyPropertiesFile( File propsFile, String projectDir )
+	public static void copyFile( File filePath, String projectDir )
 		throws Exception
 	{
-		copyFile(propsFile, new File(projectDir + propsFile.getName()));
+		log.info("Copy (" + filePath + ") to project directory (" + projectDir + ")");
+		copyFile(filePath, new File(projectDir + filePath.getName()));
 	}
 	
 	public static void logConfigFileSettings(ConfigReader reader) throws Exception 

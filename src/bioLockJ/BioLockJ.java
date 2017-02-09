@@ -80,18 +80,23 @@ public class BioLockJ
 			
 			log = LoggerFactory.getLogger(BioLockJ.class);
 			
-			log.debug("Test Metadata Code");
-			log.debug("Meta Attributes: " + cReader.getMetaData().getAttributeNames());
-			log.debug("Meta File Names: " + cReader.getMetaData().getFileNames() );
-			log.debug("Meta File_10 Att Values: " + cReader.getMetaData().getAttributes("File_10"));
-			log.debug("Meta File_10 log2_fold_change: " + cReader.getMetaData().getAttribute("File_10", "log2_fold_change"));
-			
-			
 			log.info("Number of Java run parameters args[] = " + args.length);
 			
 			String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
 			BioLockJUtils.logConfigFileSettings(cReader);
-			BioLockJUtils.copyPropertiesFile(propFile, projectDir);
+			BioLockJUtils.copyFile(propFile, projectDir);
+			
+			if( cReader.getMetaData()!=null )
+			{
+				log.debug("Testing Metadata Code");
+				log.debug("Meta Attributes: " + cReader.getMetaData().getAttributeNames());
+				log.debug("Meta File Names: " + cReader.getMetaData().getFileNames() );
+				log.debug("Meta File_10 Att Values: " + cReader.getMetaData().getAttributes("File_10"));
+				log.debug("Meta File_10 log2_fold_change: " + cReader.getMetaData().getAttribute("File_10", "log2_fold_change"));
+				
+				String metaPath = cReader.getMetaData().getFilePath();
+				BioLockJUtils.copyFile(new File(metaPath), projectDir);
+			}
 
 			runProgram(cReader);
 

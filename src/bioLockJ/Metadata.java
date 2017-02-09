@@ -21,9 +21,13 @@ public class Metadata {
 	
 	private ArrayList<String> attributeNames;
 	private HashMap<String, ArrayList<String>> map;
+	private String filePath;
+	
+	
 	    
-	public Metadata(ArrayList<ArrayList<String>> csvData)
+	public Metadata(ArrayList<ArrayList<String>> csvData, String fileName)
 	{
+		filePath = fileName;
 		init(csvData);
 	}
 	
@@ -33,8 +37,8 @@ public class Metadata {
 		if(fileName==null || fileName.trim().length() < 1)
 		{
 			log.info("Metadata file not configured: " + fileName);
+			return null;
 		}
-		
 		
 		log.info("Loading metadata file: " + fileName);
 		FileReader fileReader = null;
@@ -49,18 +53,18 @@ public class Metadata {
 
             Iterator<CSVRecord> csvRecords = csvFileParser.getRecords().iterator();
             
-            //int rowNum = 0;
+            int rowNum = 0;
             while (csvRecords.hasNext()) 
             {
             	ArrayList<String> record = new ArrayList<String>();
             	CSVRecord csvRow = csvRecords.next(); csvRow.getRecordNumber();
             	Iterator<String> it = csvRow.iterator();
-            	//log.debug("Row #" + BioLockJUtils.formatInt(rowNum++, 3) + " :: #attributes = " + csvRow.size());
+            	log.debug("Row #" + BioLockJUtils.formatInt(rowNum++, 3) + " :: #attributes = " + csvRow.size());
             	while (it.hasNext()) 
                 {
             		record.add(it.next());
                 }
-            	//log.debug(record.toString());
+
             	csvData.add(record);
 			}
             
@@ -68,6 +72,7 @@ public class Metadata {
 
         } catch (Exception e) {
         	log.error("Error in CsvFileReader  !!!", e);
+        	return null;
         } finally {
             try {
                 fileReader.close();
@@ -78,7 +83,12 @@ public class Metadata {
         }
         
         log.info("About to return meta: ");
-        return new Metadata(csvData);
+        return new Metadata(csvData, fileName);
+	}
+	
+	public String getFilePath()
+	{
+		return filePath;
 	}
 	
 	public ArrayList<String> getAttributeNames()
@@ -108,18 +118,17 @@ public class Metadata {
           Iterator<ArrayList<String>> rows = csvData.iterator();
           map = new HashMap<String, ArrayList<String>>();
           boolean firstRow = true;
-          log.debug("Number of rows: " + csvData.size());
+          log.debug("Number of rows (including header): " + csvData.size());
           while(rows.hasNext()){
                 ArrayList<String> row = rows.next();
                 String name = row.get(0);
                 row.remove(0);
-                log.debug("Removing first column value: " + name);
                 if(firstRow){
                       firstRow = false;
                       attributeNames = row;
                       log.debug("Setting attribute names: " + row);
                 }else{
-                      log.debug("Put row on map: " + row);
+                      log.debug("Add row key=" + name + " to map.  Values=" + row);
                       map.put(name, row);
                 }
           }    
