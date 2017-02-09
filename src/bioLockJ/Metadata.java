@@ -103,44 +103,25 @@ public class Metadata {
 	
 	
 	protected void init(ArrayList<ArrayList<String>> csvData)
-	{
-		log.debug("Initializing Metadata object");
-		Iterator<ArrayList<String>> rows = csvData.iterator();
-		map = new HashMap<String, ArrayList<String>>();
-		boolean firstRow = true;
-		log.debug("Number of rows: " + csvData.size());
-		while(rows.hasNext())
-		{	
-			boolean firstCol = true;
-			String name = null;
-			ArrayList<String> atts = new ArrayList<String>();
-			
-			Iterator<String> record = rows.next().iterator();
-			while(record.hasNext())
-			{
-				String val = record.next();
-				if(!firstCol)
-				{
-					atts.add(val);
-				}
-				else
-				{
-					name = val;
-					firstCol = false;
-				}
-			}
-			
-			if(firstRow)
-			{
-				firstRow = false;
-				attributeNames = atts;
-				log.debug("Setting attribute names: " + atts);
-			}
-			else if (name!=null)
-			{
-				log.debug("Setting " + name + " attribute values: " + atts);
-				map.put(name, atts);
-			}
-		}	
-	}   	
+    {
+          log.debug("Initializing Metadata object");
+          Iterator<ArrayList<String>> rows = csvData.iterator();
+          map = new HashMap<String, ArrayList<String>>();
+          boolean firstRow = true;
+          log.debug("Number of rows: " + csvData.size());
+          while(rows.hasNext()){
+                ArrayList<String> row = rows.next();
+                String name = row.get(0);
+                row.remove(0);
+                log.debug("Removing first column value: " + name);
+                if(firstRow){
+                      firstRow = false;
+                      attributeNames = row;
+                      log.debug("Setting attribute names: " + row);
+                }else{
+                      log.debug("Put row on map: " + row);
+                      map.put(name, row);
+                }
+          }    
+    }    
 }

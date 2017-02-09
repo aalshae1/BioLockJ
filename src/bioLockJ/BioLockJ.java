@@ -78,18 +78,15 @@ public class BioLockJ
 				cReader = new ConfigReader(propFile);
 			}
 			
-			log.debug("DONE READING cREADER");
-			log.debug("cReader: " + cReader);
-			log.debug("cReader.getMetaData(): " + cReader.getMetaData());
-			log.debug("cReader.getMetaData().getAttributeNames(): " + cReader.getMetaData().getAttributeNames());
+			log = LoggerFactory.getLogger(BioLockJ.class);
 			
-			
+			log.debug("Test Metadata Code");
 			log.debug("Meta Attributes: " + cReader.getMetaData().getAttributeNames());
-			log.debug("Meta File Names: " + cReader.getMetaData().getFileNames());
+			log.debug("Meta File Names: " + cReader.getMetaData().getFileNames() );
 			log.debug("Meta File_10 Att Values: " + cReader.getMetaData().getAttributes("File_10"));
 			log.debug("Meta File_10 log2_fold_change: " + cReader.getMetaData().getAttribute("File_10", "log2_fold_change"));
 			
-			log = LoggerFactory.getLogger(BioLockJ.class);
+			
 			log.info("Number of Java run parameters args[] = " + args.length);
 			
 			String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);

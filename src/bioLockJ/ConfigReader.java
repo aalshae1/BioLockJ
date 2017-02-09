@@ -108,21 +108,18 @@ public class ConfigReader
 	{
 		propertiesFile = file;
 		props = getPropsFromFile(propertiesFile);
-	
+		
 		String bljRoot = getBLJRoot();
 		String projectDir = createProjectDir(bljRoot);
 		
-		//props.setProperty(RUN_TIMESTAMP, runTimeStamp);
-		//props.setProperty(PATH_TO_BLJ_ROOT, bljRoot);
 		props.setProperty(PATH_TO_PROJECT_DIR, projectDir);
 		props.setProperty(LOG_FILE, getLogName(projectDir));
+		metadata = Metadata.loadMetadata(getMetadataDir(getAProperty(METADATA_FILE)));
 		
 		if(password!=null)
 		{
 			props.setProperty(EMAIL_PASSWORD, password);
 		}
-		
-		metadata = Metadata.loadMetadata(getMetadataDir(getAProperty(METADATA_FILE)));
 	}
 	
 	private String getMetadataDir(String filePath) throws Exception
