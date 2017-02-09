@@ -25,11 +25,13 @@ public class ConfigReader
 {
 	private Properties props;
 	private File propertiesFile;
+	private Metadata metadata;
 	private String runTimeStamp;
 	
 	protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyyMMdd_kkmmss");
 	
 	public static final String PROJECT_NAME = "PROJECT_NAME"; 
+	public static final String METADATA_FILE = "METADATA_FILE";
 	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR"; 
 	
 	public static final String EMAIL_FROM = "EMAIL_FROM"; 
@@ -120,9 +122,23 @@ public class ConfigReader
 			props.setProperty(EMAIL_PASSWORD, password);
 		}
 		
+		metadata = Metadata.loadMetadata(getMetadataDir(getAProperty(METADATA_FILE)));
 	}
 	
+	private String getMetadataDir(String filePath) throws Exception
+	{
+		return getResourcesDir() + "metadata" + File.separator + filePath;
+	}
 	
+	public Metadata getMetaData()
+	{
+		return metadata;
+	}
+	
+	private String getResourcesDir() throws Exception
+	{
+		return getBLJRoot() + "resources" + File.separator;
+	}
 	
 	public File getPropertiesFile()
 	{

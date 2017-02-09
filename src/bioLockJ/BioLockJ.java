@@ -9,7 +9,7 @@ import utils.MailUtil;
 /** 
  * To run BioLockJ program, from project root directory ($BLJ) run:
  * 
- *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ $BLJ/resources/clusterKraken.properties emailPassword	
+ *  nohup java -cp ./lib/*:./bin bioLockJ.BioLockJ ./resources/localKraken.properties emailPassword &	
  *  java -cp $BLJ/lib/*:$BLJ/bin bioLockJ.BioLockJ ./resources/somePropFile.prop
  *  
  *  Include 2nd param "emailPassword" to receive email notification when job is complete.
@@ -78,6 +78,17 @@ public class BioLockJ
 				cReader = new ConfigReader(propFile);
 			}
 			
+			log.debug("DONE READING cREADER");
+			log.debug("cReader: " + cReader);
+			log.debug("cReader.getMetaData(): " + cReader.getMetaData());
+			log.debug("cReader.getMetaData().getAttributeNames(): " + cReader.getMetaData().getAttributeNames());
+			
+			
+			log.debug("Meta Attributes: " + cReader.getMetaData().getAttributeNames());
+			log.debug("Meta File Names: " + cReader.getMetaData().getFileNames());
+			log.debug("Meta File_10 Att Values: " + cReader.getMetaData().getAttributes("File_10"));
+			log.debug("Meta File_10 log2_fold_change: " + cReader.getMetaData().getAttribute("File_10", "log2_fold_change"));
+			
 			log = LoggerFactory.getLogger(BioLockJ.class);
 			log.info("Number of Java run parameters args[] = " + args.length);
 			
@@ -89,6 +100,7 @@ public class BioLockJ
 
 		}catch(Exception ex){
 			log.error(ex.getMessage(), ex);
+			ex.printStackTrace();
 		}finally{
 			
 			try
