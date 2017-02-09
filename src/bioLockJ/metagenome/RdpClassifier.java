@@ -52,6 +52,6 @@ public class RdpClassifier extends BioLockJExecutor
 			
 		}
 		
-		ScriptBuilder.buildScripts(this, data);
+		ScriptBuilder.buildScripts(this, data, files);
 	}
 }

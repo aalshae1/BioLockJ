@@ -54,7 +54,10 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		data.add(lines);
 		
-		ScriptBuilder.buildScripts(this, data);
+		String[] files = new String[1];
+		files[0] = fastaFileToFormat.getName();
+		
+		ScriptBuilder.buildScripts(this, data, files);
 	}
 
 }

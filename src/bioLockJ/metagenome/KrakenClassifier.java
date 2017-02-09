@@ -60,7 +60,7 @@ public class KrakenClassifier extends BioLockJExecutor
 			data.add(lines);
 		}
 		
-		ScriptBuilder.buildScripts(this, data);
+		ScriptBuilder.buildScripts(this, data, files);
 	}
 	
 	

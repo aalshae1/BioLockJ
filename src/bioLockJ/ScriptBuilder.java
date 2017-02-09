@@ -30,7 +30,8 @@ public class ScriptBuilder
 	public static final String ERROR_DETECTED = "errorDetected";
 	public static final String ERROR_ON_PREVIOUS_LINE = "errorOnPreviousLine";
 	
-	public static void buildScripts(BioLockJExecutor blje, ArrayList<ArrayList<String>> data) throws Exception
+	public static void buildScripts(BioLockJExecutor blje, 
+			ArrayList<ArrayList<String>> data, String[] files) throws Exception
 	{
 		boolean needMultipleScripts = true;
 		int numJobsPerCore = 0;
@@ -41,8 +42,13 @@ public class ScriptBuilder
 			needMultipleScripts = false;
 		}
 		
+		File failureDir = new File(blje.getExecutorDir() + File.separator + "failures");
+		failureDir.mkdirs();
+		log.info("Create Failure Directory: " + failureDir.getAbsolutePath());
+		
 		BufferedWriter allWriter = new BufferedWriter(new FileWriter(blje.getRunAllFile(), true));
 		int countNum = 0;
+		int fileCount = 0;
 		int numToDo = numJobsPerCore;
 		File subScript = null;
 		BufferedWriter aWriter = null;
@@ -61,7 +67,9 @@ public class ScriptBuilder
 				}
 			}
 			
-			addDependantLinesToScript(aWriter, lines, exitOnError);
+			String failureFile = failureDir.getAbsolutePath() + File.separator + files[fileCount++];
+			
+			addDependantLinesToScript(aWriter, failureFile, lines, exitOnError);
 			
 			if( needMultipleScripts && --numToDo == 0 )
 			{
@@ -84,8 +92,10 @@ public class ScriptBuilder
 		File qsubOutput = new File(f.getParentFile().getParentFile().getAbsolutePath() + 
 				File.separator + "qsub");
 		qsubOutput.mkdirs();
+		
 
 		log.info("Create Qsub Directory: " + qsubOutput.getAbsolutePath());
+		
 		writer.write("cd " + qsubOutput.getAbsolutePath() + " \n" );
 		writer.write(ERROR_DETECTED + "=false \n" );
 		writer.flush(); writer.close();
@@ -133,7 +143,7 @@ public class ScriptBuilder
 	
 
 
-	protected static void addDependantLinesToScript(BufferedWriter writer, 
+	protected static void addDependantLinesToScript(BufferedWriter writer, String fileName,
 			ArrayList<String> lines, boolean exitOnError) throws Exception
 	{
 		Iterator<String> it = lines.iterator();
@@ -158,6 +168,7 @@ public class ScriptBuilder
 			writer.write((indent ? INDENT: "") + "if [ \"$?\" -ne \"0\" ]; then \n");
 			writer.write((indent ? INDENT: "") + INDENT + ERROR_ON_PREVIOUS_LINE + "=true \n");
 			writer.write((indent ? INDENT: "") + INDENT + ERROR_DETECTED + "=true \n");
+			writer.write((indent ? INDENT: "") + INDENT + "touch " + fileName + SCRIPT_FAILED + " \n");
 			writer.write((indent ? INDENT: "") + "fi \n");
 			writer.write(indent ? "fi \n": "");
 			firstLine = false;

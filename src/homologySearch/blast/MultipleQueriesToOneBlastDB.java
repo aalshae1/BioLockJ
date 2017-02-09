@@ -62,6 +62,6 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 			data.add(lines);
 		}
 		
-		ScriptBuilder.buildScripts(this, data);
+		ScriptBuilder.buildScripts(this, data, files);
 	}
 }
