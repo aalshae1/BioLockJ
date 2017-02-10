@@ -1,9 +1,28 @@
+/** 
+ * @UNCC Fodor Lab
+ * @author Michael Sioda
+ * @email msioda@uncc.edu 
+ * @date Feb 9, 2017
+ * @disclaimer 	This code is free software; you can redistribute it and/or
+ * 				modify it under the terms of the GNU General Public License
+ * 				as published by the Free Software Foundation; either version 2
+ * 				of the License, or (at your option) any later version,
+ * 				provided that any use properly credits the author.
+ * 				This program is distributed in the hope that it will be useful,
+ * 				but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * 				MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * 				GNU General Public License for more details at http://www.gnu.org * 
+ */
 package bioLockJ;
 
-import java.io.*;
-import java.util.*;
-
-import org.slf4j.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import utils.MailUtil;
 
 /** 
@@ -42,9 +61,8 @@ import utils.MailUtil;
 public class BioLockJ
 {
 	// wait to initialize until after ConfigReader names log file.
-	protected static Logger log;  
+	protected static Logger log;
 
-	
 	/**
 	 * The main method is the first method called when BioLockJ is run.  Here we
 	 * read property file, copy it to project directory, initialize ConfigReader 
@@ -53,102 +71,104 @@ public class BioLockJ
 	 * @param args - args[0] path to property file
 	 * 				 args[1] email password (optional)
 	 */
-	public static void main(String[] args)
+	public static void main( String[] args )
 	{
-		System.out.println("START PROGRAM");
+		System.out.println( "START PROGRAM" );
 		ConfigReader cReader = null;
-		try{
+		try
+		{
 			if( args.length < 1 || args.length > 2 )
 			{
-				System.out.println("Usage " + BioLockJ.class.getName() + " <FULL PATH TO PROP FILE> <OPTIONAL EMAIL PASSWORD>");
-				System.out.println("TERMINATE PROGRAM");
-				System.exit(1);
+				System.out
+						.println( "Usage " + BioLockJ.class.getName() + " <PROP FILE PATH> <OPTIONAL EMAIL PASSWORD>" );
+				System.out.println( "TERMINATE PROGRAM" );
+				System.exit( 1 );
 			}
-			
-			File propFile = new File(args[0]);
-			if( !propFile.exists() || propFile.isDirectory() )
-				throw new Exception(propFile.getAbsolutePath() + " is not a valid file");
 
-			if ( args.length == 2 )
+			File propFile = new File( args[0] );
+			if( !propFile.exists() || propFile.isDirectory() )
+				throw new Exception( propFile.getAbsolutePath() + " is not a valid file" );
+
+			if( args.length == 2 )
 			{
-				cReader = new ConfigReader(propFile, args[1]);
+				cReader = new ConfigReader( propFile, args[1] );
 			}
 			else
 			{
-				cReader = new ConfigReader(propFile);
+				cReader = new ConfigReader( propFile );
 			}
-			
-			log = LoggerFactory.getLogger(BioLockJ.class);
-			
-			log.info("Number of Java run parameters args[] = " + args.length);
-			
-			String projectDir = BioLockJUtils.requireString(cReader, ConfigReader.PATH_TO_PROJECT_DIR);
-			BioLockJUtils.logConfigFileSettings(cReader);
-			BioLockJUtils.copyFile(propFile, projectDir);
-			
-			if( cReader.getMetaData()!=null )
+
+			log = LoggerFactory.getLogger( BioLockJ.class );
+			log.info( "Number of Java run parameters args[] = " + args.length );
+
+			String projectDir = BioLockJUtils.requireString( cReader, ConfigReader.PATH_TO_PROJECT_DIR );
+			BioLockJUtils.logConfigFileSettings( cReader );
+			BioLockJUtils.copyFile( propFile, projectDir );
+
+			if( cReader.getMetaData() != null )
 			{
-				log.debug("Testing Metadata Code");
-				log.debug("Meta Attributes: " + cReader.getMetaData().getAttributeNames());
-				log.debug("Meta File Names: " + cReader.getMetaData().getFileNames() );
-				log.debug("Meta File_10 Att Values: " + cReader.getMetaData().getAttributes("File_10"));
-				log.debug("Meta File_10 log2_fold_change: " + cReader.getMetaData().getAttribute("File_10", "log2_fold_change"));
-				
+				log.debug( "Testing Metadata Code" );
+				log.debug( "Meta Attributes: " + cReader.getMetaData().getAttributeNames() );
+				log.debug( "Meta File Names: " + cReader.getMetaData().getFileNames() );
+				log.debug( "Meta File_10 Att Values: " + cReader.getMetaData().getAttributes( "File_10" ) );
+				log.debug( "Meta File_10 log2_fold_change: "
+						+ cReader.getMetaData().getAttribute( "File_10", "log2_fold_change" ) );
+
 				String metaPath = cReader.getMetaData().getFilePath();
-				BioLockJUtils.copyFile(new File(metaPath), projectDir);
+				BioLockJUtils.copyFile( new File( metaPath ), projectDir );
 			}
 
-			runProgram(cReader);
-
-		}catch(Exception ex){
-			log.error(ex.getMessage(), ex);
+			runProgram( cReader );
+		}
+		catch( Exception ex )
+		{
+			log.error( ex.getMessage(), ex );
 			ex.printStackTrace();
-		}finally{
-			
+		}
+		finally
+		{
 			try
 			{
-				MailUtil.sendEmailNotification(cReader); 
+				MailUtil.sendEmailNotification( cReader );
 			}
-			catch(Exception ex)
+			catch( Exception ex )
 			{
-				if(log!=null)
+				if( log != null )
 				{
-					log.error("Unable to send notification email.");
-					log.error(ex.getMessage(), ex);
+					log.error( "Unable to send notification email." );
+					log.error( ex.getMessage(), ex );
 				}
 			}
-			
-			if(log!=null)
+
+			if( log != null )
 			{
-				log.info(BioLockJUtils.LOG_SPACER);
-				log.info("MAIN PROGRAM COMPLETE");
-				log.info(BioLockJUtils.LOG_SPACER);
+				log.info( BioLockJUtils.LOG_SPACER );
+				log.info( "MAIN PROGRAM COMPLETE" );
+				log.info( BioLockJUtils.LOG_SPACER );
 			}
 			else
 			{
-				System.out.println("MAIN PROGRAM COMPLETE");
+				System.out.println( "MAIN PROGRAM COMPLETE" );
 			}
-		}	
-	}
-	
-	
-	protected static void runProgram(ConfigReader cReader) throws Exception
-	{
-		List<BioLockJExecutor> list = getListToRun(cReader);
-		
-		for( BioLockJExecutor e : list )
-			e.checkDependencies();
-		
-		for( BioLockJExecutor e : list )
-		{
-			BioLockJUtils.noteStartToLogWriter(e);
-			executeAndWaitForScriptsIfAny(e);
-			BioLockJUtils.noteEndToLogWriter(e);
 		}
 	}
-	
 
-	protected static void executeAndWaitForScriptsIfAny(BioLockJExecutor invoker) throws Exception
+	protected static void runProgram( ConfigReader cReader ) throws Exception
+	{
+		List<BioLockJExecutor> list = getListToRun( cReader );
+
+		for( BioLockJExecutor e : list )
+			e.checkDependencies();
+
+		for( BioLockJExecutor e : list )
+		{
+			BioLockJUtils.noteStartToLogWriter( e );
+			executeAndWaitForScriptsIfAny( e );
+			BioLockJUtils.noteEndToLogWriter( e );
+		}
+	}
+
+	protected static void executeAndWaitForScriptsIfAny( BioLockJExecutor invoker ) throws Exception
 	{
 		invoker.executeProjectFile();
 		if( invoker.hasScripts() )
@@ -156,152 +176,153 @@ public class BioLockJ
 			int pollTime = 15;
 			try
 			{
-				pollTime = BioLockJUtils.requirePositiveInteger(invoker.getConfig(), ConfigReader.POLL_TIME);
+				pollTime = BioLockJUtils.requirePositiveInteger( invoker.getConfig(), ConfigReader.POLL_TIME );
 			}
-			catch(Exception ex)
+			catch( Exception ex )
 			{
-				BioLockJExecutor.log.warn("Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + 
-								pollTime +  " seconds ", ex);		
+				BioLockJExecutor.log.warn(
+						"Could not set " + ConfigReader.POLL_TIME + ".  Setting poll time to " + pollTime + " seconds ",
+						ex );
 			}
-			
-			executeCHMOD_ifDefined(invoker.getConfig(), invoker.getScriptDir());
-			executeFile(invoker.getRunAllFile());
-			pollAndSpin(invoker, pollTime );
+
+			executeCHMOD_ifDefined( invoker.getConfig(), invoker.getScriptDir() );
+			executeFile( invoker.getRunAllFile() );
+			pollAndSpin( invoker, pollTime );
 		}
 	}
-	
-	
-	protected static void executeCHMOD_ifDefined(ConfigReader cReader, File scriptDir)  throws Exception
+
+	protected static void executeCHMOD_ifDefined( ConfigReader cReader, File scriptDir ) throws Exception
 	{
-		String chmod = cReader.getAProperty(ConfigReader.CHMOD_STRING);
+		String chmod = cReader.getAProperty( ConfigReader.CHMOD_STRING );
 		if( chmod != null )
 		{
 			File[] listOfFiles = scriptDir.listFiles();
-			for(File file: listOfFiles)
+			for( File file : listOfFiles )
 			{
-				if(!file.getName().startsWith("."))
+				if( !file.getName().startsWith( "." ) )
 				{
-					new ProcessWrapper(getArgs(chmod, file.getAbsolutePath()));
+					new ProcessWrapper( getArgs( chmod, file.getAbsolutePath() ) );
 				}
-			}	
+			}
 		}
 	}
-	
 
-	
-	protected static void pollAndSpin(BioLockJExecutor invoker, int pollTime) throws Exception
+	protected static void pollAndSpin( BioLockJExecutor invoker, int pollTime ) throws Exception
 	{
 		boolean finished = false;
 		while( !finished )
 		{
-			finished = poll(invoker);
-			
+			finished = poll( invoker );
+
 			if( !finished )
 			{
-				Thread.sleep(pollTime * 1000);
+				Thread.sleep( pollTime * 1000 );
 			}
 		}
 	}
-	
-	protected static boolean poll(BioLockJExecutor invoker) throws Exception
+
+	protected static boolean poll( BioLockJExecutor invoker ) throws Exception
 	{
 		List<File> scriptFiles = invoker.getScriptFiles();
 		int numSuccess = 0;
 		int numFailed = 0;
-		
-		for(File f : scriptFiles)
+
+		for( File f : scriptFiles )
 		{
-			File testSuccess = new File(f.getAbsolutePath() + ScriptBuilder.SCRIPT_SUCCEEDED);
-			
-			if(testSuccess.exists())
+			File testSuccess = new File( f.getAbsolutePath() + ScriptBuilder.SCRIPT_SUCCEEDED );
+
+			if( testSuccess.exists() )
 			{
 				numSuccess++;
 			}
 			else
-			{ 
-				File testFailure = new File(f.getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED);
-				if(testFailure.exists())
+			{
+				File testFailure = new File( f.getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED );
+				if( testFailure.exists() )
 				{
 					numFailed++;
 				}
 				else
 				{
-					log.info(f.getAbsolutePath() + " not finished ");
+					log.info( f.getAbsolutePath() + " not finished " );
 				}
 			}
 		}
-		
-		File runAllFailed = new File(invoker.getRunAllFile().getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED);
-		if(runAllFailed.exists())
+
+		File runAllFailed = new File( invoker.getRunAllFile().getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED );
+		if( runAllFailed.exists() )
 		{
-			throw new Exception("CANCEL SCRIPT EXECUTION: ERROR IN...runAll.sh");
+			throw new Exception( "CANCEL SCRIPT EXECUTION: ERROR IN...runAll.sh" );
 		}
-		
-		log.info("Script Status (Total=" + scriptFiles.size() + "): Success=" + numSuccess + "; Failure=" + numFailed);
-		return (numSuccess + numFailed) == scriptFiles.size();
+
+		log.info(
+				"Script Status (Total=" + scriptFiles.size() + "): Success=" + numSuccess + "; Failure=" + numFailed );
+		return ( numSuccess + numFailed ) == scriptFiles.size();
 	}
-	
-	
-	protected static void executeFile(File f) throws Exception
-	{	
-		String[] cmd = new String[1];
+
+	protected static void executeFile( File f ) throws Exception
+	{
+		String[] cmd = new String[ 1 ];
 		cmd[0] = f.getAbsolutePath();
-		new ProcessWrapper(cmd);
+		new ProcessWrapper( cmd );
 	}
-	
-	
+
 	protected static List<BioLockJExecutor> getListToRun( ConfigReader cReader ) throws Exception
 	{
 		List<BioLockJExecutor> list = new ArrayList<BioLockJExecutor>();
-		BufferedReader reader = new BufferedReader(new FileReader(cReader.getPropertiesFile()));
+		BufferedReader reader = new BufferedReader( new FileReader( cReader.getPropertiesFile() ) );
 		try
 		{
 			int count = 0;
 			BioLockJExecutor bljePrevious = null;
-			for(String s = reader.readLine(); s != null; s= reader.readLine())
+			for( String s = reader.readLine(); s != null; s = reader.readLine() )
 			{
-				if (s.startsWith(ScriptBuilder.RUN_BIOLOCK_J))
+				if( s.startsWith( ScriptBuilder.RUN_BIOLOCK_J ) )
 				{
-					StringTokenizer sToken = new StringTokenizer(s);
+					StringTokenizer sToken = new StringTokenizer( s );
 					sToken.nextToken();
-					if( ! sToken.hasMoreTokens())
-						throw new Exception("Lines starting with " + ScriptBuilder.RUN_BIOLOCK_J 
-								+ " must be followed by a Java class that is a BioLockJExecutor");
-					
+					if( !sToken.hasMoreTokens() )
+						throw new Exception( "Lines starting with " + ScriptBuilder.RUN_BIOLOCK_J
+								+ " must be followed by a Java class that is a BioLockJExecutor" );
+
 					String fullClassName = sToken.nextToken();
-					BioLockJExecutor blje = (BioLockJExecutor) Class.forName(fullClassName).newInstance();
-					blje.setConfig(cReader);
-					blje.setExecutorDir(BioLockJUtils.getSimpleClassName(fullClassName), count++);
-					if(bljePrevious!=null)
+					BioLockJExecutor blje = (BioLockJExecutor) Class.forName( fullClassName ).newInstance();
+					blje.setConfig( cReader );
+					blje.setExecutorDir( BioLockJUtils.getSimpleClassName( fullClassName ), count++ );
+					if( bljePrevious != null )
 					{
-						blje.setInputDir(bljePrevious.getOutputDir());
+						blje.setInputDir( bljePrevious.getOutputDir() );
 					}
 
 					bljePrevious = blje;
-					list.add(blje);
-					if( sToken.hasMoreTokens())
-						throw new Exception("Lines starting with " + ScriptBuilder.RUN_BIOLOCK_J 
-								+ " must be followed by a Java class that is a BioLockJExecutor with no parameters");
+					list.add( blje );
+					if( sToken.hasMoreTokens() )
+						throw new Exception( "Lines starting with " + ScriptBuilder.RUN_BIOLOCK_J
+								+ " must be followed by a Java class that is a BioLockJExecutor with no parameters" );
 				}
 			}
 		}
-		finally{ if (reader != null) reader.close(); }
-		
+		finally
+		{
+			if( reader != null )
+				reader.close();
+		}
+
 		return list;
 	}
-	
-	private static String[] getArgs(String command, String filePath) 
+
+	private static String[] getArgs( String command, String filePath )
 	{
-		StringTokenizer sToken = new StringTokenizer(command + " " + filePath);
+		StringTokenizer sToken = new StringTokenizer( command + " " + filePath );
 		List<String> list = new ArrayList<String>();
-		while(sToken.hasMoreTokens())
-			list.add(sToken.nextToken());
-		
-		String[] args = new String[list.size()];
-		
-		for( int x=0; x  < list.size(); x++)
-			args[x] = list.get(x);;
-		
+		while( sToken.hasMoreTokens() )
+			list.add( sToken.nextToken() );
+
+		String[] args = new String[ list.size() ];
+
+		for( int x = 0; x < list.size(); x++ )
+			args[x] = list.get( x );;
+
 		return args;
 	}
 }

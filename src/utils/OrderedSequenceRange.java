@@ -1,16 +1,18 @@
 /** 
- * Author:  anthony.fodor@gmail.com    
- * This code is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version,
-* provided that any use properly credits the author.
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details at http://www.gnu.org * * */
-
-
+ * @UNCC Fodor Lab
+ * @author Anthony Fodor
+ * @email anthony.fodor@gmail.com 
+ * @date Feb 9, 2017
+ * @disclaimer 	This code is free software; you can redistribute it and/or
+ * 				modify it under the terms of the GNU General Public License
+ * 				as published by the Free Software Foundation; either version 2
+ * 				of the License, or (at your option) any later version,
+ * 				provided that any use properly credits the author.
+ * 				This program is distributed in the hope that it will be useful,
+ * 				but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * 				MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * 				GNU General Public License for more details at http://www.gnu.org * 
+ */
 package utils;
 
 import org.slf4j.Logger;
@@ -18,17 +20,17 @@ import org.slf4j.LoggerFactory;
 
 public class OrderedSequenceRange
 {
-	protected static final Logger log = LoggerFactory.getLogger(OrderedSequenceRange.class);
-	
+	protected static final Logger log = LoggerFactory.getLogger( OrderedSequenceRange.class );
+
 	private final int startPosition;
 	private final int endPosition;
 	private boolean originallyForward;
-	
+
 	/**  if startSequence > endSequence, they will be switched
 	 */
 	public OrderedSequenceRange( int startPositionIn, int endPositionIn )
 	{
-		if ( startPositionIn > endPositionIn ) 
+		if( startPositionIn > endPositionIn )
 		{
 			int temp = startPositionIn;
 			startPositionIn = endPositionIn;
@@ -39,54 +41,54 @@ public class OrderedSequenceRange
 		{
 			originallyForward = true;
 		}
-		
+
 		this.startPosition = startPositionIn;
 		this.endPosition = endPositionIn;
 	}
-	
-	public boolean isInRange(int pos)
+
+	public boolean isInRange( int pos )
 	{
-		if ( pos >= startPosition && pos <= endPosition)	
+		if( pos >= startPosition && pos <= endPosition )
 			return true;
-			
+
 		return false;
 	}
-	
-	public int getEndPosition()
+
+	public int getEndPosition( )
 	{
 		return endPosition;
 	}
 
-	public int getStartPosition()
+	public int getStartPosition( )
 	{
 		return startPosition;
 	}
-	
-	public String toString()
+
+	public String toString( )
 	{
 		return "Start: " + this.startPosition + " End: " + this.endPosition;
 	}
 
-	public boolean isOriginallyForward()
+	public boolean isOriginallyForward( )
 	{
 		return originallyForward;
 	}
-	
-	public int getLength()
+
+	public int getLength( )
 	{
 		return this.endPosition - this.startPosition;
 	}
-	
-	public int getOverlap(OrderedSequenceRange otherRange)
+
+	public int getOverlap( OrderedSequenceRange otherRange )
 	{
-		return Math.min(this.endPosition, otherRange.endPosition) -
-			Math.max(this.startPosition, otherRange.startPosition);
+		return Math.min( this.endPosition, otherRange.endPosition )
+				- Math.max( this.startPosition, otherRange.startPosition );
 	}
-	
-	public static void main(String[] args)
+
+	public static void main( String[] args )
 	{
-		OrderedSequenceRange osr = new OrderedSequenceRange(1,100);
-		
-		log.info(new Integer(osr.getOverlap(new OrderedSequenceRange(50,150))).toString());
+		OrderedSequenceRange osr = new OrderedSequenceRange( 1, 100 );
+
+		log.info( new Integer( osr.getOverlap( new OrderedSequenceRange( 50, 150 ) ) ).toString() );
 	}
 }

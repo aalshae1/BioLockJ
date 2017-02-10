@@ -1,23 +1,25 @@
 /** 
- * Author:  anthony.fodor@gmail.com    
- * This code is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version,
-* provided that any use properly credits the author.
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details at http://www.gnu.org * * */
-
-
+ * @UNCC Fodor Lab
+ * @author Anthony Fodor
+ * @email anthony.fodor@gmail.com 
+ * @date Feb 9, 2017
+ * @disclaimer 	This code is free software; you can redistribute it and/or
+ * 				modify it under the terms of the GNU General Public License
+ * 				as published by the Free Software Foundation; either version 2
+ * 				of the License, or (at your option) any later version,
+ * 				provided that any use properly credits the author.
+ * 				This program is distributed in the hope that it will be useful,
+ * 				but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * 				MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * 				GNU General Public License for more details at http://www.gnu.org * 
+ */
 package utils;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,273 +30,260 @@ import org.slf4j.LoggerFactory;
 
 public class Translate
 {
-	protected static final Logger log = LoggerFactory.getLogger(Translate.class);
-	
-	private static final int NUM_PROTEIN_RESIDUES_PER_LINE=15;
+	protected static final Logger log = LoggerFactory.getLogger( Translate.class );
+
+	private static final int NUM_PROTEIN_RESIDUES_PER_LINE = 15;
 	//private static final Random random= new Random(39425435);
-	private static final Random random= new Random(System.currentTimeMillis());
-	
-	private static String translationString = 
-	 "TTT Phe TCT Ser TAT Tyr TGT Cys " + 
-	 "TTC Phe TCC Ser TAC Tyr TGC Cys " + 
-     "TTA Leu TCA Ser TAA STOP TGA STOP " + 
-     "TTG Leu TCG Ser TAG STOP TGG Trp " + 
-	 "CTT Leu CCT Pro CAT His CGT Arg " + 
-     "CTC Leu CCC Pro CAC His CGC Arg " + 
-     "CTA Leu CCA Pro CAA Gln CGA Arg " + 
-     "CTG Leu CCG Pro CAG Gln CGG Arg " + 
-     "ATT Ile ACT Thr AAT Asn AGT Ser " + 
-     "ATC Ile ACC Thr AAC Asn AGC Ser " + 
-     "ATA Ile ACA Thr AAA Lys AGA Arg " + 
-     "ATG Met ACG Thr AAG Lys AGG Arg " + 
-     "GTT Val GCT Ala GAT Asp GGT Gly " + 
-     "GTC Val GCC Ala GAC Asp GGC Gly " + 
-     "GTA Val GCA Ala GAA Glu GGA Gly " + 
-     "GTG Val GCG Ala GAG Glu GGG Gly ";
-	
-	private static HashMap<String,String> translationMap = new HashMap<String,String>();
-	
-	public static void dumpAllFramesToConsole(String inString ) throws Exception
+	private static final Random random = new Random( System.currentTimeMillis() );
+
+	private static String translationString = "TTT Phe TCT Ser TAT Tyr TGT Cys " + "TTC Phe TCC Ser TAC Tyr TGC Cys "
+			+ "TTA Leu TCA Ser TAA STOP TGA STOP " + "TTG Leu TCG Ser TAG STOP TGG Trp "
+			+ "CTT Leu CCT Pro CAT His CGT Arg " + "CTC Leu CCC Pro CAC His CGC Arg "
+			+ "CTA Leu CCA Pro CAA Gln CGA Arg " + "CTG Leu CCG Pro CAG Gln CGG Arg "
+			+ "ATT Ile ACT Thr AAT Asn AGT Ser " + "ATC Ile ACC Thr AAC Asn AGC Ser "
+			+ "ATA Ile ACA Thr AAA Lys AGA Arg " + "ATG Met ACG Thr AAG Lys AGG Arg "
+			+ "GTT Val GCT Ala GAT Asp GGT Gly " + "GTC Val GCC Ala GAC Asp GGC Gly "
+			+ "GTA Val GCA Ala GAA Glu GGA Gly " + "GTG Val GCG Ala GAG Glu GGG Gly ";
+
+	private static HashMap<String, String> translationMap = new HashMap<String, String>();
+
+	public static void dumpAllFramesToConsole( String inString ) throws Exception
 	{
-	    String[] frames = Translate.getAllFrames(inString);
-	    
-	    for ( int x=0; x < frames.length; x++ )
-	    {
-	        log.info(x + " " + frames[x]);
-	    }
-	    
+		String[] frames = Translate.getAllFrames( inString );
+
+		for( int x = 0; x < frames.length; x++ )
+		{
+			log.info( x + " " + frames[x] );
+		}
+
 	}
-	
-	public static Collection<String> getKeySet() throws Exception
+
+	public static Collection<String> getKeySet( ) throws Exception
 	{
-		return Collections.unmodifiableCollection(translationMap.keySet());
+		return Collections.unmodifiableCollection( translationMap.keySet() );
 	}
-	
+
 	static
 	{
 		StringTokenizer sToken = new StringTokenizer( translationString );
-		
-		while ( sToken.hasMoreTokens() ) 
+
+		while( sToken.hasMoreTokens() )
 		{
 			String key = sToken.nextToken();
 			String value = sToken.nextToken().toUpperCase();
 			//log.info( key + " " + value );
-			
-			translationMap.put(key, value);
+
+			translationMap.put( key, value );
 		}
 	}
-	
-	public static char getSafeAA(String codon) throws Exception
+
+	public static char getSafeAA( String codon ) throws Exception
 	{
-		
-		if ( ! isValidCodon(codon) ) 
-				return 'X';
-		else if ( ! isStopCodon(codon ) ) 
-			return SequenceUtils.threeToOne( 
-				(String) translationMap.get( codon)).charAt(0);
-			
+
+		if( !isValidCodon( codon ) )
+			return 'X';
+		else if( !isStopCodon( codon ) )
+			return SequenceUtils.threeToOne( (String) translationMap.get( codon ) ).charAt( 0 );
+
 		return '*';
 	}
-	
+
 	public static boolean isValidCodon( String codon ) throws Exception
 	{
-		String returnVal = (String) translationMap.get(codon);
-		
-		if ( returnVal == null ) 
+		String returnVal = (String) translationMap.get( codon );
+
+		if( returnVal == null )
 			return false;
-			
+
 		return true;
 	}
-	
+
 	public static boolean isStopCodon( String codon ) throws Exception
 	{
-		String returnVal = (String) translationMap.get(codon);
-		
-		if ( returnVal.equals("STOP")  ) 
+		String returnVal = (String) translationMap.get( codon );
+
+		if( returnVal.equals( "STOP" ) )
 			return true;
-			
+
 		return false;
-	
+
 	}
-	
-	public static String changeCodonRandomly(String inCodon) throws Exception
+
+	public static String changeCodonRandomly( String inCodon ) throws Exception
 	{
-		if ( inCodon.length() != 3)
-			throw new Exception("Invalid codon");
-		
-		int randomPos = random.nextInt(3);
-		
-		if ( randomPos < 0 || randomPos > 2)
-			throw new Exception("Logic error");
-			
+		if( inCodon.length() != 3 )
+			throw new Exception( "Invalid codon" );
+
+		int randomPos = random.nextInt( 3 );
+
+		if( randomPos < 0 || randomPos > 2 )
+			throw new Exception( "Logic error" );
+
 		StringBuffer buff = new StringBuffer();
-		
-		for ( int x=0; x <= 2; x++ )
+
+		for( int x = 0; x <= 2; x++ )
 		{
-			if ( x == randomPos)
+			if( x == randomPos )
 			{
 				char c = getRandomNucleotide();
-				
-				while ( c == inCodon.charAt(x))
+
+				while( c == inCodon.charAt( x ) )
 					c = getRandomNucleotide();
-					
-				buff.append(c);
+
+				buff.append( c );
 			}
 			else
 			{
-				buff.append(inCodon.charAt(x));
+				buff.append( inCodon.charAt( x ) );
 			}
-		}	
-		
+		}
+
 		return buff.toString();
 	}
-	
+
 	/**
 	 *  finds a frame or returns -1 if no frame can be found.
 	 *   
 	 *  Throws if two frames are found
 	 */
-	public static int findAFrame(String dnaSeq, String proteinGuideSeq)
-		throws Exception
+	public static int findAFrame( String dnaSeq, String proteinGuideSeq ) throws Exception
 	{
 		int frame = -1;
-		
-		String[] frames = getAllFrames(dnaSeq);
-		
-		for ( int x=0; x < frames.length; x++ )
+
+		String[] frames = getAllFrames( dnaSeq );
+
+		for( int x = 0; x < frames.length; x++ )
 		{
-			if ( proteinGuideSeq.indexOf(frames[x] ) != -1)
+			if( proteinGuideSeq.indexOf( frames[x] ) != -1 )
 			{
-				if ( frame != -1 )
-					throw new Exception("Found two frames for " 
-						+ proteinGuideSeq);
-					
+				if( frame != -1 )
+					throw new Exception( "Found two frames for " + proteinGuideSeq );
+
 				frame = x;
 			}
 		}
-		
+
 		return frame;
 	}
-	
-	public static String getRandomCodon() throws Exception
+
+	public static String getRandomCodon( ) throws Exception
 	{
-		return "" + getRandomNucleotide() + getRandomNucleotide() + 
-							getRandomNucleotide();
+		return "" + getRandomNucleotide() + getRandomNucleotide() + getRandomNucleotide();
 	}
-	
-	public static char getRandomNucleotide() throws Exception
-	{	
-		int randomInt = random.nextInt(4);
-		
-		if ( randomInt == 0)
+
+	public static char getRandomNucleotide( ) throws Exception
+	{
+		int randomInt = random.nextInt( 4 );
+
+		if( randomInt == 0 )
 			return 'A';
-			
-		if ( randomInt == 1)
+
+		if( randomInt == 1 )
 			return 'C';
-			
-		if ( randomInt == 2)
+
+		if( randomInt == 2 )
 			return 'G';
-			
-		if ( randomInt == 3)
+
+		if( randomInt == 3 )
 			return 'T';
-			
-		throw new Exception("unexpected " + randomInt);
+
+		throw new Exception( "unexpected " + randomInt );
 	}
-	
+
 	public static String translate( String codon ) throws Exception
 	{
 		codon = codon.toUpperCase();
-		
-		String returnVal = (String) translationMap.get(codon);
-		
-		if ( returnVal == null ) 
+
+		String returnVal = (String) translationMap.get( codon );
+
+		if( returnVal == null )
 			throw new Exception( "Unknown codon " + codon );
-			
+
 		return returnVal;
 	}
-	
-	public static String safeReverseTranscribe(String inString ) throws 
-		Exception
+
+	public static String safeReverseTranscribe( String inString ) throws Exception
 	{
 		StringBuffer buff = new StringBuffer();
-		
-		for ( int x= inString.length() - 1; x >=0; x-- ) 
+
+		for( int x = inString.length() - 1; x >= 0; x-- )
 		{
-			char c = inString.charAt(x);
-			
-			if ( c == 'A' ) 
+			char c = inString.charAt( x );
+
+			if( c == 'A' )
 				buff.append( 'T' );
-			else if ( c == 'T' ) 
+			else if( c == 'T' )
 				buff.append( 'A' );
-			else if ( c == 'C' ) 
+			else if( c == 'C' )
 				buff.append( 'G' );
-			else if ( c == 'G' )
-				buff.append ( 'C' );
-			else if ( c == 'N') 
-				buff.append( 'N') ;
-			else if ( c== '-' ) 
-				buff.append('-');
-			else buff.append(c);
+			else if( c == 'G' )
+				buff.append( 'C' );
+			else if( c == 'N' )
+				buff.append( 'N' );
+			else if( c == '-' )
+				buff.append( '-' );
+			else
+				buff.append( c );
 		}
-		
-		return buff.toString();
-		}
-	
-	public static String reverseTranscribe(String inString) throws Exception
-	{
-		StringBuffer buff = new StringBuffer();
-		
-		for ( int x= inString.length() - 1; x >=0; x-- ) 
-		{
-			char c = inString.charAt(x);
-			
-			if ( c == 'A' ) 
-				buff.append( 'T' );
-			else if ( c == 'T' ) 
-				buff.append( 'A' );
-			else if ( c == 'C' ) 
-				buff.append( 'G' );
-			else if ( c == 'G' )
-				buff.append ( 'C' );
-			else if ( c == 'N') 
-				buff.append( 'N') ;
-			else if ( c== '-' ) 
-				buff.append('-');
-			else throw new Exception("Unexpected character " + c );
-		}
-		
+
 		return buff.toString();
 	}
-	
-	public static String getSafeProteinSequence(String dnaSequence )
-		throws Exception
+
+	public static String reverseTranscribe( String inString ) throws Exception
+	{
+		StringBuffer buff = new StringBuffer();
+
+		for( int x = inString.length() - 1; x >= 0; x-- )
+		{
+			char c = inString.charAt( x );
+
+			if( c == 'A' )
+				buff.append( 'T' );
+			else if( c == 'T' )
+				buff.append( 'A' );
+			else if( c == 'C' )
+				buff.append( 'G' );
+			else if( c == 'G' )
+				buff.append( 'C' );
+			else if( c == 'N' )
+				buff.append( 'N' );
+			else if( c == '-' )
+				buff.append( '-' );
+			else
+				throw new Exception( "Unexpected character " + c );
+		}
+
+		return buff.toString();
+	}
+
+	public static String getSafeProteinSequence( String dnaSequence ) throws Exception
 	{
 		dnaSequence = dnaSequence.toUpperCase();
 		StringBuffer buff = new StringBuffer();
-		
+
 		int currentPos = 0;
-		
-		while( dnaSequence.length() -3 >= currentPos ) 
+
+		while( dnaSequence.length() - 3 >= currentPos )
 		{
-			String symbol = "" + dnaSequence.charAt(currentPos) + 
-							dnaSequence.charAt(currentPos + 1) + 
-							dnaSequence.charAt(currentPos + 2);
+			String symbol = "" + dnaSequence.charAt( currentPos ) + dnaSequence.charAt( currentPos + 1 )
+					+ dnaSequence.charAt( currentPos + 2 );
 			currentPos += 3;
-			
-			String value = (String) translationMap.get( symbol);
-			
-			if ( value == null ) 
-				buff.append("X");
-			else if ( ! value.equals("STOP" ) ) 
-				buff.append( SequenceUtils.threeToOne( value ));
-			else if ( value.equals("STOP") ) 
-				buff.append("*");
-			else buff.append("X");
+
+			String value = (String) translationMap.get( symbol );
+
+			if( value == null )
+				buff.append( "X" );
+			else if( !value.equals( "STOP" ) )
+				buff.append( SequenceUtils.threeToOne( value ) );
+			else if( value.equals( "STOP" ) )
+				buff.append( "*" );
+			else
+				buff.append( "X" );
 		}
-		
-		return buff.toString();	
+
+		return buff.toString();
 	}
-	
+
 	/**  Ignores the last part of the sequence if it does not form a full codon.
 	 *   * is a STOP
 	 */
@@ -302,246 +291,247 @@ public class Translate
 	{
 		dnaSequence = dnaSequence.toUpperCase();
 		StringBuffer buff = new StringBuffer();
-		
+
 		int currentPos = 0;
-		
-		while( dnaSequence.length() -3 >= currentPos ) 
+
+		while( dnaSequence.length() - 3 >= currentPos )
 		{
-			String symbol = "" + dnaSequence.charAt(currentPos) + 
-							dnaSequence.charAt(currentPos + 1) + 
-							dnaSequence.charAt(currentPos + 2);
+			String symbol = "" + dnaSequence.charAt( currentPos ) + dnaSequence.charAt( currentPos + 1 )
+					+ dnaSequence.charAt( currentPos + 2 );
 			currentPos += 3;
-			
-			String value = (String) translationMap.get( symbol);
-			
+
+			String value = (String) translationMap.get( symbol );
+
 			//if ( value == null ) 
 			//	throw new Exception("Unkown codon " + symbol );
-			
-			if ( value == null ) 
-				buff.append("X");
-			else if ( ! value.equals("STOP" ) ) 
-				buff.append( SequenceUtils.threeToOne( value ));
-			else if ( value.equals("STOP") ) 
-				buff.append("*");
-			else throw new Exception("Unexpected codon " + symbol );
+
+			if( value == null )
+				buff.append( "X" );
+			else if( !value.equals( "STOP" ) )
+				buff.append( SequenceUtils.threeToOne( value ) );
+			else if( value.equals( "STOP" ) )
+				buff.append( "*" );
+			else
+				throw new Exception( "Unexpected codon " + symbol );
 		}
-		
-		return buff.toString();	
-	}
-	
-	public static String getDnaSequenceFromFrame(String inSequence, int frame) throws Exception
-	{
-		if ( frame == 0 )
-			return inSequence;
-		
-		if ( frame == 1 )		
-			return inSequence.substring(1);
-			
-		if ( frame == 2)
-			return inSequence.substring(2);
-				
-		if ( frame == 3) 
-			return reverseTranscribe(inSequence);
-			
-		if ( frame ==4 )
-				return reverseTranscribe(inSequence.substring(0, inSequence.length() -1 ));
-				
-		if ( frame == 5 )		
-				return reverseTranscribe(inSequence.substring(0, inSequence.length() -2));
-		
-		throw new Exception("Unknown frame");
-	}
-	
-	public static String[] getSafeAllFrames(String inSequence ) throws Exception
-	{
-		String[] allFrames = new String[6];
-		allFrames[0] = getSafeProteinSequence(inSequence);
-		allFrames[1] = getSafeProteinSequence(inSequence.substring(1));
-		allFrames[2] = getSafeProteinSequence(inSequence.substring(2));
-		allFrames[3] = getSafeProteinSequence(
-		        	safeReverseTranscribe(inSequence));
-		allFrames[4] = getSafeProteinSequence(
-		        	safeReverseTranscribe(inSequence.substring(0, inSequence.length() -1 )));
-		allFrames[5] = getSafeProteinSequence(
-		        safeReverseTranscribe(inSequence.substring(0, inSequence.length() -2)));
-		
-		return allFrames;
-	}
-	
-	public static String[] getAllFrames( String inSequence ) throws Exception
-	{
-		String[] allFrames = new String[6];
-		allFrames[0] = getProteinSequence(inSequence);
-		allFrames[1] = getProteinSequence(inSequence.substring(1));
-		allFrames[2] = getProteinSequence(inSequence.substring(2));
-		allFrames[3] = getProteinSequence(reverseTranscribe(inSequence));
-		allFrames[4] = getProteinSequence(reverseTranscribe(inSequence.substring(0, inSequence.length() -1 )));
-		allFrames[5] = getProteinSequence(reverseTranscribe(inSequence.substring(0, inSequence.length() -2)));
-		
-		return allFrames;
-	}
-	
-	/**  Frame should be 0, 1 or 2
-	 */
-	public static void dumpToHtml( File file, String dnaSequence, int frame ) 
-		throws Exception
-	{
-		BufferedWriter writer = new BufferedWriter( new FileWriter( file ));
-		writer.write( "<html><body><pre> " );
-		
-		int currentPos = 0;
-		
-		for ( int x=frame; x >0; x-- ) 
-		{
-			writer.write( dnaSequence.charAt(currentPos));
-			currentPos++;		
-		}
-		
-		log.info(String.valueOf(currentPos));
-		
-		writer.write("\n\n");
-		
-		while ( currentPos < dnaSequence.length() - 1 ) 
-		{
-			writeProteinLine(writer, dnaSequence, currentPos);
-			writeDnaLine(writer, dnaSequence,currentPos);
-			currentPos += NUM_PROTEIN_RESIDUES_PER_LINE *3;
-			log.info(String.valueOf(currentPos));
-			writer.write("\n");
-		}	
-		
-		writer.write("</pre></body></html>");
-		writer.flush();  writer.close();
-	}
-	
-	private static void writeProteinLine(BufferedWriter writer, String dnaSequence, int startPos)
-		throws Exception
-	{
-		int numToDo = NUM_PROTEIN_RESIDUES_PER_LINE;
-		int currentPos = startPos;
-		
-		while ( numToDo > 0 && currentPos < dnaSequence.length() - 3 ) 
-		{
-			String symbol = "" + dnaSequence.charAt(currentPos) + 
-							dnaSequence.charAt(currentPos + 1) + 
-							dnaSequence.charAt(currentPos + 2);
-			currentPos += 3;
-			numToDo--;
-			
-			String value = (String) translationMap.get( symbol);
-			
-			if ( ! value.equals("STOP" ) ) 
-				writer.write( "  " + SequenceUtils.threeToOne(value) + " ");
-			else if ( value.equals("STOP") ) 
-				writer.write("  * ");
-			else throw new Exception("Unexpected codon " + symbol );
-		}
-		
-		writer.write("\n");
-	}
-	
-	private static void writeDnaLine(BufferedWriter writer, String dnaSequence, int startPos ) 
-		throws Exception
-	{
-		int numToDo = NUM_PROTEIN_RESIDUES_PER_LINE;
-		int currentPos = startPos;
-		
-		writer.write( " " );
-		
-		while ( numToDo > 0 && currentPos < dnaSequence.length() - 3 ) 
-		{
-			writer.write( "" + dnaSequence.charAt(currentPos) + 
-							dnaSequence.charAt(currentPos + 1) + 
-							dnaSequence.charAt(currentPos + 2) + " ");
-			currentPos += 3;
-			numToDo--;
-		}
-		
-		writer.write( " " + currentPos + "\n");
-	
+
+		return buff.toString();
 	}
 
-	
+	public static String getDnaSequenceFromFrame( String inSequence, int frame ) throws Exception
+	{
+		if( frame == 0 )
+			return inSequence;
+
+		if( frame == 1 )
+			return inSequence.substring( 1 );
+
+		if( frame == 2 )
+			return inSequence.substring( 2 );
+
+		if( frame == 3 )
+			return reverseTranscribe( inSequence );
+
+		if( frame == 4 )
+			return reverseTranscribe( inSequence.substring( 0, inSequence.length() - 1 ) );
+
+		if( frame == 5 )
+			return reverseTranscribe( inSequence.substring( 0, inSequence.length() - 2 ) );
+
+		throw new Exception( "Unknown frame" );
+	}
+
+	public static String[] getSafeAllFrames( String inSequence ) throws Exception
+	{
+		String[] allFrames = new String[ 6 ];
+		allFrames[0] = getSafeProteinSequence( inSequence );
+		allFrames[1] = getSafeProteinSequence( inSequence.substring( 1 ) );
+		allFrames[2] = getSafeProteinSequence( inSequence.substring( 2 ) );
+		allFrames[3] = getSafeProteinSequence( safeReverseTranscribe( inSequence ) );
+		allFrames[4] = getSafeProteinSequence(
+				safeReverseTranscribe( inSequence.substring( 0, inSequence.length() - 1 ) ) );
+		allFrames[5] = getSafeProteinSequence(
+				safeReverseTranscribe( inSequence.substring( 0, inSequence.length() - 2 ) ) );
+
+		return allFrames;
+	}
+
+	public static String[] getAllFrames( String inSequence ) throws Exception
+	{
+		String[] allFrames = new String[ 6 ];
+		allFrames[0] = getProteinSequence( inSequence );
+		allFrames[1] = getProteinSequence( inSequence.substring( 1 ) );
+		allFrames[2] = getProteinSequence( inSequence.substring( 2 ) );
+		allFrames[3] = getProteinSequence( reverseTranscribe( inSequence ) );
+		allFrames[4] = getProteinSequence( reverseTranscribe( inSequence.substring( 0, inSequence.length() - 1 ) ) );
+		allFrames[5] = getProteinSequence( reverseTranscribe( inSequence.substring( 0, inSequence.length() - 2 ) ) );
+
+		return allFrames;
+	}
+
 	/**  Frame should be 0, 1 or 2
 	 */
-	public static void dumpToFile( File file, String dnaSequence, int frame )  throws Exception
+	public static void dumpToHtml( File file, String dnaSequence, int frame ) throws Exception
 	{
-		BufferedWriter writer = new BufferedWriter( new FileWriter( file ));
-		try{
+		BufferedWriter writer = new BufferedWriter( new FileWriter( file ) );
+		writer.write( "<html><body><pre> " );
+
+		int currentPos = 0;
+
+		for( int x = frame; x > 0; x-- )
+		{
+			writer.write( dnaSequence.charAt( currentPos ) );
+			currentPos++;
+		}
+
+		log.info( String.valueOf( currentPos ) );
+
+		writer.write( "\n\n" );
+
+		while( currentPos < dnaSequence.length() - 1 )
+		{
+			writeProteinLine( writer, dnaSequence, currentPos );
+			writeDnaLine( writer, dnaSequence, currentPos );
+			currentPos += NUM_PROTEIN_RESIDUES_PER_LINE * 3;
+			log.info( String.valueOf( currentPos ) );
+			writer.write( "\n" );
+		}
+
+		writer.write( "</pre></body></html>" );
+		writer.flush();
+		writer.close();
+	}
+
+	private static void writeProteinLine( BufferedWriter writer, String dnaSequence, int startPos ) throws Exception
+	{
+		int numToDo = NUM_PROTEIN_RESIDUES_PER_LINE;
+		int currentPos = startPos;
+
+		while( numToDo > 0 && currentPos < dnaSequence.length() - 3 )
+		{
+			String symbol = "" + dnaSequence.charAt( currentPos ) + dnaSequence.charAt( currentPos + 1 )
+					+ dnaSequence.charAt( currentPos + 2 );
+			currentPos += 3;
+			numToDo--;
+
+			String value = (String) translationMap.get( symbol );
+
+			if( !value.equals( "STOP" ) )
+				writer.write( "  " + SequenceUtils.threeToOne( value ) + " " );
+			else if( value.equals( "STOP" ) )
+				writer.write( "  * " );
+			else
+				throw new Exception( "Unexpected codon " + symbol );
+		}
+
+		writer.write( "\n" );
+	}
+
+	private static void writeDnaLine( BufferedWriter writer, String dnaSequence, int startPos ) throws Exception
+	{
+		int numToDo = NUM_PROTEIN_RESIDUES_PER_LINE;
+		int currentPos = startPos;
+
+		writer.write( " " );
+
+		while( numToDo > 0 && currentPos < dnaSequence.length() - 3 )
+		{
+			writer.write( "" + dnaSequence.charAt( currentPos ) + dnaSequence.charAt( currentPos + 1 )
+					+ dnaSequence.charAt( currentPos + 2 ) + " " );
+			currentPos += 3;
+			numToDo--;
+		}
+
+		writer.write( " " + currentPos + "\n" );
+
+	}
+
+	/**  Frame should be 0, 1 or 2
+	 */
+	public static void dumpToFile( File file, String dnaSequence, int frame ) throws Exception
+	{
+		BufferedWriter writer = new BufferedWriter( new FileWriter( file ) );
+		try
+		{
 			int currentPos = 0;
-			
-			for ( int x=frame; x >0; x-- ) 
+
+			for( int x = frame; x > 0; x-- )
 			{
-				writer.write( dnaSequence.charAt(currentPos));
-				currentPos++;		
+				writer.write( dnaSequence.charAt( currentPos ) );
+				currentPos++;
 			}
-			
-			writer.write("\n\n");
-			
-			while ( dnaSequence.length() -3 >= currentPos )
+
+			writer.write( "\n\n" );
+
+			while( dnaSequence.length() - 3 >= currentPos )
 			{
-				String symbol = "" + dnaSequence.charAt(currentPos) + 
-								dnaSequence.charAt(currentPos + 1) + 
-								dnaSequence.charAt(currentPos + 2);
+				String symbol = "" + dnaSequence.charAt( currentPos ) + dnaSequence.charAt( currentPos + 1 )
+						+ dnaSequence.charAt( currentPos + 2 );
 				currentPos += 3;
-				
-				String value = (String) translationMap.get( symbol);
-				
-				if ( ! value.equals("STOP" ) ) 
-					writer.write( SequenceUtils.threeToOne( value ) + " " + value + "\n");
-				else if ( value.equals("STOP") ) 
-					writer.write("*\n");
-				else throw new Exception("Unexpected codon " + symbol );
-				
-				writer.write( symbol + "\n");
+
+				String value = (String) translationMap.get( symbol );
+
+				if( !value.equals( "STOP" ) )
+					writer.write( SequenceUtils.threeToOne( value ) + " " + value + "\n" );
+				else if( value.equals( "STOP" ) )
+					writer.write( "*\n" );
+				else
+					throw new Exception( "Unexpected codon " + symbol );
+
+				writer.write( symbol + "\n" );
 				writer.write( currentPos + "\n\n" );
 			}
-		}finally{
-			writer.flush();  writer.close();
 		}
-			
+		finally
+		{
+			writer.flush();
+			writer.close();
+		}
+
 	}
-	
-	public static String readSequenceFromFastaFile(File inFile ) throws Exception
+
+	public static String readSequenceFromFastaFile( File inFile ) throws Exception
 	{
 		StringBuffer buff = new StringBuffer();
-		
-		BufferedReader reader = new BufferedReader( new FileReader( inFile ));
-		try{
+
+		BufferedReader reader = new BufferedReader( new FileReader( inFile ) );
+		try
+		{
 			reader.readLine();
 			String nextLine = reader.readLine();
-			
-			while ( nextLine != null ) 
+
+			while( nextLine != null )
 			{
 				buff.append( nextLine.trim() );
 				nextLine = reader.readLine();
 			}
-			
-		}finally{
+
+		}
+		finally
+		{
 			reader.close();
 		}
-		return buff.toString();	
+		return buff.toString();
 	}
-	
-	
-	public static float getGCContent(String inString ) 
+
+	public static float getGCContent( String inString )
 	{
-		int gcNum =0;
-		int num= 0;
-		
+		int gcNum = 0;
+		int num = 0;
+
 		inString = inString.toUpperCase();
-		
-		for ( int x=0; x< inString.length(); x++ ) 
+
+		for( int x = 0; x < inString.length(); x++ )
 		{
 			num++;
-			
-			if ( inString.charAt(x) == 'G' || inString.charAt(x) == 'C' ) 
+
+			if( inString.charAt( x ) == 'G' || inString.charAt( x ) == 'C' )
 				gcNum++;
 		}
-		
-		return (( float) gcNum )/ num;
+
+		return ( (float) gcNum ) / num;
 	}
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -585,7 +575,7 @@ public class Translate
 		}
 	}
 	*/
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -602,9 +592,7 @@ public class Translate
 		log.info( sequence.indexOf(subSequence));
 	}
 	*/
-	
-	
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -615,7 +603,7 @@ public class Translate
 		log.info( getProteinSequence(sequence));
 	}
 	*/
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -625,7 +613,7 @@ public class Translate
 		log.info( reverseTranscribe(aSequence) );	
 	}
 	*/
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -640,7 +628,7 @@ public class Translate
 		cAlignment.writeHtmlFile(new File("c:\\cygwin\\clustalw\\Seq2.html"));
 	}
 	*/
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -655,7 +643,7 @@ public class Translate
 				
 	}
 	*/
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -674,7 +662,7 @@ public class Translate
 		log.info( Translate.getProteinSequence(aSequence) );
 	}
 	*/
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -694,7 +682,7 @@ public class Translate
 		//log.info( vectorSequence.indexOf(aSequence));
 	}
 	*/
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -719,7 +707,7 @@ public class Translate
 		//log.info( vectorSequence.indexOf(aSequence));
 	}
 	*/
-	
+
 	/*
 	public static void main(String[] args) throws Exception
 	{
@@ -764,5 +752,5 @@ public class Translate
 			}
 		}	
 	}
-	*/	
+	*/
 }

@@ -1,16 +1,18 @@
 /** 
- * Author:  anthony.fodor@gmail.com    
- * This code is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License
-* as published by the Free Software Foundation; either version 2
-* of the License, or (at your option) any later version,
-* provided that any use properly credits the author.
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details at http://www.gnu.org * * */
-
-
+ * @UNCC Fodor Lab
+ * @author Anthony Fodor
+ * @email anthony.fodor@gmail.com 
+ * @date Feb 9, 2017
+ * @disclaimer 	This code is free software; you can redistribute it and/or
+ * 				modify it under the terms of the GNU General Public License
+ * 				as published by the Free Software Foundation; either version 2
+ * 				of the License, or (at your option) any later version,
+ * 				provided that any use properly credits the author.
+ * 				This program is distributed in the hope that it will be useful,
+ * 				but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * 				MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * 				GNU General Public License for more details at http://www.gnu.org * 
+ */
 package parsers;
 
 import java.io.BufferedReader;
@@ -39,8 +41,8 @@ import utils.TabReader;
  */
 public class HitScores implements Comparable<HitScores>
 {
-	protected static final Logger log = LoggerFactory.getLogger(HitScores.class);
-	
+	protected static final Logger log = LoggerFactory.getLogger( HitScores.class );
+
 	//# Fields: Query id, Subject id, % identity, alignment length, mismatches, gap op
 	//enings, q. start, q. end, s. start, s. end, e-value, bit score
 	private String queryId;
@@ -55,560 +57,551 @@ public class HitScores implements Comparable<HitScores>
 	private final int targetEnd;
 	private final double eScore;
 	private final float bitScore;
-	
+
 	//Queryid	Subjectid	percentIdentity	alignmentlength	mismatches	gap_openings	querystart	queryend	targetstart	targetEnd	evalue	bitScore
-	
-	
+
 	public static class PercentIdentitySorter implements Comparator<HitScores>
 	{
-		public int compare(HitScores o1, HitScores o2)
+		public int compare( HitScores o1, HitScores o2 )
 		{
-			return Float.compare(o2.percentIdentity, o1.percentIdentity);
+			return Float.compare( o2.percentIdentity, o1.percentIdentity );
 		}
 	}
-	
-	public static HitScores getTopHitByBitScore(File file) throws Exception
+
+	public static HitScores getTopHitByBitScore( File file ) throws Exception
 	{
-		List<HitScores> list = getAsList(file, file.getName().toLowerCase().endsWith("gz"));
-					
+		List<HitScores> list = getAsList( file, file.getName().toLowerCase().endsWith( "gz" ) );
+
 		HitScores returnVal = null;
-		
-		for(HitScores hs : list)
+
+		for( HitScores hs : list )
 		{
-			if( returnVal == null ||  hs.getBitScore() > returnVal.getBitScore() )
+			if( returnVal == null || hs.getBitScore() > returnVal.getBitScore() )
 				returnVal = hs;
 		}
-		
+
 		return returnVal;
 	}
-	
-	public void setQueryId(String queryId)
+
+	public void setQueryId( String queryId )
 	{
 		this.queryId = queryId;
 	}
-	
+
 	/*
 	 *   The file line is the result of a blast run with the blast output set to 8
 	 *   //# Fields: Query id, Subject id, % identity, alignment length, mismatches, gap op
 	//enings, q. start, q. end, s. start, s. end, e-value, bit score
 	 */
-	public HitScores(String fileLine) throws Exception
+	public HitScores( String fileLine ) throws Exception
 	{
-		TabReader sToken = new TabReader(fileLine);
-		
+		TabReader sToken = new TabReader( fileLine );
+
 		this.queryId = sToken.nextToken();
 		this.targetId = sToken.nextToken();
-		this.percentIdentity = Float.parseFloat(sToken.nextToken());
-		this.alignmentLength = Integer.parseInt(sToken.nextToken());
-		this.numMismatches = Integer.parseInt(sToken.nextToken());
-		this.gapOpenings = Integer.parseInt(sToken.nextToken());
-		
-		this.queryStart = Integer.parseInt(sToken.nextToken());
-		this.queryEnd = Integer.parseInt(sToken.nextToken());
-		
-		this.targetStart = Integer.parseInt(sToken.nextToken()); 
-		this.targetEnd = Integer.parseInt( sToken.nextToken());
-		this.eScore = Double.parseDouble(sToken.nextToken());
-		this.bitScore = Float.parseFloat(sToken.nextToken());
-		
-		if( sToken.hasMore())
-			throw new Exception("Parsing error");
+		this.percentIdentity = Float.parseFloat( sToken.nextToken() );
+		this.alignmentLength = Integer.parseInt( sToken.nextToken() );
+		this.numMismatches = Integer.parseInt( sToken.nextToken() );
+		this.gapOpenings = Integer.parseInt( sToken.nextToken() );
+
+		this.queryStart = Integer.parseInt( sToken.nextToken() );
+		this.queryEnd = Integer.parseInt( sToken.nextToken() );
+
+		this.targetStart = Integer.parseInt( sToken.nextToken() );
+		this.targetEnd = Integer.parseInt( sToken.nextToken() );
+		this.eScore = Double.parseDouble( sToken.nextToken() );
+		this.bitScore = Float.parseFloat( sToken.nextToken() );
+
+		if( sToken.hasMore() )
+			throw new Exception( "Parsing error" );
 	}
-	
-	
-	public OrderedSequenceRange getTargetRange()
+
+	public OrderedSequenceRange getTargetRange( )
 	{
-		return new OrderedSequenceRange(this.targetStart, this.targetEnd);
+		return new OrderedSequenceRange( this.targetStart, this.targetEnd );
 	}
-	
-	public OrderedSequenceRange getQueryRange()
+
+	public OrderedSequenceRange getQueryRange( )
 	{
-		return new OrderedSequenceRange(this.queryStart, this.queryEnd);
+		return new OrderedSequenceRange( this.queryStart, this.queryEnd );
 	}
-	
+
 	/*
 	 * Returns the gi identifier the gi identifier ( e.g. 119668705 ) 
 	 */
-	public String getTargetGenbankId()
+	public String getTargetGenbankId( )
 	{
 		String returnString = getTargetId();
-		returnString = returnString.substring(3);
-		returnString = returnString.substring(0, returnString.indexOf("|"));
+		returnString = returnString.substring( 3 );
+		returnString = returnString.substring( 0, returnString.indexOf( "|" ) );
 		return returnString;
 	}
-	
-	public static HashSet<String> getAllGenbankIdsForCollection( Collection<HitScores> c ) 
+
+	public static HashSet<String> getAllGenbankIdsForCollection( Collection<HitScores> c )
 	{
 		HashSet<String> set = new HashSet<String>();
-		
+
 		for( HitScores hs : c )
-			set.add(hs.getTargetGenbankId());
-		
+			set.add( hs.getTargetGenbankId() );
+
 		return set;
 	}
-	
+
 	/*
 	 * Throws if there any duplicate queryIDs in the results file
 	 */
-	public static HashMap<String, HitScores> getUniqueQueryIDMap(File fileToParse) 
-					throws Exception
+	public static HashMap<String, HitScores> getUniqueQueryIDMap( File fileToParse ) throws Exception
 	{
 		HashMap<String, HitScores> map = new HashMap<String, HitScores>();
-		BufferedReader reader = new BufferedReader(new FileReader(fileToParse));
-		try{
+		BufferedReader reader = new BufferedReader( new FileReader( fileToParse ) );
+		try
+		{
 
 			reader.readLine();
-			
+
 			String nextLine = reader.readLine();
-			
-			while(nextLine != null)
+
+			while( nextLine != null )
 			{
-				if( ! nextLine.startsWith("#"))
+				if( !nextLine.startsWith( "#" ) )
 				{
-					HitScores hs = new HitScores(nextLine);
-					
-					if( map.get(hs.getQueryId()) != null )
-						throw new Exception("Error!  Duplicate keys for " + hs.getQueryId());
-					
-					map.put(hs.getQueryId(), hs);
+					HitScores hs = new HitScores( nextLine );
+
+					if( map.get( hs.getQueryId() ) != null )
+						throw new Exception( "Error!  Duplicate keys for " + hs.getQueryId() );
+
+					map.put( hs.getQueryId(), hs );
 				}
-				
+
 				nextLine = reader.readLine();
 			}
-		}finally{
+		}
+		finally
+		{
 			reader.close();
 		}
-		
+
 		return map;
 	}
-	
 
-public void writeALine( PrintWriter writer, boolean endWithNewline) throws Exception
-{
-	writer.write(queryId + "\t");
-	writer.write(targetId + "\t");
-	writer.write(percentIdentity + "\t");
-	writer.write(alignmentLength + "\t");
-	writer.write(numMismatches + "\t");
-	writer.write(gapOpenings + "\t");
-	writer.write(queryStart + "\t");
-	writer.write(queryEnd + "\t");
-	writer.write(targetStart + "\t");
-	writer.write(targetEnd + "\t");
-	writer.write(eScore + "\t");
-	writer.write("" + bitScore);
-	writer.write( endWithNewline ? "\n" : "\t" );
-}
-	
-	public static List<HitScores> getAsList(  File file, 
-						boolean gzipped, 
-							int minQueryAlignmentLength) 
-			throws Exception
+	public void writeALine( PrintWriter writer, boolean endWithNewline ) throws Exception
 	{
-		log.info("PARSING: " + file.getAbsolutePath());
-		BufferedReader reader = 
-			gzipped ?
-				new BufferedReader(new InputStreamReader( 
-						new GZIPInputStream( new FileInputStream( file) ) ))
-				:
-					new BufferedReader(new FileReader(file));
-		
+		writer.write( queryId + "\t" );
+		writer.write( targetId + "\t" );
+		writer.write( percentIdentity + "\t" );
+		writer.write( alignmentLength + "\t" );
+		writer.write( numMismatches + "\t" );
+		writer.write( gapOpenings + "\t" );
+		writer.write( queryStart + "\t" );
+		writer.write( queryEnd + "\t" );
+		writer.write( targetStart + "\t" );
+		writer.write( targetEnd + "\t" );
+		writer.write( eScore + "\t" );
+		writer.write( "" + bitScore );
+		writer.write( endWithNewline ? "\n" : "\t" );
+	}
+
+	public static List<HitScores> getAsList( File file, boolean gzipped, int minQueryAlignmentLength ) throws Exception
+	{
+		log.info( "PARSING: " + file.getAbsolutePath() );
+		BufferedReader reader = gzipped
+				? new BufferedReader( new InputStreamReader( new GZIPInputStream( new FileInputStream( file ) ) ) )
+				: new BufferedReader( new FileReader( file ) );
+
 		List<HitScores> list = new ArrayList<HitScores>();
-		
+
 		String nextLine = reader.readLine();
-		
-		if(nextLine.startsWith("queryId"))
+
+		if( nextLine.startsWith( "queryId" ) )
 			nextLine = reader.readLine();
-		
+
 		while( nextLine != null )
 		{
-			if( ! nextLine.startsWith("#"))
+			if( !nextLine.startsWith( "#" ) )
 			{
-				HitScores hs = new HitScores(nextLine);
-				
-				if( hs.getQueryAlignmentLength() > minQueryAlignmentLength)
-					list.add(new HitScores(nextLine));
-				
+				HitScores hs = new HitScores( nextLine );
+
+				if( hs.getQueryAlignmentLength() > minQueryAlignmentLength )
+					list.add( new HitScores( nextLine ) );
+
 			}
-			
+
 			nextLine = reader.readLine();
 		}
-		
+
 		return list;
 	}
-	
-	
-	
+
 	/*
 	 * Writes the top hit for each query to the file defined by 
 	 * FilePathGenerator.getTopHitsFile().
 	 */
-	public static void writeToFile( Collection<HitScores> scores, File file, boolean writeHeader)
-		throws Exception
+	public static void writeToFile( Collection<HitScores> scores, File file, boolean writeHeader ) throws Exception
 	{
-		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-		
-		if( writeHeader)
-			writeHeader(writer, true);
-		
+		BufferedWriter writer = new BufferedWriter( new FileWriter( file ) );
+
+		if( writeHeader )
+			writeHeader( writer, true );
+
 		for( HitScores hs : scores )
-			hs.writeALine(writer, true);
-		
-		writer.flush();  writer.close();
+			hs.writeALine( writer, true );
+
+		writer.flush();
+		writer.close();
 	}
-	
-	public static HashSet<HitScores> filter(Collection<HitScores> scores,
-			double eScore, double length) throws Exception
+
+	public static HashSet<HitScores> filter( Collection<HitScores> scores, double eScore, double length )
+			throws Exception
 	{
 		HashSet<HitScores> returnSet = new HashSet<HitScores>();
-		
+
 		for( HitScores hs : scores )
-			if( hs.getEScore() <= eScore && hs.getQueryAlignmentLength() >= length)
-				returnSet.add(hs);
-		
+			if( hs.getEScore() <= eScore && hs.getQueryAlignmentLength() >= length )
+				returnSet.add( hs );
+
 		return returnSet;
 	}
-		
-	public static HashMap<String,HitScores> getTopHitsFilteredByPercentIdentityAtMinLength(
-			String filepath, int minLength) throws Exception
+
+	public static HashMap<String, HitScores> getTopHitsFilteredByPercentIdentityAtMinLength( String filepath,
+			int minLength ) throws Exception
 	{
 		//Query id, Subject id, % identity, alignment length
-		
-		HashMap<String, HitScores> map= new HashMap<String, HitScores>();
-		
-		BufferedReader reader = new BufferedReader(new FileReader(filepath));
-		try{
+
+		HashMap<String, HitScores> map = new HashMap<String, HitScores>();
+
+		BufferedReader reader = new BufferedReader( new FileReader( filepath ) );
+		try
+		{
 			String nextLine = reader.readLine();
-			
+
 			//int index=0;
-			while( nextLine != null)
+			while( nextLine != null )
 			{
-				String[] splits = nextLine.split("\t");
-				
-				if( splits.length != 12)
-					throw new Exception("Parsing error");
-				
-				HitScores hs = new HitScores(nextLine);
-				HitScores oldHit= map.get(hs.getQueryId());
-				
-				if( hs.getAlignmentLength() >= minLength)
+				String[] splits = nextLine.split( "\t" );
+
+				if( splits.length != 12 )
+					throw new Exception( "Parsing error" );
+
+				HitScores hs = new HitScores( nextLine );
+				HitScores oldHit = map.get( hs.getQueryId() );
+
+				if( hs.getAlignmentLength() >= minLength )
 				{
-					if(oldHit== null || hs.getPercentIdentity() > oldHit.getPercentIdentity() )
+					if( oldHit == null || hs.getPercentIdentity() > oldHit.getPercentIdentity() )
 					{
-						map.put(hs.getQueryId(), hs);
+						map.put( hs.getQueryId(), hs );
 					}
 				}
-					
-				nextLine= reader.readLine();
-				
+
+				nextLine = reader.readLine();
+
 				//if( index % 100000==0)
-					//log.info(index + " " + map.size());
-				
+				//log.info(index + " " + map.size());
+
 				//index++;
 			}
-		}finally{
+		}
+		finally
+		{
 			reader.close();
 		}
-		
-		
+
 		return map;
 	}
-	
-	public static HashMap<String, HitScores> getTopHitsAsQueryMap(String filepath) throws Exception
-	{	
-		HashMap<String, HitScores> map= new LinkedHashMap<String, HitScores>();
-		
-		BufferedReader reader = 	filepath.toLowerCase().endsWith("gz") ?
-				new BufferedReader(new InputStreamReader( 
-						new GZIPInputStream( new FileInputStream( filepath) ) ))
-				:
-					new BufferedReader(new FileReader(filepath));
 
-		
+	public static HashMap<String, HitScores> getTopHitsAsQueryMap( String filepath ) throws Exception
+	{
+		HashMap<String, HitScores> map = new LinkedHashMap<String, HitScores>();
+
+		BufferedReader reader = filepath.toLowerCase().endsWith( "gz" )
+				? new BufferedReader( new InputStreamReader( new GZIPInputStream( new FileInputStream( filepath ) ) ) )
+				: new BufferedReader( new FileReader( filepath ) );
+
 		String nextLine = reader.readLine();
-		
+
 		//int index=0;
-		while( nextLine != null)
+		while( nextLine != null )
 		{
-			HitScores hs = new HitScores(nextLine);
-			HitScores oldHit = map.get(hs.getQueryId());
-			
-			if( oldHit == null || hs.getBitScore()> oldHit.getBitScore())
-				map.put(hs.getQueryId(), hs);
-			
-			nextLine= reader.readLine();
-			
+			HitScores hs = new HitScores( nextLine );
+			HitScores oldHit = map.get( hs.getQueryId() );
+
+			if( oldHit == null || hs.getBitScore() > oldHit.getBitScore() )
+				map.put( hs.getQueryId(), hs );
+
+			nextLine = reader.readLine();
+
 			//if( index % 100000==0)
-				//log.info(index + " " + map.size());
-			
+			//log.info(index + " " + map.size());
+
 			//index++;
 		}
-		
-		
+
 		reader.close();
-		
+
 		return map;
 	}
-	
-	public static List<HitScores> getTopHits(String filepath) throws Exception
+
+	public static List<HitScores> getTopHits( String filepath ) throws Exception
 	{
-		return new ArrayList<HitScores>(getTopHitsAsQueryMap(filepath).values());
+		return new ArrayList<HitScores>( getTopHitsAsQueryMap( filepath ).values() );
 	}
-	
-	public static List<HitScores> getTopHits(List<HitScores> inHits) throws Exception
+
+	public static List<HitScores> getTopHits( List<HitScores> inHits ) throws Exception
 	{
-		HashMap<String, HitScores> map=  new LinkedHashMap<String, HitScores>();
-		List<HitScores> returnList= new ArrayList<HitScores>();
-		
-		for( HitScores hs : inHits)
+		HashMap<String, HitScores> map = new LinkedHashMap<String, HitScores>();
+		List<HitScores> returnList = new ArrayList<HitScores>();
+
+		for( HitScores hs : inHits )
 		{
-			HitScores oldScore = map.get(hs.getQueryId());
-			
-			if( oldScore == null || hs.getEScore() < oldScore.getEScore())
-				map.put(hs.getQueryId(), hs);
+			HitScores oldScore = map.get( hs.getQueryId() );
+
+			if( oldScore == null || hs.getEScore() < oldScore.getEScore() )
+				map.put( hs.getQueryId(), hs );
 		}
-		
+
 		for( String s : map.keySet() )
-			returnList.add(map.get(s));
-		
+			returnList.add( map.get( s ) );
+
 		return returnList;
 	}
-	
+
 	public static HashSet<String> getUniqueQueryIds( Collection<HitScores> collection )
 	{
 		HashSet<String> returnSet = new HashSet<String>();
-		
-		for( HitScores hs : collection)
-			returnSet.add(hs.getQueryId());
-		
+
+		for( HitScores hs : collection )
+			returnSet.add( hs.getQueryId() );
+
 		return returnSet;
 	}
-	
-	public static void writeHeader(BufferedWriter writer, boolean endWithNewline ) throws Exception
+
+	public static void writeHeader( BufferedWriter writer, boolean endWithNewline ) throws Exception
 	{
-		writer.write("queryId\t");
-		writer.write("targetId\tpercentIdentity\t");
-		writer.write("alignmentLength\tmismatches\t");
-		writer.write("gapOpenings\tqueryStart\tqueryEnd\t");
-		writer.write("targetStart\ttargetEnd\teValue\tbitScore");
-		
+		writer.write( "queryId\t" );
+		writer.write( "targetId\tpercentIdentity\t" );
+		writer.write( "alignmentLength\tmismatches\t" );
+		writer.write( "gapOpenings\tqueryStart\tqueryEnd\t" );
+		writer.write( "targetStart\ttargetEnd\teValue\tbitScore" );
+
 		writer.write( endWithNewline ? "\n" : "\t" );
 	}
-	
-	public void writeALine( BufferedWriter writer, boolean endWithNewline) throws Exception
+
+	public void writeALine( BufferedWriter writer, boolean endWithNewline ) throws Exception
 	{
-		writer.write(queryId + "\t");
-		writer.write(targetId + "\t");
-		writer.write(percentIdentity + "\t");
-		writer.write(alignmentLength + "\t");
-		writer.write(numMismatches + "\t");
-		writer.write(gapOpenings + "\t");
-		writer.write(queryStart + "\t");
-		writer.write(queryEnd + "\t");
-		writer.write(targetStart + "\t");
-		writer.write(targetEnd + "\t");
-		writer.write(eScore + "\t");
-		writer.write("" + bitScore);
+		writer.write( queryId + "\t" );
+		writer.write( targetId + "\t" );
+		writer.write( percentIdentity + "\t" );
+		writer.write( alignmentLength + "\t" );
+		writer.write( numMismatches + "\t" );
+		writer.write( gapOpenings + "\t" );
+		writer.write( queryStart + "\t" );
+		writer.write( queryEnd + "\t" );
+		writer.write( targetStart + "\t" );
+		writer.write( targetEnd + "\t" );
+		writer.write( eScore + "\t" );
+		writer.write( "" + bitScore );
 		writer.write( endWithNewline ? "\n" : "\t" );
 	}
-	
-	public static HashSet<String> getQueryIds(File file, double cutoffEScore, int cutoffSequenceLength) 
-		throws Exception
+
+	public static HashSet<String> getQueryIds( File file, double cutoffEScore, int cutoffSequenceLength )
+			throws Exception
 	{
 		HashSet<String> queryIds = new HashSet<String>();
-		
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		try{
+
+		BufferedReader reader = new BufferedReader( new FileReader( file ) );
+		try
+		{
 			String nextLine = reader.readLine();
-			
+
 			while( nextLine != null )
 			{
-				if( ! nextLine.startsWith("#"))
+				if( !nextLine.startsWith( "#" ) )
 				{
-					HitScores hs = new HitScores(nextLine);
-					
+					HitScores hs = new HitScores( nextLine );
+
 					if( hs.getEScore() <= cutoffEScore )
-						if( Math.abs(hs.getTargetEnd()-hs.getTargetStart()) <= cutoffSequenceLength )
+						if( Math.abs( hs.getTargetEnd() - hs.getTargetStart() ) <= cutoffSequenceLength )
 						{
 							String id = hs.getQueryId();
-							id = id.substring( id.lastIndexOf("|") + 1, id.length() );
-							
-							queryIds.add(id);
-							
+							id = id.substring( id.lastIndexOf( "|" ) + 1, id.length() );
+
+							queryIds.add( id );
+
 							//log.info(hs.getQueryId() + " " +  id);
 						}
 				}
-				
+
 				nextLine = reader.readLine();
 			}
-		}finally{
+		}
+		finally
+		{
 			reader.close();
 		}
-		
+
 		return queryIds;
 	}
-	
-	public static List<HitScores> getAsList( String filepath) throws Exception
+
+	public static List<HitScores> getAsList( String filepath ) throws Exception
 	{
-		return getAsList(new File(filepath), false);
+		return getAsList( new File( filepath ), false );
 	}
-	
+
 	@SuppressWarnings("unused")
-	public static List<HitScores> getAsList(  File file, boolean gzipped) throws Exception
+	public static List<HitScores> getAsList( File file, boolean gzipped ) throws Exception
 	{
-		log.info("PARSING: " + file.getAbsolutePath());
-		BufferedReader reader = 
-			gzipped ?
-				new BufferedReader(new InputStreamReader( 
-						new GZIPInputStream( new FileInputStream( file) ) ))
-				:
-					new BufferedReader(new FileReader(file));
-		
+		log.info( "PARSING: " + file.getAbsolutePath() );
+		BufferedReader reader = gzipped
+				? new BufferedReader( new InputStreamReader( new GZIPInputStream( new FileInputStream( file ) ) ) )
+				: new BufferedReader( new FileReader( file ) );
+
 		List<HitScores> list = new ArrayList<HitScores>();
-		
+
 		String nextLine = reader.readLine();
-		
+
 		// empty file
 		if( nextLine == null )
 			return list;
-		
-		if(nextLine.startsWith("queryId"))
+
+		if( nextLine.startsWith( "queryId" ) )
 			nextLine = reader.readLine();
-		
+
 		while( nextLine != null )
 		{
-			if( ! nextLine.startsWith("#"))
+			if( !nextLine.startsWith( "#" ) )
 			{
-				list.add(new HitScores(nextLine));
-				
+				list.add( new HitScores( nextLine ) );
+
 			}
-			
+
 			nextLine = reader.readLine();
 		}
-		
+
 		// Bugs in earlier VMs sometimes made this line throw
 		// as hard as that is to believe!!
-		if( nextLine != null)
-			throw new Exception("Parsing error");
-		
+		if( nextLine != null )
+			throw new Exception( "Parsing error" );
+
 		reader.close();
 		return list;
 	}
-	
-	public static HashSet<String> getKeysForCutoff(HashMap<String,HitScores> map,
-									double maxEScore, int minAlignmentLength) 
+
+	public static HashSet<String> getKeysForCutoff( HashMap<String, HitScores> map, double maxEScore,
+			int minAlignmentLength )
 	{
 		HashSet<String> returnSet = new HashSet<String>();
-		
+
 		for( HitScores hs : map.values() )
-			if( hs.getEScore() <= maxEScore && hs.getQueryAlignmentLength() >= minAlignmentLength)
-				returnSet.add(hs.getQueryId());
-		
+			if( hs.getEScore() <= maxEScore && hs.getQueryAlignmentLength() >= minAlignmentLength )
+				returnSet.add( hs.getQueryId() );
+
 		return returnSet;
 	}
 
-	public static List<HitScores> getAsList(File file, double maxEScore, int minAlignmentLength) 
-		throws Exception
+	public static List<HitScores> getAsList( File file, double maxEScore, int minAlignmentLength ) throws Exception
 	{
 		List<HitScores> list = new ArrayList<HitScores>();
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		
-		try{
+		BufferedReader reader = new BufferedReader( new FileReader( file ) );
+
+		try
+		{
 
 			String nextLine = reader.readLine();
-			
+
 			while( nextLine != null )
 			{
-				if( ! nextLine.startsWith("#"))
+				if( !nextLine.startsWith( "#" ) )
 				{
-					HitScores hs = new HitScores(nextLine);
-					
-					if( hs.getEScore() <= maxEScore && hs.getQueryAlignmentLength() >= minAlignmentLength ) 
-						list.add(hs);
-					
+					HitScores hs = new HitScores( nextLine );
+
+					if( hs.getEScore() <= maxEScore && hs.getQueryAlignmentLength() >= minAlignmentLength )
+						list.add( hs );
+
 				}
-				
+
 				nextLine = reader.readLine();
 			}
-		}finally{
+		}
+		finally
+		{
 			reader.close();
 		}
-		
+
 		return list;
 	}
-	
-	public int getNumMismatches()
+
+	public int getNumMismatches( )
 	{
 		return numMismatches;
 	}
 
-	public float getPercentIdentity()
+	public float getPercentIdentity( )
 	{
 		return percentIdentity;
 	}
 
-	public double getEScore()
+	public double getEScore( )
 	{
 		return eScore;
 	}
 
-	public String getTargetId()
+	public String getTargetId( )
 	{
 		return targetId;
 	}
-	
-	public int compareTo(HitScores other)
+
+	public int compareTo( HitScores other )
 	{
-		return Double.compare(this.eScore, other.eScore);
+		return Double.compare( this.eScore, other.eScore );
 	}
 
-	public String getQueryId()
+	public String getQueryId( )
 	{
 		return queryId;
 	}
 
-	public int getQueryEnd()
+	public int getQueryEnd( )
 	{
 		return queryEnd;
 	}
 
-	public int getQueryStart()
+	public int getQueryStart( )
 	{
 		return queryStart;
 	}
 
-	public int getTargetEnd()
+	public int getTargetEnd( )
 	{
 		return targetEnd;
 	}
 
-	public int getTargetStart()
+	public int getTargetStart( )
 	{
 		return targetStart;
 	}
 
-	public int getAlignmentLength()
+	public int getAlignmentLength( )
 	{
 		return alignmentLength;
 	}
-	
-	public int getQueryAlignmentLength()
+
+	public int getQueryAlignmentLength( )
 	{
-		return Math.abs(queryEnd - queryStart);
+		return Math.abs( queryEnd - queryStart );
 	}
 
-	public float getBitScore()
+	public float getBitScore( )
 	{
 		return bitScore;
 	}
 
-	public int getGapOpenings()
+	public int getGapOpenings( )
 	{
 		return gapOpenings;
 	}
-	
-	public static void main(String[] args)  throws Exception
+
+	public static void main( String[] args ) throws Exception
 	{
-		
+
 	}
 }
