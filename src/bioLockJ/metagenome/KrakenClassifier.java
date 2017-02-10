@@ -21,7 +21,7 @@ import java.util.Iterator;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.ScriptBuilder;
+import bioLockJ.BashScriptBuilder;
 
 /**
  * 
@@ -76,7 +76,7 @@ public class KrakenClassifier extends BioLockJExecutor
 			data.add( lines );
 		}
 
-		ScriptBuilder.buildScripts( this, data, files );
+		BashScriptBuilder.buildScripts( this, data, files );
 	}
 
 	protected String getKrakenSwitches( ) throws Exception

@@ -97,7 +97,7 @@ public abstract class BioLockJExecutor
 		{
 			return runAllFile;
 		}
-		runAllFile = ScriptBuilder.createRunAllFile( getScriptDir().getAbsolutePath() );
+		runAllFile = BashScriptBuilder.createRunAllFile( getScriptDir().getAbsolutePath() );
 		log.info( this.getClass().getSimpleName() + " Create RunAllFile: " + runAllFile.getAbsolutePath() );
 		return runAllFile;
 	}

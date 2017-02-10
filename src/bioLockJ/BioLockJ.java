@@ -229,7 +229,7 @@ public class BioLockJ
 
 		for( File f : scriptFiles )
 		{
-			File testSuccess = new File( f.getAbsolutePath() + ScriptBuilder.SCRIPT_SUCCEEDED );
+			File testSuccess = new File( f.getAbsolutePath() + BashScriptBuilder.SCRIPT_SUCCEEDED );
 
 			if( testSuccess.exists() )
 			{
@@ -237,7 +237,7 @@ public class BioLockJ
 			}
 			else
 			{
-				File testFailure = new File( f.getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED );
+				File testFailure = new File( f.getAbsolutePath() + BashScriptBuilder.SCRIPT_FAILED );
 				if( testFailure.exists() )
 				{
 					numFailed++;
@@ -249,7 +249,7 @@ public class BioLockJ
 			}
 		}
 
-		File runAllFailed = new File( invoker.getRunAllFile().getAbsolutePath() + ScriptBuilder.SCRIPT_FAILED );
+		File runAllFailed = new File( invoker.getRunAllFile().getAbsolutePath() + BashScriptBuilder.SCRIPT_FAILED );
 		if( runAllFailed.exists() )
 		{
 			throw new Exception( "CANCEL SCRIPT EXECUTION: ERROR IN...runAll.sh" );
@@ -277,12 +277,12 @@ public class BioLockJ
 			BioLockJExecutor bljePrevious = null;
 			for( String s = reader.readLine(); s != null; s = reader.readLine() )
 			{
-				if( s.startsWith( ScriptBuilder.RUN_BIOLOCK_J ) )
+				if( s.startsWith( BashScriptBuilder.RUN_BIOLOCK_J ) )
 				{
 					StringTokenizer sToken = new StringTokenizer( s );
 					sToken.nextToken();
 					if( !sToken.hasMoreTokens() )
-						throw new Exception( "Lines starting with " + ScriptBuilder.RUN_BIOLOCK_J
+						throw new Exception( "Lines starting with " + BashScriptBuilder.RUN_BIOLOCK_J
 								+ " must be followed by a Java class that is a BioLockJExecutor" );
 
 					String fullClassName = sToken.nextToken();
@@ -297,7 +297,7 @@ public class BioLockJ
 					bljePrevious = blje;
 					list.add( blje );
 					if( sToken.hasMoreTokens() )
-						throw new Exception( "Lines starting with " + ScriptBuilder.RUN_BIOLOCK_J
+						throw new Exception( "Lines starting with " + BashScriptBuilder.RUN_BIOLOCK_J
 								+ " must be followed by a Java class that is a BioLockJExecutor with no parameters" );
 				}
 			}

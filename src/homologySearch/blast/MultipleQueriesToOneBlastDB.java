@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.ScriptBuilder;
+import bioLockJ.BashScriptBuilder;
 
 /**
  * Takes in a BLAST_QUERY_DIRECTORY that should only contain FASTA files (subdirectories are ignored)
@@ -75,6 +75,6 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 			data.add( lines );
 		}
 
-		ScriptBuilder.buildScripts( this, data, files );
+		BashScriptBuilder.buildScripts( this, data, files );
 	}
 }

@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.ScriptBuilder;
+import bioLockJ.BashScriptBuilder;
 
 /**
  * 
@@ -65,6 +65,6 @@ public class RdpClassifier extends BioLockJExecutor
 
 		}
 
-		ScriptBuilder.buildScripts( this, data, files );
+		BashScriptBuilder.buildScripts( this, data, files );
 	}
 }

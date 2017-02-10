@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.ScriptBuilder;
+import bioLockJ.BashScriptBuilder;
 
 public class FormatSingleBlastDatabase extends BioLockJExecutor
 {
@@ -69,7 +69,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		String[] files = new String[ 1 ];
 		files[0] = fastaFileToFormat.getName();
 
-		ScriptBuilder.buildScripts( this, data, files );
+		BashScriptBuilder.buildScripts( this, data, files );
 	}
 
 }

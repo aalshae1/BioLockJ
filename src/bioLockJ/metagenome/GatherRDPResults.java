@@ -31,7 +31,7 @@ import java.util.zip.GZIPInputStream;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.ScriptBuilder;
+import bioLockJ.BashScriptBuilder;
 import parsers.NewRDPNode;
 import parsers.NewRDPParserFileLine;
 import parsers.OtuWrapper;
@@ -75,14 +75,14 @@ public class GatherRDPResults extends BioLockJExecutor
 
 				for( String key : countMap.keySet() )
 				{
-					if( s.contains( ScriptBuilder.SCRIPT_SUCCEEDED ) )
+					if( s.contains( BashScriptBuilder.SCRIPT_SUCCEEDED ) )
 					{
-						writer.write( s.replaceAll( ScriptBuilder.SCRIPT_SUCCEEDED, "" ) + "\t" + key + "\t"
+						writer.write( s.replaceAll( BashScriptBuilder.SCRIPT_SUCCEEDED, "" ) + "\t" + key + "\t"
 								+ countMap.get( key ) + "\n" );
 					}
-					if( s.contains( ScriptBuilder.SCRIPT_FAILED ) )
+					if( s.contains( BashScriptBuilder.SCRIPT_FAILED ) )
 					{
-						writer.write( s.replaceAll( ScriptBuilder.SCRIPT_FAILED, "" ) + "\t" + key + "\t"
+						writer.write( s.replaceAll( BashScriptBuilder.SCRIPT_FAILED, "" ) + "\t" + key + "\t"
 								+ countMap.get( key ) + "\n" );
 					}
 

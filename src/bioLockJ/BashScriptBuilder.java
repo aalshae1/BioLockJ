@@ -26,10 +26,10 @@ import org.slf4j.LoggerFactory;
 /**
  *
  */
-public class ScriptBuilder
+public class BashScriptBuilder
 {
 
-	protected static final Logger log = LoggerFactory.getLogger( ScriptBuilder.class );
+	protected static final Logger log = LoggerFactory.getLogger( BashScriptBuilder.class );
 
 	public static final String SCRIPT_FAILED = "_FAIL";
 	public static final String SCRIPT_SUCCEEDED = "_SUCCESS";
