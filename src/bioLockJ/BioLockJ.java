@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,6 +45,7 @@ import utils.MailUtil;
  *  ./projects
  *  	> PROJECT_NAME_%timestamp% (PROJECT_NAME = required property)
  *  		> 00_#RUN_BIOLOCK_J<BioLockJExecutor> (#RUN_BIOLOCK_J = required property)
+ *  			> failures  
  *  			> input - if COPY_INPUT_FLAG=TRUE (optional property)
  *  			> output 
  *  			> qsub 
@@ -53,6 +55,7 @@ import utils.MailUtil;
  *  				-run_XXX.sh (as many as required byas per NUMBER_OF_JOBS_PER_CORE)
  *  		> 01_#RUN_BIOLOCK_J<BioLockJExecutor> (additional #RUN_BIOLOCK_J = optional)
  * 				* No input directory, uses 00_#RUN_BIOLOCK_J/output as input.
+ * 				> failures
  * 				> output
  * 				> qsub (if needed)
  * 				> scripts (if needed)
@@ -99,23 +102,32 @@ public class BioLockJ
 			}
 
 			log = LoggerFactory.getLogger( BioLockJ.class );
-			log.info( "Number of Java run parameters args[] = " + args.length );
-
+			log.info( "Num Java run parameters args[ ] = " + args.length );
 			String projectDir = BioLockJUtils.requireString( cReader, ConfigReader.PATH_TO_PROJECT_DIR );
 			BioLockJUtils.logConfigFileSettings( cReader );
+			log.info( "Create Project Directory: " + projectDir );
 			BioLockJUtils.copyFile( propFile, projectDir );
 
 			if( cReader.getMetaData() != null )
 			{
 				log.debug( "Testing Metadata Code" );
-				log.debug( "Meta Attributes: " + cReader.getMetaData().getAttributeNames() );
-				log.debug( "Meta File Names: " + cReader.getMetaData().getFileNames() );
-				log.debug( "Meta File_10 Att Values: " + cReader.getMetaData().getAttributes( "File_10" ) );
-				log.debug( "Meta File_10 log2_fold_change: "
-						+ cReader.getMetaData().getAttribute( "File_10", "log2_fold_change" ) );
+				ArrayList<String> attNames = cReader.getMetaData().getAttributeNames();
+				Set<String> fileNames = cReader.getMetaData().getFileNames();
+				String testFile = fileNames.iterator().next();
+				String testAtt = attNames.get( 2 );
 
-				String metaPath = cReader.getMetaData().getFilePath();
-				BioLockJUtils.copyFile( new File( metaPath ), projectDir );
+				log.debug( "Meta Attributes: " + attNames );
+				log.debug( "Meta File Names: " + fileNames );
+				log.debug(
+						"Meta " + testAtt + " Descriptor: " + cReader.getMetaData().getAttributeDescriptor( testAtt ) );
+				log.debug( "Meta " + testFile + " Att Values: " + cReader.getMetaData().getAttributes( testFile ) );
+				log.debug( "Meta " + testFile + "/" + testAtt + " = "
+						+ cReader.getMetaData().getAttribute( testFile, testAtt ) );
+
+				String metadataPath = cReader.getMetaData().getMetadataPath();
+				String descriptorPath = cReader.getMetaData().getDescriptorPath();
+				BioLockJUtils.copyFile( new File( metadataPath ), projectDir );
+				BioLockJUtils.copyFile( new File( descriptorPath ), projectDir );
 			}
 
 			runProgram( cReader );
@@ -292,6 +304,10 @@ public class BioLockJ
 					if( bljePrevious != null )
 					{
 						blje.setInputDir( bljePrevious.getOutputDir() );
+					}
+					else
+					{
+						blje.setInputFiles( null );
 					}
 
 					bljePrevious = blje;

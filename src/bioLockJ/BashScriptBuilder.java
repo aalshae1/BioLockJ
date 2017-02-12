@@ -39,7 +39,7 @@ public class BashScriptBuilder
 	public static final String ERROR_ON_PREVIOUS_LINE = "errorOnPreviousLine";
 	public static final String FAILURE_CODE = "failureCode";
 
-	public static void buildScripts( BioLockJExecutor blje, ArrayList<ArrayList<String>> data, String[] files )
+	public static void buildScripts( BioLockJExecutor blje, ArrayList<ArrayList<String>> data, ArrayList<File> files )
 			throws Exception
 	{
 		boolean needMultipleScripts = true;
@@ -80,7 +80,7 @@ public class BashScriptBuilder
 				}
 			}
 
-			String failureFile = failureDir.getAbsolutePath() + File.separator + files[fileCount++];
+			String failureFile = failureDir.getAbsolutePath() + File.separator + files.get( fileCount++ );
 
 			addDependantLinesToScript( aWriter, failureFile, lines, exitOnError );
 
@@ -136,7 +136,7 @@ public class BashScriptBuilder
 		String clusterCommand = blje.getConfig().getAProperty( ConfigReader.CLUSTER_BATCH_COMMAND );
 		String executeCommand = ( clusterCommand == null ? "" : clusterCommand + " " ) + script.getAbsolutePath();
 		allWriter.write( INDENT + executeCommand + "\n" );
-		allWriter.write( INDENT + "exitCode=$? \n");
+		allWriter.write( INDENT + "exitCode=$? \n" );
 		allWriter.write( INDENT + "if [[ $exitCode != \"0\" ]]; then \n" );
 		allWriter.write( INDENT + INDENT + ERROR_DETECTED + "=true \n" );
 		allWriter.write( INDENT + INDENT + FAILURE_CODE + "=$exitCode \n" );
@@ -182,12 +182,13 @@ public class BashScriptBuilder
 			}
 
 			writer.write( ( indent ? INDENT : "" ) + it.next() + "\n" );
-			writer.write( ( indent ? INDENT : "" ) + "exitCode=$? \n");
+			writer.write( ( indent ? INDENT : "" ) + "exitCode=$? \n" );
 			writer.write( ( indent ? INDENT : "" ) + "if [[ $exitCode != \"0\" ]]; then \n" );
 			writer.write( ( indent ? INDENT : "" ) + INDENT + ERROR_ON_PREVIOUS_LINE + "=true \n" );
 			writer.write( ( indent ? INDENT : "" ) + INDENT + ERROR_DETECTED + "=true \n" );
 			writer.write( ( indent ? INDENT : "" ) + INDENT + FAILURE_CODE + "=$exitCode \n" );
-			writer.write( ( indent ? INDENT : "" ) + INDENT + "touch " + fileName +  SCRIPT_FAILED + "_exitCode_$exitCode  \n" );
+			writer.write( ( indent ? INDENT : "" ) + INDENT + "touch " + fileName + SCRIPT_FAILED
+					+ "_exitCode_$exitCode  \n" );
 			writer.write( ( indent ? INDENT : "" ) + "fi \n" );
 			writer.write( indent ? "fi \n" : "" );
 			firstLine = false;

@@ -73,23 +73,6 @@ public class BioLockJUtils
 				propertyName + " must be set to either " + ConfigReader.TRUE + " or " + ConfigReader.FALSE );
 	}
 
-	//	public static boolean requireBoolean(ConfigReader cReader, String propertyName) throws Exception
-	//	{
-	//		String val = cReader.getAProperty(propertyName);
-	//		
-	//		if( val == null)
-	//			throw new Exception("Could not find " + propertyName);
-	//		
-	//		if( val.equalsIgnoreCase(ConfigReader.TRUE))
-	//			return true;
-	//		
-	//		if( val.equalsIgnoreCase(ConfigReader.FALSE))
-	//			return false;
-	//		
-	//		throw new Exception(propertyName + " must be set to either " + ConfigReader.TRUE + " or " +
-	//								ConfigReader.FALSE);	
-	//	}
-
 	public static String requireString( ConfigReader reader, String propertyName ) throws Exception
 	{
 		String val = reader.getAProperty( propertyName );
@@ -104,6 +87,26 @@ public class BioLockJUtils
 	public static String getStringOrNull( ConfigReader reader, String propertyName ) throws Exception
 	{
 		return reader.getAProperty( propertyName );
+	}
+
+	public static ArrayList<File> getExistingDirectories( ConfigReader reader, String propertyName, boolean required )
+			throws Exception
+	{
+		ArrayList<String> dirs = reader.getPropertyAsList( propertyName );
+		ArrayList<File> returnDirs = new ArrayList<File>();
+
+		if( required && ( dirs == null || dirs.isEmpty() ) )
+			throw new Exception( propertyName + " is not defined in " + reader.getPropertiesFile().getAbsolutePath() );
+
+		for( String dirName : dirs )
+		{
+			File dir = new File( dirName );
+			if( !dir.exists() || !dir.isDirectory() )
+				throw new Exception( dir.getAbsolutePath() + " is not a valid directory " );
+			returnDirs.add( dir );
+		}
+
+		return returnDirs;
 	}
 
 	public static File requireExistingDirectory( ConfigReader reader, String propertyName ) throws Exception
@@ -182,32 +185,6 @@ public class BioLockJUtils
 			log.info( key + " = " + map.get( key ) );
 		}
 		log.info( LOG_SPACER );
-	}
-
-	public static String[] getFilePaths( File inputDir )
-	{
-		String[] input = inputDir.list();
-		ArrayList<String> list = new ArrayList<String>();
-		for( String s : input )
-		{
-			if( !s.startsWith( "." ) ) // ignore hidden files
-			{
-				File file = new File( inputDir.getAbsolutePath() + File.separator + s );
-				if( !file.isDirectory() )
-				{
-					list.add( s );
-				}
-			}
-		}
-
-		String[] files = new String[ list.size() ];
-		int index = 0;
-		for( String s : list )
-		{
-			files[index++] = s;
-		}
-
-		return files;
 	}
 
 	public static String removeLastChar( String val )

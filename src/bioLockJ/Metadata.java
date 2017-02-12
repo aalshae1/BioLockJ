@@ -15,6 +15,7 @@
  */
 package bioLockJ;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,64 +33,131 @@ import org.slf4j.LoggerFactory;
  */
 public class Metadata
 {
-
 	protected static final Logger log = LoggerFactory.getLogger( Metadata.class );
 
-	private ArrayList<String> attributeNames;
-	private HashMap<String, ArrayList<String>> map;
-	private String filePath;
+	static final char SP = ' ';
+	static final char PIPE = '|';
+	static final char COMMA = ',';
+	static final char BACKSLASH = '\\';
+	static final char TAB = '\t';
 
-	public Metadata( ArrayList<ArrayList<String>> csvData, String fileName )
+	private HashMap<String, ArrayList<String>> metadataMap;
+	private HashMap<String, String> descriptorMap;
+	private ArrayList<String> attributeNames;
+	private String metadataPath;
+	private String descriptorPath;
+
+	public Metadata( ArrayList<ArrayList<String>> metadata, String metadataFileName,
+			ArrayList<ArrayList<String>> descriptor, String descriptorFileName )
 	{
-		filePath = fileName;
-		init( csvData );
+		metadataPath = metadataFileName;
+		descriptorPath = descriptorFileName;
+		init( metadata, descriptor );
 	}
 
-	public static Metadata loadMetadata( String fileName )
+	public static Metadata loadMetadata( ConfigReader cReader )
 	{
-
-		if( fileName == null || fileName.trim().length() < 1 )
-		{
-			log.info( "Metadata file not configured: " + fileName );
-			return null;
-		}
-
-		log.info( "Loading metadata file: " + fileName );
-		FileReader fileReader = null;
-		CSVParser csvFileParser = null;
-
-		ArrayList<ArrayList<String>> csvData = new ArrayList<ArrayList<String>>();
+		String metadata = null;
+		String commentChar = null;
+		String delim = null;
+		String descriptor = null;
+		String nullChar = null;
+		char delimChar = TAB;
 
 		try
 		{
+			metadata = getFilePath( cReader, ConfigReader.METADATA_FILE );
+			descriptor = getFilePath( cReader, ConfigReader.METADATA_DESCRIPTOR );
+			commentChar = cReader.getAProperty( ConfigReader.METADATA_COMMENT );
+			delim = cReader.getAProperty( ConfigReader.METADATA_DELIMITER );
+			nullChar = cReader.getAProperty( ConfigReader.METADATA_NULL_VALUE );
 
+			boolean delimNotFound = true;
+			if( delim != null && delim.trim().length() == 1 )
+			{
+				delimChar = delim.charAt( 0 );
+				delimNotFound = false;
+			}
+			else if( delim != null && delim.trim().length() == 2 )
+			{
+				if( delim.startsWith( "\\" ) )
+				{
+					if( delim.endsWith( "\\" ) )
+					{
+						delimChar = BACKSLASH;
+						delimNotFound = false;
+					}
+					else if( delim.endsWith( "t" ) )
+					{
+						delimChar = TAB;
+						delimNotFound = false;
+					}
+				}
+			}
+
+			if( delimNotFound )
+			{
+				throw new Exception( "Metadata delimiter not found: " + delim );
+			}
+		}
+		catch( Exception ex )
+		{
+			log.error( ex.getMessage(), ex );
+			return null;
+		}
+
+		if( metadata == null || metadata.trim().length() < 1 )
+		{
+			log.info( "Metadata file not configured: " + metadata );
+			return null;
+		}
+
+		if( descriptor == null || descriptor.trim().length() < 1 )
+		{
+			log.info( "Metadata descriptor file not configured: " + descriptor );
+			return null;
+		}
+
+		log.info( BioLockJUtils.LOG_SPACER );
+		log.info( "Loading metadata file: " + metadata );
+		log.info( "Metadata commentChar: " + commentChar );
+		log.info( "Metadata delimeter: " + String.valueOf( delimChar ) );
+		log.info( "Metadata descriptor: " + descriptor );
+		log.info( "Metadata nullChar: " + nullChar );
+		log.info( BioLockJUtils.LOG_SPACER );
+
+		return new Metadata( processFile( metadata, delimChar ), metadata, processFile( descriptor, delimChar ),
+				descriptor );
+	}
+
+	public static ArrayList<ArrayList<String>> processFile( String fileName, char delimChar )
+	{
+		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
+		FileReader fileReader = null;
+		CSVParser csvFileParser = null;
+		try
+		{
 			fileReader = new FileReader( fileName );
-			csvFileParser = new CSVParser( fileReader, CSVFormat.TDF );
+			csvFileParser = new CSVParser( fileReader, CSVFormat.DEFAULT.withDelimiter( delimChar ) );
 
 			Iterator<CSVRecord> csvRecords = csvFileParser.getRecords().iterator();
-
-			int rowNum = 0;
 			while( csvRecords.hasNext() )
 			{
 				ArrayList<String> record = new ArrayList<String>();
 				CSVRecord csvRow = csvRecords.next();
 				csvRow.getRecordNumber();
 				Iterator<String> it = csvRow.iterator();
-				log.debug( "Row #" + BioLockJUtils.formatInt( rowNum++, 3 ) + " :: #attributes = " + csvRow.size() );
 				while( it.hasNext() )
 				{
 					record.add( it.next() );
 				}
 
-				csvData.add( record );
+				data.add( record );
 			}
-
-			log.debug( "CSV Metadata number rows: " + ( csvData.size() - 1 ) );
-
 		}
-		catch( Exception e )
+		catch( Exception ex )
 		{
-			log.error( "Error in CsvFileReader  !!!", e );
+			log.error( "Error in CsvFileReader  !!!", ex );
 			return null;
 		}
 		finally
@@ -99,19 +167,34 @@ public class Metadata
 				fileReader.close();
 				csvFileParser.close();
 			}
-			catch( IOException e )
+			catch( IOException ex )
 			{
-				log.error( "Error while closing fileReader/csvFileParser !!!", e );
+				log.error( "Error while closing fileReader/csvFileParser !!!", ex );
 			}
 		}
 
-		log.info( "About to return meta: " );
-		return new Metadata( csvData, fileName );
+		return data;
 	}
 
-	public String getFilePath( )
+	public static String getFilePath( ConfigReader cReader, String propName ) throws Exception
 	{
-		return filePath;
+		String prop = cReader.getAProperty( propName );
+		if( prop == null || prop.length() < 1 )
+		{
+			return null;
+		}
+
+		return cReader.getResourcesDir() + "metadata" + File.separator + prop;
+	}
+
+	public String getMetadataPath( )
+	{
+		return metadataPath;
+	}
+
+	public String getDescriptorPath( )
+	{
+		return descriptorPath;
 	}
 
 	public ArrayList<String> getAttributeNames( )
@@ -121,42 +204,90 @@ public class Metadata
 
 	public Set<String> getFileNames( )
 	{
-		return map.keySet();
+		return metadataMap.keySet();
 	}
 
 	public ArrayList<String> getAttributes( String fileName )
 	{
-		return map.get( fileName );
+		return metadataMap.get( fileName );
+	}
+
+	public String getAttributeDescriptor( String attribute )
+	{
+		return descriptorMap.get( attribute );
 	}
 
 	public String getAttribute( String fileName, String attribute )
 	{
-		return map.get( fileName ).get( attributeNames.indexOf( attribute ) );
+		return metadataMap.get( fileName ).get( attributeNames.indexOf( attribute ) );
 	}
 
-	protected void init( ArrayList<ArrayList<String>> csvData )
+	protected void init( ArrayList<ArrayList<String>> metadata, ArrayList<ArrayList<String>> descriptor )
 	{
-		log.debug( "Initializing Metadata object" );
-		Iterator<ArrayList<String>> rows = csvData.iterator();
-		map = new HashMap<String, ArrayList<String>>();
+		processDescriptor( descriptor );
+		processMetadata( metadata );
+	}
+
+	protected void processDescriptor( ArrayList<ArrayList<String>> descriptor )
+	{
+		log.info( "Number of descriptor rows (including header): " + descriptor.size() );
+		descriptorMap = new HashMap<String, String>();
 		boolean firstRow = true;
-		log.debug( "Number of rows (including header): " + csvData.size() );
+		int rowNum = 0;
+		Iterator<ArrayList<String>> rows = descriptor.iterator();
 		while( rows.hasNext() )
 		{
-			ArrayList<String> row = rows.next();
+			ArrayList<String> row = getFormattedRow( rows.next() );
+			if( firstRow )
+			{
+				firstRow = false;
+				log.info( "Descriptor Column Names: " + row );
+			}
+			else
+			{
+				log.info( "Row[" + BioLockJUtils.formatInt( rowNum++, 2 ) + "], key[" + row.get( 0 ) + "], values"
+						+ row );
+				descriptorMap.put( row.get( 0 ), row.get( 1 ) );
+			}
+		}
+	}
+
+	protected void processMetadata( ArrayList<ArrayList<String>> metadata )
+	{
+		log.info( "Number of metadata rows (including header): " + metadata.size() );
+		metadataMap = new HashMap<String, ArrayList<String>>();
+		boolean firstRow = true;
+		int rowNum = 0;
+		Iterator<ArrayList<String>> rows = metadata.iterator();
+		while( rows.hasNext() )
+		{
+			ArrayList<String> row = getFormattedRow( rows.next() );
 			String name = row.get( 0 );
 			row.remove( 0 );
 			if( firstRow )
 			{
 				firstRow = false;
 				attributeNames = row;
-				log.debug( "Setting attribute names: " + row );
+				log.info( "Metadata Attributes: " + row );
 			}
 			else
 			{
-				log.debug( "Add row key=" + name + " to map.  Values=" + row );
-				map.put( name, row );
+				log.info( "Row[" + BioLockJUtils.formatInt( rowNum++, 3 ) + "], key[" + name + "], #atts[" + row.size()
+						+ "], values" + row );
+				metadataMap.put( name, row );
 			}
 		}
+	}
+
+	private ArrayList<String> getFormattedRow( ArrayList<String> row )
+	{
+		ArrayList<String> formattedRow = new ArrayList<String>();
+		Iterator<String> it = row.iterator();
+		while( it.hasNext() )
+		{
+			formattedRow.add( it.next().trim() );
+		}
+
+		return formattedRow;
 	}
 }

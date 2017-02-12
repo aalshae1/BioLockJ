@@ -17,10 +17,10 @@ package homologySearch.blast;
 
 import java.io.File;
 import java.util.ArrayList;
+import bioLockJ.BashScriptBuilder;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.BashScriptBuilder;
 
 public class FormatMultipleBlastDatabases extends BioLockJExecutor
 {
@@ -40,29 +40,27 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	public void checkDependencies( ) throws Exception
 	{
 		BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
-		BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.FASTA_DIR_TO_FORMAT );
+		BioLockJUtils.getExistingDirectories( getConfig(), ConfigReader.INPUT_DIRS, true );
 	}
 
 	@Override
 	public void executeProjectFile( ) throws Exception
 	{
 		String blastBinDir = BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
-		File fastaDirToFormat = BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.FASTA_DIR_TO_FORMAT );
-
 		String prelimString = getConfig().getAProperty( ConfigReader.BLAST_PRELIMINARY_STRING );
 
-		String[] files = BioLockJUtils.getFilePaths( fastaDirToFormat );
-		log.debug( "Number of valid  files found: " + files.length );
-		setInputDir( fastaDirToFormat );
+		//BioLockJUtils.logVersion( krakenBinary.getAbsolutePath() );
+		ArrayList<File> files = getInputFiles();
+		log.info( "Number of input files to add to BLAST scripts: " + files.size() );
 
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for( String file : files )
+		for( File file : files )
 		{
 			ArrayList<String> lines = new ArrayList<String>();
 			if( prelimString != null )
 				lines.add( prelimString );
 
-			lines.add( blastBinDir + "/makeblastdb -dbtype nucl -in " + file );
+			lines.add( blastBinDir + "/makeblastdb -dbtype nucl -in " + file.getAbsolutePath() );
 			data.add( lines );
 		}
 

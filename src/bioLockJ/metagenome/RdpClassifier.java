@@ -17,10 +17,10 @@ package bioLockJ.metagenome;
 
 import java.io.File;
 import java.util.ArrayList;
+import bioLockJ.BashScriptBuilder;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.BashScriptBuilder;
 
 /**
  * 
@@ -32,29 +32,27 @@ public class RdpClassifier extends BioLockJExecutor
 	@Override
 	public void checkDependencies( ) throws Exception
 	{
-		BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.PATH_TO_INPUT_DIRECTORY );
+		BioLockJUtils.getExistingDirectories( getConfig(), ConfigReader.INPUT_DIRS, true );
 		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.PATH_TO_RDP_JAR );
 	}
 
 	@Override
 	public void executeProjectFile( ) throws Exception
 	{
-		File fastaInDir = BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.PATH_TO_INPUT_DIRECTORY );
 		File rdpBinary = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.PATH_TO_RDP_JAR );
 
-		String[] files = BioLockJUtils.getFilePaths( fastaInDir );
-		log.debug( "Number of valid  files found: " + files.length );
-		BioLockJUtils.logVersion( rdpBinary.getAbsolutePath() );
-		setInputDir( fastaInDir );
+		// how do I print the version?
+		//BioLockJUtils.logVersion( rdpBinary.getAbsolutePath() );
+		ArrayList<File> files = getInputFiles();
+		log.info( "Number of input files to add to RDP scripts: " + files.size() );
 
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for( String file : files )
+		for( File file : files )
 		{
-			String fastaFile = fastaInDir.getAbsolutePath() + File.separator + file;
-			String rdpOutFile = getOutputDir().getAbsolutePath() + File.separator + file + "toRDP.txt";
+			String rdpOutFile = getOutputDir().getAbsolutePath() + File.separator + file.getName() + "toRDP.txt";
 
 			String firstLine = "java -jar " + rdpBinary.getAbsolutePath() + " " + "-o \"" + rdpOutFile + "\" -q \""
-					+ fastaFile + "\"";
+					+ file.getAbsolutePath() + "\"";
 
 			String nextLine = "gzip " + rdpOutFile;
 

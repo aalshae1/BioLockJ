@@ -19,12 +19,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class BioLockJExecutor
 {
-
 	public abstract void executeProjectFile( ) throws Exception;
 
 	public abstract void checkDependencies( ) throws Exception;
@@ -32,13 +32,14 @@ public abstract class BioLockJExecutor
 	protected static final Logger log = LoggerFactory.getLogger( BioLockJExecutor.class );
 
 	private List<File> scriptFiles = new ArrayList<File>();
+	private ArrayList<File> inputFiles = new ArrayList<File>();
 	private ConfigReader config;
 	private File runAllFile;
 	private File projectDir;
 	private File executorDir;
 	private File inputDir;
-	private File scriptsDir;
 	private File outputDir;
+	private File scriptsDir;
 
 	public boolean hasScripts( )
 	{
@@ -109,33 +110,67 @@ public abstract class BioLockJExecutor
 			return projectDir;
 		}
 		projectDir = BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.PATH_TO_PROJECT_DIR );
-		log.info( this.getClass().getSimpleName() + " Project Directory: " + projectDir.getAbsolutePath() );
+
 		return projectDir;
 	}
 
-	public void setInputDir( File inDir ) throws Exception
+	public File getInputDir( )
 	{
-		if( !inDir.getAbsolutePath().contains( getProjectDir().getName() ) )
+		return inputDir;
+	}
+
+	public void setInputDir( File dir ) throws Exception
+	{
+		inputDir = dir;
+	}
+
+	public void setInputFiles( File dir ) throws Exception
+	{
+		ArrayList<File> inputDirs = new ArrayList<File>();
+		File localInputDir = null;
+		ArrayList<String> inputDirProp = getConfig().getPropertyAsList( ConfigReader.INPUT_DIRS );
+		boolean copyInput = BioLockJUtils.getBoolean( getConfig(), ConfigReader.COPY_INPUT_FLAG, false );
+
+		if( dir != null )
 		{
-			if( BioLockJUtils.getBoolean( getConfig(), ConfigReader.COPY_INPUT_FLAG, false ) )
+			inputDirs.add( dir );
+		}
+		else if( inputDirProp != null && !inputDirProp.isEmpty() )
+		{
+			inputDirs = BioLockJUtils.getExistingDirectories( getConfig(), ConfigReader.INPUT_DIRS, true );
+			if( copyInput )
 			{
-				log.info( "Copy input data to " + getExecutorDir().getAbsolutePath() + File.separator + "input" );
-				FileUtils.copyDirectory( inDir, getInputDir() );
+				localInputDir = createSubDir( "input" );
+				setInputDir( localInputDir );
+				log.info( this.getClass().getSimpleName() + " Create input dir " + localInputDir.getAbsolutePath() );
 			}
 		}
 
-		inputDir = inDir;
-		log.info( this.getClass().getSimpleName() + " Set Input Directory: " + inputDir.getAbsolutePath() );
+		for( File inDir : inputDirs )
+		{
+			List<File> files = (List<File>) FileUtils.listFiles( inDir, TrueFileFilter.INSTANCE,
+					TrueFileFilter.INSTANCE );
+			for( File f : files )
+			{
+				log.info( "Checking file " + f.getName() + " from inputDir: " + inDir.getAbsolutePath() );
+				if( !f.isDirectory() && !f.getName().startsWith( "." ) )
+				{
+					inputFiles.add( f );
+					log.info( "Add input file: " + f.getAbsolutePath() );
+					if( copyInput && ( dir == null ) )
+					{
+						FileUtils.copyFileToDirectory( f, localInputDir );
+						log.info( this.getClass().getSimpleName() + " ||| Copy " + f.getName() + " >> "
+								+ localInputDir.getAbsolutePath() );
+					}
+				}
+			}
+		}
 	}
 
-	public File getInputDir( ) throws Exception
+	public ArrayList<File> getInputFiles( ) throws Exception
 	{
-		if( inputDir != null )
-		{
-			return inputDir;
-		}
-		inputDir = createSubDir( "input" );
-		return inputDir;
+		return inputFiles;
 	}
 
 	public File getScriptDir( ) throws Exception

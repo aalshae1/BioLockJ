@@ -40,6 +40,11 @@ public class ConfigReader
 
 	public static final String PROJECT_NAME = "PROJECT_NAME";
 	public static final String METADATA_FILE = "METADATA_FILE";
+	public static final String METADATA_DESCRIPTOR = "METADATA_DESCRIPTOR";
+	public static final String METADATA_DELIMITER = "METADATA_DELIMITER";
+	public static final String METADATA_NULL_VALUE = "METADATA_NULL_VALUE";
+	public static final String METADATA_COMMENT = "METADATA_COMMENT";
+
 	public static final String PATH_TO_PROJECT_DIR = "PATH_TO_PROJECT_DIR";
 
 	public static final String EMAIL_FROM = "EMAIL_FROM";
@@ -94,6 +99,8 @@ public class ConfigReader
 	public static final String PATH_TO_INPUT_DIRECTORY = "PATH_TO_INPUT_DIRECTORY";
 	public static final String RDP_THRESHOLD = "RDP_THRESHOLD";
 
+	public static final String INPUT_DIRS = "INPUT_DIRS";
+
 	public static final String PATH_TO_KRAKEN_DATABASE = "PATH_TO_KRAKEN_DATABASE";
 	public static final String PATH_TO_KRAKEN_BINARY = "PATH_TO_KRAKEN_BINARY";
 	public static final String KRAKEN_SWITCHES = "KRAKEN_SWITCHES";
@@ -119,7 +126,7 @@ public class ConfigReader
 
 		props.setProperty( PATH_TO_PROJECT_DIR, projectDir );
 		props.setProperty( LOG_FILE, getLogName( projectDir ) );
-		metadata = Metadata.loadMetadata( getMetadataDir( getAProperty( METADATA_FILE ) ) );
+		metadata = Metadata.loadMetadata( this );
 
 		if( password != null )
 		{
@@ -127,17 +134,12 @@ public class ConfigReader
 		}
 	}
 
-	private String getMetadataDir( String filePath ) throws Exception
-	{
-		return getResourcesDir() + "metadata" + File.separator + filePath;
-	}
-
 	public Metadata getMetaData( )
 	{
 		return metadata;
 	}
 
-	private String getResourcesDir( ) throws Exception
+	public String getResourcesDir( ) throws Exception
 	{
 		return getBLJRoot() + "resources" + File.separator;
 	}

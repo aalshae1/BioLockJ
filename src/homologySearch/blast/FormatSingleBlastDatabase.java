@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.BashScriptBuilder;
 
 public class FormatSingleBlastDatabase extends BioLockJExecutor
 {
@@ -45,7 +44,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 	@Override
 	public void executeProjectFile( ) throws Exception
 	{
-		String blastBinDin = BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
+		String blastBinDir = BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
 		File fastaFileToFormat = BioLockJUtils.requireExistingFile( getConfig(),
 				ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB );
 
@@ -61,7 +60,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		if( prelimString != null )
 			lines.add( prelimString );
 
-		lines.add( blastBinDin + "/makeblastdb -dbtype " + dbType + " -in " + fastaFileToFormat.getAbsolutePath() );
+		lines.add( blastBinDir + "/makeblastdb -dbtype " + dbType + " -in " + fastaFileToFormat.getAbsolutePath() );
 
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
 		data.add( lines );
@@ -69,7 +68,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 		String[] files = new String[ 1 ];
 		files[0] = fastaFileToFormat.getName();
 
-		BashScriptBuilder.buildScripts( this, data, files );
+		//BashScriptBuilder.buildScripts( this, data, files );
 	}
 
 }

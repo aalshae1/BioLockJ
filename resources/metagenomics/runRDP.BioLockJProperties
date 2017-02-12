@@ -5,8 +5,8 @@
 CHMOD_STRING = chmod 744
 
 # these are set for our UNCC cluster
-CLUSTER_BATCH_COMMAND = qsub -q "copperhead"
-CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
+# CLUSTER_BATCH_COMMAND = qsub -q "copperhead"
+# CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 
 # in seconds - how long to wait before checking to see if queued jobs have finished
 POLL_TIME = 30

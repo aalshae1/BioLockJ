@@ -17,10 +17,10 @@ package homologySearch.blast;
 
 import java.io.File;
 import java.util.ArrayList;
+import bioLockJ.BashScriptBuilder;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.BashScriptBuilder;
 
 /**
  * Takes in a BLAST_QUERY_DIRECTORY that should only contain FASTA files (subdirectories are ignored)
@@ -40,7 +40,7 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 	public void checkDependencies( ) throws Exception
 	{
 		BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
-		BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.BLAST_QUERY_DIRECTORY );
+		BioLockJUtils.getExistingDirectories( getConfig(), ConfigReader.INPUT_DIRS, true );
 		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB );
 		BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_ALL_COMMAND );
 	}
@@ -48,29 +48,29 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 	@Override
 	public void executeProjectFile( ) throws Exception
 	{
-		String blastBinDin = BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
-		File blastQueryDir = BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.BLAST_QUERY_DIRECTORY );
+		String blastBinDir = BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
 		File blastDatabaseFile = BioLockJUtils.requireExistingFile( getConfig(),
 				ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB );
 		String blastAllCommand = BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_ALL_COMMAND );
 
 		String prelimString = getConfig().getAProperty( ConfigReader.BLAST_PRELIMINARY_STRING );
 
-		String[] files = BioLockJUtils.getFilePaths( blastQueryDir );
-		log.debug( "Number of valid  files found: " + files.length );
-		setInputDir( blastQueryDir );
+		//BioLockJUtils.logVersion( krakenBinary.getAbsolutePath() );
+		ArrayList<File> files = getInputFiles();
+		log.info( "Number of input files to add to BLAST scripts: " + files.size() );
 
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for( String file : files )
+		for( File file : files )
 		{
 			ArrayList<String> lines = new ArrayList<String>();
 			if( prelimString != null )
 				lines.add( prelimString );
 
-			String outFile = getOutputDir() + File.separator + file + "_to_" + blastDatabaseFile.getName() + ".txt";
+			String outFile = getOutputDir() + File.separator + file.getName() + "_to_" + blastDatabaseFile.getName()
+					+ ".txt";
 
-			lines.add( blastBinDin + "/" + blastAllCommand + " -db " + blastDatabaseFile.getAbsolutePath() + " -out "
-					+ outFile + " -query " + file + " -outfmt 6" );
+			lines.add( blastBinDir + "/" + blastAllCommand + " -db " + blastDatabaseFile.getAbsolutePath() + " -out "
+					+ outFile + " -query " + file.getAbsolutePath() + " -outfmt 6" );
 
 			data.add( lines );
 		}

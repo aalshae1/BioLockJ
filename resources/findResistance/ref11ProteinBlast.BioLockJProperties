@@ -12,7 +12,8 @@ BLAST_BINARY_DIR=/apps/pkg/ncbi-blast-2.2.29+/rhel6_u5-x86_64/gnu/bin/
 CHMOD_STRING = chmod 744
 
 # these are set for our UNCC cluster
-CLUSTER_BATCH_COMMAND = qsub -q "viper_batch" 
+CLUSTER_BATCH_COMMAND = qsub -q "copperhead"
+CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 NUMBER_OF_JOBS_PER_CORE=100
 
 # the query file to split into NUMBER_CLUSTER query files
@@ -22,7 +23,7 @@ FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/bioLockJProjects/resistantAnnotati
 # where the split FASTA_TO_SPLIT_PATH files will live 
 # once created, these files will serve as the blast query (defined by BLAST_QUERY_DIRECTORY)
 SPLIT_FASTA_DIR=/nobackup/afodor_research/bioLockJProjects/resistantAnnotation/proteinToRef11Search/querySeqs
-BLAST_QUERY_DIRECTORY=$SPLIT_FASTA_DIR
+INPUT_DIRSß	=$SPLIT_FASTA_DIR
 
 # our target database
 # mbgd_2016-01

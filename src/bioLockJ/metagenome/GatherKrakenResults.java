@@ -18,6 +18,7 @@ package bioLockJ.metagenome;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import bioLockJ.BioLockJExecutor;
@@ -49,11 +50,13 @@ public class GatherKrakenResults extends BioLockJExecutor
 	private HashMap<String, HashMap<String, Integer>> getAllSamples( int parseLevel ) throws Exception
 	{
 		HashMap<String, HashMap<String, Integer>> map = new HashMap<String, HashMap<String, Integer>>();
-		for( String s : getInputDir().list() )
+		setInputFiles( getInputDir() );
+		ArrayList<File> inputFiles = getInputFiles();
+		for( File file : inputFiles )
 		{
-			if( s.endsWith( "toKrakenTranslate.txt" ) )
+			if( file.getName().endsWith( "toKrakenTranslate.txt" ) )
 			{
-				File inFile = new File( getInputDir().getAbsolutePath() + File.separator + s );
+				File inFile = new File( file.getAbsolutePath() );
 				HashMap<String, Integer> innerMap = getCounts( inFile, parseLevel );
 
 				long sum = 0;

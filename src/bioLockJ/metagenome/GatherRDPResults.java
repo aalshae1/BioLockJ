@@ -31,7 +31,6 @@ import java.util.zip.GZIPInputStream;
 import bioLockJ.BioLockJExecutor;
 import bioLockJ.BioLockJUtils;
 import bioLockJ.ConfigReader;
-import bioLockJ.BashScriptBuilder;
 import parsers.NewRDPNode;
 import parsers.NewRDPParserFileLine;
 import parsers.OtuWrapper;
@@ -60,32 +59,22 @@ public class GatherRDPResults extends BioLockJExecutor
 			taxaWriters.put( NewRDPParserFileLine.TAXA_ARRAY[x], writer );
 		}
 
+		setInputFiles( getInputDir() );
+		ArrayList<File> inputFiles = getInputFiles();
+
 		int fileCount = 0;
-		for( String s : getOutputDir().list() )
+		for( File file : inputFiles )
 		{
-			log.info( "RDP OUTPUT FILE # (" + String.valueOf( fileCount++ ) + "):  " + s );
-			List<NewRDPParserFileLine> list = NewRDPParserFileLine
-					.getRdpListSingleThread( getOutputDir().getAbsoluteFile() + File.separator + s );
+			log.info( "RDP OUTPUT FILE # (" + String.valueOf( fileCount++ ) + "):  " + file.getName() );
+			List<NewRDPParserFileLine> list = NewRDPParserFileLine.getRdpListSingleThread( file.getAbsolutePath() );
 
 			for( int x = 1; x < NewRDPParserFileLine.TAXA_ARRAY.length; x++ )
 			{
 				HashMap<String, Integer> countMap = getCount( NewRDPParserFileLine.TAXA_ARRAY[x], list, rdpThreshold );
-
 				BufferedWriter writer = taxaWriters.get( NewRDPParserFileLine.TAXA_ARRAY[x] );
-
 				for( String key : countMap.keySet() )
 				{
-					if( s.contains( BashScriptBuilder.SCRIPT_SUCCEEDED ) )
-					{
-						writer.write( s.replaceAll( BashScriptBuilder.SCRIPT_SUCCEEDED, "" ) + "\t" + key + "\t"
-								+ countMap.get( key ) + "\n" );
-					}
-					if( s.contains( BashScriptBuilder.SCRIPT_FAILED ) )
-					{
-						writer.write( s.replaceAll( BashScriptBuilder.SCRIPT_FAILED, "" ) + "\t" + key + "\t"
-								+ countMap.get( key ) + "\n" );
-					}
-
+					writer.write( file.getName() + "\t" + key + "\t" + countMap.get( key ) + "\n" );
 				}
 
 				writer.flush();
@@ -108,7 +97,7 @@ public class GatherRDPResults extends BioLockJExecutor
 					+ NewRDPParserFileLine.TAXA_ARRAY[x] + "_taxaAsColumns.txt" );
 			writeResults( map, outFile.getAbsolutePath() );
 			OtuWrapper wrapper = new OtuWrapper( outFile );
-			wrapper.writeNormalizedLoggedDataToFile( getOutputDir().getAbsolutePath() + File.separator + "pivoted_"
+			wrapper.writeNormalizedLoggedDataToFile( getOutputDir() + File.separator + "pivoted_"
 					+ NewRDPParserFileLine.TAXA_ARRAY[x] + "asColumnsLogNormal.txt" );
 		}
 	}
