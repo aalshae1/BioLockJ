@@ -42,7 +42,7 @@ public class RdpClassifier extends BioLockJExecutor
 		File rdpBinary = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.PATH_TO_RDP_JAR );
 
 		// how do I print the version?
-		//BioLockJUtils.logVersion( rdpBinary.getAbsolutePath() );
+		// BioLockJUtils.logVersion( rdpBinary.getAbsolutePath() );
 		ArrayList<File> files = getInputFiles();
 		log.info( "Number of input files to add to RDP scripts: " + files.size() );
 
@@ -60,7 +60,6 @@ public class RdpClassifier extends BioLockJExecutor
 			lines.add( firstLine );
 			lines.add( nextLine );
 			data.add( lines );
-
 		}
 
 		BashScriptBuilder.buildScripts( this, data, files );

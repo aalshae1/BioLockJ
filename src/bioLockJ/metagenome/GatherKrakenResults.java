@@ -63,7 +63,6 @@ public class GatherKrakenResults extends BioLockJExecutor
 				HashMap<String, Integer> innerMap = getCounts( inFile, parseLevel, mpaFormat );
 
 				long sum = 0;
-
 				for( Integer i: innerMap.values() )
 					sum += i;
 
