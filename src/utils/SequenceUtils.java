@@ -129,7 +129,7 @@ public class SequenceUtils
 	}
 
 	// static access only
-	private SequenceUtils( )
+	private SequenceUtils()
 	{
 	}
 

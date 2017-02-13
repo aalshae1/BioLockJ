@@ -37,7 +37,7 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 {
 
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
 		BioLockJUtils.getExistingDirectories( getConfig(), ConfigReader.INPUT_DIRS, true );
@@ -46,7 +46,7 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		String blastBinDir = BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
 		File blastDatabaseFile = BioLockJUtils.requireExistingFile( getConfig(),
@@ -60,7 +60,7 @@ public class MultipleQueriesToOneBlastDB extends BioLockJExecutor
 		log.info( "Number of input files to add to BLAST scripts: " + files.size() );
 
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for( File file : files )
+		for( File file: files )
 		{
 			ArrayList<String> lines = new ArrayList<String>();
 			if( prelimString != null )

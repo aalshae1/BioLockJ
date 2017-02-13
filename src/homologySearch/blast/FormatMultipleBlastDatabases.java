@@ -37,14 +37,14 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 	 */
 
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
 		BioLockJUtils.getExistingDirectories( getConfig(), ConfigReader.INPUT_DIRS, true );
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		String blastBinDir = BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
 		String prelimString = getConfig().getAProperty( ConfigReader.BLAST_PRELIMINARY_STRING );
@@ -54,7 +54,7 @@ public class FormatMultipleBlastDatabases extends BioLockJExecutor
 		log.info( "Number of input files to add to BLAST scripts: " + files.size() );
 
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for( File file : files )
+		for( File file: files )
 		{
 			ArrayList<String> lines = new ArrayList<String>();
 			if( prelimString != null )

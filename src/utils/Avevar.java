@@ -26,28 +26,28 @@ public class Avevar
 	double ave;
 	double var;
 
-	public double getAve( )
+	public double getAve()
 	{
 		return ave;
 	}
 
-	public double getVar( )
+	public double getVar()
 	{
 		return var;
 	}
 
-	public double getSqrt( )
+	public double getSqrt()
 	{
 		return Math.sqrt( var );
 	}
 
-	public double getSD( )
+	public double getSD()
 	{
 		return Math.sqrt( var );
 	}
 
 	@Override
-	public String toString( )
+	public String toString()
 	{
 		return this.getAve() + " " + this.getSD();
 	}
@@ -119,7 +119,7 @@ public class Avevar
 	{
 		List<Double> newList = new ArrayList<Double>();
 
-		for( Double d : list )
+		for( Double d: list )
 			newList.add( d );
 
 		Collections.sort( newList );

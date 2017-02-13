@@ -40,13 +40,13 @@ public class GatherRDPResults extends BioLockJExecutor
 	public static final String THREE_COL_SUFFIX = "_SparseThreeCol.txt";
 
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.requirePositiveInteger( getConfig(), ConfigReader.RDP_THRESHOLD );
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		int rdpThreshold = BioLockJUtils.requirePositiveInteger( getConfig(), ConfigReader.RDP_THRESHOLD );
 
@@ -59,11 +59,9 @@ public class GatherRDPResults extends BioLockJExecutor
 			taxaWriters.put( NewRDPParserFileLine.TAXA_ARRAY[x], writer );
 		}
 
-		setInputFiles( getInputDir() );
-		ArrayList<File> inputFiles = getInputFiles();
-
 		int fileCount = 0;
-		for( File file : inputFiles )
+		ArrayList<File> inputFiles = getInputFiles();
+		for( File file: inputFiles )
 		{
 			log.info( "RDP OUTPUT FILE # (" + String.valueOf( fileCount++ ) + "):  " + file.getName() );
 			List<NewRDPParserFileLine> list = NewRDPParserFileLine.getRdpListSingleThread( file.getAbsolutePath() );
@@ -72,7 +70,7 @@ public class GatherRDPResults extends BioLockJExecutor
 			{
 				HashMap<String, Integer> countMap = getCount( NewRDPParserFileLine.TAXA_ARRAY[x], list, rdpThreshold );
 				BufferedWriter writer = taxaWriters.get( NewRDPParserFileLine.TAXA_ARRAY[x] );
-				for( String key : countMap.keySet() )
+				for( String key: countMap.keySet() )
 				{
 					writer.write( file.getName() + "\t" + key + "\t" + countMap.get( key ) + "\n" );
 				}
@@ -81,7 +79,7 @@ public class GatherRDPResults extends BioLockJExecutor
 			}
 		}
 
-		for( BufferedWriter writer : taxaWriters.values() )
+		for( BufferedWriter writer: taxaWriters.values() )
 		{
 			writer.flush();
 			writer.close();
@@ -98,7 +96,7 @@ public class GatherRDPResults extends BioLockJExecutor
 			writeResults( map, outFile.getAbsolutePath() );
 			OtuWrapper wrapper = new OtuWrapper( outFile );
 			wrapper.writeNormalizedLoggedDataToFile( getOutputDir() + File.separator + "pivoted_"
-					+ NewRDPParserFileLine.TAXA_ARRAY[x] + "asColumnsLogNormal.txt" );
+					+ NewRDPParserFileLine.TAXA_ARRAY[x] + "AsColumnsLogNormal.txt" );
 		}
 	}
 
@@ -107,11 +105,11 @@ public class GatherRDPResults extends BioLockJExecutor
 
 		HashMap<String, Integer> countMap = new HashMap<String, Integer>();
 
-		for( String s : map.keySet() )
+		for( String s: map.keySet() )
 		{
 			HashMap<String, Integer> innerMap = map.get( s );
 
-			for( String possibleOtu : innerMap.keySet() )
+			for( String possibleOtu: innerMap.keySet() )
 			{
 				Integer oldCount = countMap.get( possibleOtu );
 
@@ -126,7 +124,7 @@ public class GatherRDPResults extends BioLockJExecutor
 
 		List<String> otuList = new ArrayList<String>();
 
-		for( String s : countMap.keySet() )
+		for( String s: countMap.keySet() )
 			if( countMap.get( s ) >= threshold )
 				otuList.add( s );
 
@@ -142,19 +140,19 @@ public class GatherRDPResults extends BioLockJExecutor
 		List<String> otuList = getOTUSAtThreshold( map, 0 );
 		Collections.sort( otuList );
 
-		for( String s : otuList )
+		for( String s: otuList )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
 
 		List<String> samples = new ArrayList<String>();
 
-		for( String s : map.keySet() )
+		for( String s: map.keySet() )
 			samples.add( s );
 
 		Collections.sort( samples );
 
-		for( String s : samples )
+		for( String s: samples )
 		{
 			//String expandedString = PivotRDPs.getExpandedString( s);
 			//writer.write( expandedString );
@@ -162,7 +160,7 @@ public class GatherRDPResults extends BioLockJExecutor
 
 			HashMap<String, Integer> innerMap = map.get( s );
 
-			for( String otu : otuList )
+			for( String otu: otuList )
 			{
 				Integer aVal = innerMap.get( otu );
 
@@ -224,7 +222,7 @@ public class GatherRDPResults extends BioLockJExecutor
 	{
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 
-		for( NewRDPParserFileLine rdp : rdpList )
+		for( NewRDPParserFileLine rdp: rdpList )
 		{
 			NewRDPNode node = rdp.getTaxaMap().get( level );
 

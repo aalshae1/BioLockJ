@@ -63,7 +63,7 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 				index = 0;
 		}
 
-		for( BufferedWriter writer : writers.values() )
+		for( BufferedWriter writer: writers.values() )
 		{
 			writer.flush();
 			writer.close();
@@ -72,7 +72,7 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 	}
 
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.SPLIT_FASTA_DIR );
 		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.FASTA_TO_SPLIT_PATH );
@@ -80,7 +80,7 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		File outputDir = BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.SPLIT_FASTA_DIR );
 		File fileToParse = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.FASTA_TO_SPLIT_PATH );

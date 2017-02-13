@@ -56,12 +56,12 @@ public class FastaSequenceOneAtATime
 
 	}
 
-	public void close( ) throws Exception
+	public void close() throws Exception
 	{
 		reader.close();
 	}
 
-	public FastaSequence getNextSequence( ) throws Exception
+	public FastaSequence getNextSequence() throws Exception
 	{
 		if( nextLine == null )
 		{

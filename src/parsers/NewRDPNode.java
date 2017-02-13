@@ -67,12 +67,12 @@ public class NewRDPNode
 	/*
 	 * Should be between 1 and 100
 	 */
-	public int getScore( )
+	public int getScore()
 	{
 		return score;
 	}
 
-	public String getTaxaName( )
+	public String getTaxaName()
 	{
 		return taxaName;
 	}

@@ -134,17 +134,17 @@ public class ConfigReader
 		}
 	}
 
-	public Metadata getMetaData( )
+	public Metadata getMetaData()
 	{
 		return metadata;
 	}
 
-	public String getResourcesDir( ) throws Exception
+	public String getResourcesDir() throws Exception
 	{
 		return getBLJRoot() + "resources" + File.separator;
 	}
 
-	public File getPropertiesFile( )
+	public File getPropertiesFile()
 	{
 		return propertiesFile;
 	}
@@ -197,7 +197,7 @@ public class ConfigReader
 		return tempProps;
 	}
 
-	public HashMap<String, String> getProperties( ) throws Exception
+	public HashMap<String, String> getProperties() throws Exception
 	{
 		Properties tempProps = getPropsFromFile( propertiesFile );
 		HashMap<String, String> map = new HashMap<String, String>();
@@ -239,7 +239,7 @@ public class ConfigReader
 		return projectDir.getAbsolutePath() + File.separator;
 	}
 
-	private static String getBLJRoot( ) throws IOException, URISyntaxException
+	private static String getBLJRoot() throws IOException, URISyntaxException
 	{
 		URL u = ConfigReader.class.getProtectionDomain().getCodeSource().getLocation();
 		File f = new File( u.toURI() );

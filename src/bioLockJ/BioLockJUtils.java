@@ -98,7 +98,7 @@ public class BioLockJUtils
 		if( required && ( dirs == null || dirs.isEmpty() ) )
 			throw new Exception( propertyName + " is not defined in " + reader.getPropertiesFile().getAbsolutePath() );
 
-		for( String dirName : dirs )
+		for( String dirName: dirs )
 		{
 			File dir = new File( dirName );
 			if( !dir.exists() || !dir.isDirectory() )

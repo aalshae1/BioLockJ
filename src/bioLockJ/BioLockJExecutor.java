@@ -25,14 +25,14 @@ import org.slf4j.LoggerFactory;
 
 public abstract class BioLockJExecutor
 {
-	public abstract void executeProjectFile( ) throws Exception;
+	public abstract void executeProjectFile() throws Exception;
 
-	public abstract void checkDependencies( ) throws Exception;
+	public abstract void checkDependencies() throws Exception;
 
 	protected static final Logger log = LoggerFactory.getLogger( BioLockJExecutor.class );
 
 	private List<File> scriptFiles = new ArrayList<File>();
-	private ArrayList<File> inputFiles = new ArrayList<File>();
+	private ArrayList<File> inputFiles = null;
 	private ConfigReader config;
 	private File runAllFile;
 	private File projectDir;
@@ -41,14 +41,14 @@ public abstract class BioLockJExecutor
 	private File outputDir;
 	private File scriptsDir;
 
-	public boolean hasScripts( )
+	public boolean hasScripts()
 	{
 		if( scriptsDir == null )
 			return false;
 		return true;
 	}
 
-	public boolean poll( )
+	public boolean poll()
 	{
 		return true;
 	}
@@ -58,7 +58,7 @@ public abstract class BioLockJExecutor
 		config = cReader;
 	}
 
-	public ConfigReader getConfig( )
+	public ConfigReader getConfig()
 	{
 		return config;
 	}
@@ -77,12 +77,12 @@ public abstract class BioLockJExecutor
 		executorDir = dir;
 	}
 
-	public File getExecutorDir( )
+	public File getExecutorDir()
 	{
 		return executorDir;
 	}
 
-	public List<File> getScriptFiles( )
+	public List<File> getScriptFiles()
 	{
 		return scriptFiles;
 	}
@@ -92,7 +92,7 @@ public abstract class BioLockJExecutor
 		scriptFiles.add( f );
 	}
 
-	public File getRunAllFile( ) throws Exception
+	public File getRunAllFile() throws Exception
 	{
 		if( runAllFile != null )
 		{
@@ -103,7 +103,7 @@ public abstract class BioLockJExecutor
 		return runAllFile;
 	}
 
-	public File getProjectDir( ) throws Exception
+	public File getProjectDir() throws Exception
 	{
 		if( projectDir != null )
 		{
@@ -114,7 +114,7 @@ public abstract class BioLockJExecutor
 		return projectDir;
 	}
 
-	public File getInputDir( )
+	public File getInputDir()
 	{
 		return inputDir;
 	}
@@ -126,6 +126,7 @@ public abstract class BioLockJExecutor
 
 	public void setInputFiles( File dir ) throws Exception
 	{
+		inputFiles = new ArrayList<File>();
 		ArrayList<File> inputDirs = new ArrayList<File>();
 		File localInputDir = null;
 		ArrayList<String> inputDirProp = getConfig().getPropertyAsList( ConfigReader.INPUT_DIRS );
@@ -146,11 +147,11 @@ public abstract class BioLockJExecutor
 			}
 		}
 
-		for( File inDir : inputDirs )
+		for( File inDir: inputDirs )
 		{
 			List<File> files = (List<File>) FileUtils.listFiles( inDir, TrueFileFilter.INSTANCE,
 					TrueFileFilter.INSTANCE );
-			for( File f : files )
+			for( File f: files )
 			{
 				log.info( "Checking file " + f.getName() + " from inputDir: " + inDir.getAbsolutePath() );
 				if( !f.isDirectory() && !f.getName().startsWith( "." ) )
@@ -168,12 +169,16 @@ public abstract class BioLockJExecutor
 		}
 	}
 
-	public ArrayList<File> getInputFiles( ) throws Exception
+	public ArrayList<File> getInputFiles() throws Exception
 	{
+		if( inputFiles == null )
+		{
+			setInputFiles( getInputDir() );
+		}
 		return inputFiles;
 	}
 
-	public File getScriptDir( ) throws Exception
+	public File getScriptDir() throws Exception
 	{
 		if( scriptsDir != null )
 		{
@@ -184,7 +189,7 @@ public abstract class BioLockJExecutor
 		return scriptsDir;
 	}
 
-	public File getOutputDir( ) throws Exception
+	public File getOutputDir() throws Exception
 	{
 		if( outputDir != null )
 		{

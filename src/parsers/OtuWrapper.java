@@ -53,12 +53,12 @@ public class OtuWrapper
 	private double avgNumber;
 	private final String filePath;
 
-	public double getAvgNumber( )
+	public double getAvgNumber()
 	{
 		return avgNumber;
 	}
 
-	public int getSampleIdWithMinCounts( ) throws Exception
+	public int getSampleIdWithMinCounts() throws Exception
 	{
 		int returnVal = -1;
 		int minCounts = Integer.MAX_VALUE;
@@ -92,7 +92,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String otu : otuNames )
+		for( String otu: otuNames )
 			writer.write( "\t" + otu );
 
 		writer.write( "\n" );
@@ -153,7 +153,7 @@ public class OtuWrapper
 		return list;
 	}
 
-	public int getSampleIdWithMostCounts( ) throws Exception
+	public int getSampleIdWithMostCounts() throws Exception
 	{
 		int returnVal = -1;
 		int maxCounts = 0;
@@ -172,7 +172,7 @@ public class OtuWrapper
 		return returnVal;
 	}
 
-	public String getFilePath( )
+	public String getFilePath()
 	{
 		return filePath;
 	}
@@ -200,7 +200,7 @@ public class OtuWrapper
 		}
 	}
 
-	public HashMap<String, Double> getTaxaListSortedByNumberOfCounts( )
+	public HashMap<String, Double> getTaxaListSortedByNumberOfCounts()
 	{
 		HashMap<String, TaxaCounts> tempMap = new HashMap<String, TaxaCounts>();
 
@@ -224,7 +224,7 @@ public class OtuWrapper
 
 		HashMap<String, Double> map = new LinkedHashMap<String, Double>();
 
-		for( TaxaCounts tc : list )
+		for( TaxaCounts tc: list )
 			map.put( tc.taxaName, tc.counts );
 
 		return map;
@@ -241,7 +241,7 @@ public class OtuWrapper
 
 		numTaxaToInclude = Math.min( numTaxaToInclude, taxaSorted.size() );
 
-		for( String s : taxaSorted.keySet() )
+		for( String s: taxaSorted.keySet() )
 		{
 			if( numTaxaToInclude > 0 )
 			{
@@ -273,7 +273,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : toInclude )
+		for( String s: toInclude )
 			writer.write( "\t" + s );
 
 		writer.write( "\tother\n" );
@@ -282,7 +282,7 @@ public class OtuWrapper
 		{
 			writer.write( this.sampleNames.get( x ) );
 
-			for( String s : toInclude )
+			for( String s: toInclude )
 			{
 				writer.write( "\t" + this.dataPointsUnnormalized.get( x ).get( getIndexForOtuName( s ) ) );
 			}
@@ -304,7 +304,7 @@ public class OtuWrapper
 
 		List<Double> list = dataPointsUnnormalized.get( sampleIndex );
 
-		for( Double d : list )
+		for( Double d: list )
 		{
 			if( d == 1 )
 				singetons++;
@@ -407,7 +407,7 @@ public class OtuWrapper
 	{
 		HashSet<String> set = new HashSet<String>();
 
-		for( String s : wrapper1.getSampleNames() )
+		for( String s: wrapper1.getSampleNames() )
 		{
 			if( set.contains( s ) )
 				throw new Exception( "Duplicate " + s );
@@ -415,7 +415,7 @@ public class OtuWrapper
 			set.add( s );
 		}
 
-		for( String s : wrapper2.getSampleNames() )
+		for( String s: wrapper2.getSampleNames() )
 		{
 			if( set.contains( s ) )
 				throw new Exception( "Duplicate " + s );
@@ -432,10 +432,10 @@ public class OtuWrapper
 
 		HashSet<String> otuSet = new LinkedHashSet<String>();
 
-		for( String s : wrapper1.getOtuNames() )
+		for( String s: wrapper1.getOtuNames() )
 			otuSet.add( s );
 
-		for( String s : wrapper2.getOtuNames() )
+		for( String s: wrapper2.getOtuNames() )
 			otuSet.add( s );
 
 		List<String> otuList = new ArrayList<String>();
@@ -446,7 +446,7 @@ public class OtuWrapper
 
 		writer.write( "samples" );
 
-		for( String s : otuList )
+		for( String s: otuList )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -458,12 +458,12 @@ public class OtuWrapper
 
 	private static void addWrapper( OtuWrapper wrapper, BufferedWriter writer, List<String> otuList ) throws Exception
 	{
-		for( String s : wrapper.getSampleNames() )
+		for( String s: wrapper.getSampleNames() )
 		{
 			int sampleIndex = wrapper.getIndexForSampleName( s );
 			writer.write( s );
 
-			for( String s2 : otuList )
+			for( String s2: otuList )
 			{
 				int index = wrapper.getIndexForOtuName( s2 );
 				if( index == -1 )
@@ -513,11 +513,11 @@ public class OtuWrapper
 		return sum;
 	}
 
-	public double getNumberOfSequencesForSampleWithMaxNumberOfSequences( ) throws Exception
+	public double getNumberOfSequencesForSampleWithMaxNumberOfSequences() throws Exception
 	{
 		double d = -1;
 
-		for( String s : getSampleNames() )
+		for( String s: getSampleNames() )
 			d = Math.max( getNumberSequences( s ), d );
 
 		return d;
@@ -562,7 +562,7 @@ public class OtuWrapper
 		List<Double> initialData = dataPointsUnnormalized.get( sampleIndex );
 
 		int someVal = 0;
-		for( Double d : initialData )
+		for( Double d: initialData )
 		{
 			someVal++;
 
@@ -599,7 +599,7 @@ public class OtuWrapper
 		List<Double> initialData = dataPointsUnnormalized.get( sampleIndex );
 
 		int someVal = 0;
-		for( Double d : initialData )
+		for( Double d: initialData )
 		{
 			someVal++;
 
@@ -649,12 +649,12 @@ public class OtuWrapper
 		return mch;
 	}
 
-	public List<String> getOtuNames( )
+	public List<String> getOtuNames()
 	{
 		return otuNames;
 	}
 
-	public List<String> getSampleNames( )
+	public List<String> getSampleNames()
 	{
 		return sampleNames;
 	}
@@ -706,7 +706,7 @@ public class OtuWrapper
 		}
 	}
 
-	public List<List<Double>> getRankNormalizedDataPoints( )
+	public List<List<Double>> getRankNormalizedDataPoints()
 	{
 		List<List<Double>> rankList = new ArrayList<List<Double>>();
 
@@ -733,7 +733,7 @@ public class OtuWrapper
 
 			List<Double> crankedList = new ArrayList<Double>();
 
-			for( RankHolder rh : innerRanks )
+			for( RankHolder rh: innerRanks )
 				crankedList.add( rh.originalData );
 			crank( crankedList );
 
@@ -750,7 +750,7 @@ public class OtuWrapper
 
 			List<Double> newList = new ArrayList<Double>();
 
-			for( Double d : ranks )
+			for( Double d: ranks )
 				newList.add( d );
 
 			rankList.add( newList );
@@ -759,12 +759,12 @@ public class OtuWrapper
 		return rankList;
 	}
 
-	public List<List<Double>> getDataPointsNormalized( )
+	public List<List<Double>> getDataPointsNormalized()
 	{
 		return dataPointsNormalized;
 	}
 
-	public List<List<Double>> getDataPointsNormalizedThenLogged( )
+	public List<List<Double>> getDataPointsNormalizedThenLogged()
 	{
 		return dataPointsNormalizedThenLogged;
 	}
@@ -788,13 +788,13 @@ public class OtuWrapper
 		BufferedWriter writer = new BufferedWriter( new FileWriter( file ) );
 
 		for( int x = 0; x < getSampleNames().size(); x++ )
-			writer.write( getSampleNames().get( x ) + ( x < getSampleNames().size() - 1 ? "\t" : "\n" ) );
+			writer.write( getSampleNames().get( x ) + ( x < getSampleNames().size() - 1 ? "\t": "\n" ) );
 
 		for( int y = 0; y < getOtuNames().size(); y++ )
 		{
 			for( int x = 0; x < getSampleNames().size(); x++ )
 				writer.write( getDataPointsNormalizedThenLogged().get( x ).get( y )
-						+ ( x < getSampleNames().size() - 1 ? "\t" : "\n" ) );
+						+ ( x < getSampleNames().size() - 1 ? "\t": "\n" ) );
 		}
 
 		writer.flush();
@@ -807,13 +807,13 @@ public class OtuWrapper
 		BufferedWriter writer = new BufferedWriter( new FileWriter( file ) );
 
 		for( int x = 0; x < getSampleNames().size(); x++ )
-			writer.write( getSampleNames().get( x ) + ( x < getSampleNames().size() - 1 ? "\t" : "\n" ) );
+			writer.write( getSampleNames().get( x ) + ( x < getSampleNames().size() - 1 ? "\t": "\n" ) );
 
 		for( int y = 0; y < getOtuNames().size(); y++ )
 		{
 			for( int x = 0; x < getSampleNames().size(); x++ )
-				writer.write( ( getDataPointsUnnormalized().get( x ).get( y ) > 0.1 ? "1" : "0" )
-						+ ( x < getSampleNames().size() - 1 ? "\t" : "\n" ) );
+				writer.write( ( getDataPointsUnnormalized().get( x ).get( y ) > 0.1 ? "1": "0" )
+						+ ( x < getSampleNames().size() - 1 ? "\t": "\n" ) );
 		}
 
 		writer.flush();
@@ -860,7 +860,7 @@ public class OtuWrapper
 
 		writer.write( "otu" );
 
-		for( String s : otuNames )
+		for( String s: otuNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -874,7 +874,7 @@ public class OtuWrapper
 			if( innerList.size() != otuNames.size() )
 				throw new Exception( "No" );
 
-			for( Double d : innerList )
+			for( Double d: innerList )
 				writer.write( "\t" + d );
 
 			writer.write( "\n" );
@@ -921,10 +921,10 @@ public class OtuWrapper
 		List<String> sampleList1 = new ArrayList<String>();
 		List<String> sampleList2 = new ArrayList<String>();
 
-		for( String s : wrapper1.getSampleNames() )
+		for( String s: wrapper1.getSampleNames() )
 			sampleList1.add( s );
 
-		for( String s : wrapper2.getSampleNames() )
+		for( String s: wrapper2.getSampleNames() )
 			sampleList2.add( s );
 
 		Collections.sort( sampleList1 );
@@ -937,10 +937,10 @@ public class OtuWrapper
 		List<String> taxaList1 = new ArrayList<String>();
 		List<String> taxaList2 = new ArrayList<String>();
 
-		for( String s : wrapper1.getOtuNames() )
+		for( String s: wrapper1.getOtuNames() )
 			taxaList1.add( s );
 
-		for( String s : wrapper2.getOtuNames() )
+		for( String s: wrapper2.getOtuNames() )
 			taxaList2.add( s );
 
 		Collections.sort( taxaList1 );
@@ -980,7 +980,7 @@ public class OtuWrapper
 
 		int sampleIndex = getIndexForSampleName( sample );
 
-		for( String s : otus )
+		for( String s: otus )
 		{
 			int otuIndex = getIndexForOtuName( s );
 			sum += dataPointsNormalized.get( sampleIndex ).get( otuIndex );
@@ -996,7 +996,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : newOtuNames )
+		for( String s: newOtuNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1059,7 +1059,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : getOtuNames() )
+		for( String s: getOtuNames() )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1087,7 +1087,7 @@ public class OtuWrapper
 
 		writer.write( "taxa" );
 
-		for( String s : getSampleNames() )
+		for( String s: getSampleNames() )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1116,7 +1116,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : newOtuNames )
+		for( String s: newOtuNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1154,7 +1154,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : newOtuNames )
+		for( String s: newOtuNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1182,7 +1182,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : newOtuNames )
+		for( String s: newOtuNames )
 			writer.write( "\t" + "S_" + s );
 
 		writer.write( "\n" );
@@ -1221,7 +1221,7 @@ public class OtuWrapper
 
 		writer.write( "taxa" );
 
-		for( String s : newFileNames )
+		for( String s: newFileNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1258,7 +1258,7 @@ public class OtuWrapper
 
 		writer.write( "taxa" );
 
-		for( String s : newFileNames )
+		for( String s: newFileNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1290,7 +1290,7 @@ public class OtuWrapper
 
 		writer.write( "taxa" );
 
-		for( String s : newFileNames )
+		for( String s: newFileNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1328,7 +1328,7 @@ public class OtuWrapper
 		return list;
 	}
 
-	public List<List<Double>> getDataPointsUnnormalized( )
+	public List<List<Double>> getDataPointsUnnormalized()
 	{
 		return dataPointsUnnormalized;
 	}
@@ -1344,16 +1344,16 @@ public class OtuWrapper
 
 		List<Double> innerList = getDataPointsUnnormalized().get( sampleIndex );
 
-		for( Double d : innerList )
+		for( Double d: innerList )
 			sum += d;
 
 		List<Double> newList = new ArrayList<Double>();
 
-		for( Double d : innerList )
+		for( Double d: innerList )
 			newList.add( d / sum );
 
 		sum = 0;
-		for( Double d : newList )
+		for( Double d: newList )
 			if( d > 0 )
 			{
 				sum += d * Math.log( d );
@@ -1369,16 +1369,16 @@ public class OtuWrapper
 
 		List<Double> innerList = getDataPointsNormalizedThenLogged().get( sampleIndex );
 
-		for( Double d : innerList )
+		for( Double d: innerList )
 			sum += d;
 
 		List<Double> newList = new ArrayList<Double>();
 
-		for( Double d : innerList )
+		for( Double d: innerList )
 			newList.add( d / sum );
 
 		sum = 0;
-		for( Double d : newList )
+		for( Double d: newList )
 			if( d > 0 )
 			{
 				sum += d * Math.log( d );
@@ -1399,13 +1399,13 @@ public class OtuWrapper
 
 		List<Double> innerList = getDataPointsUnnormalized().get( sampleIndex );
 
-		for( Double d : innerList )
+		for( Double d: innerList )
 			if( d > 0.1 )
 				sum += d;
 
 		double returnVal = 0;
 
-		for( Double d : innerList )
+		for( Double d: innerList )
 			if( d > 0.1 )
 			{
 				double n = d / sum;
@@ -1428,14 +1428,14 @@ public class OtuWrapper
 
 		List<Double> innerList = getDataPointsUnnormalized().get( sampleIndex );
 
-		for( Double d : innerList )
+		for( Double d: innerList )
 			if( d > 0.1 )
 				sum++;
 
 		return getShannonEntropy( sampleIndex ) / Math.log( sum );
 	}
 
-	public double[][] getUnnorlalizedAsArray( )
+	public double[][] getUnnorlalizedAsArray()
 	{
 		double[][] d = new double[ dataPointsUnnormalized.size() ][ dataPointsUnnormalized.get( 0 ).size() ];
 
@@ -1446,19 +1446,19 @@ public class OtuWrapper
 		return d;
 	}
 
-	public double[][] getPresenceAbsenceArray( )
+	public double[][] getPresenceAbsenceArray()
 	{
 		double[][] d = new double[ dataPointsUnnormalized.size() ][ dataPointsUnnormalized.get( 0 ).size() ];
 
 		for( int x = 0; x < dataPointsUnnormalized.size(); x++ )
 			for( int y = 0; y < dataPointsUnnormalized.get( 0 ).size(); y++ )
-				d[x][y] = ( dataPointsUnnormalized.get( x ).get( y ) > 0.1 ? 1 : 0 );
+				d[x][y] = ( dataPointsUnnormalized.get( x ).get( y ) > 0.1 ? 1: 0 );
 
 		return d;
 
 	}
 
-	public double[][] getNormalizedThenLoggedAsArray( )
+	public double[][] getNormalizedThenLoggedAsArray()
 	{
 		double[][] d = new double[ dataPointsNormalizedThenLogged.size() ][ dataPointsNormalizedThenLogged.get( 0 )
 				.size() ];
@@ -1472,7 +1472,7 @@ public class OtuWrapper
 		return d;
 	}
 
-	public double[][] getLoggedAsArray( )
+	public double[][] getLoggedAsArray()
 	{
 		double[][] d = new double[ dataPointsUnnormalized.size() ][ dataPointsUnnormalized.get( 0 ).size() ];
 		// new
@@ -1485,7 +1485,7 @@ public class OtuWrapper
 		return d;
 	}
 
-	public double[][] getAsArray( )
+	public double[][] getAsArray()
 	{
 		double[][] d = new double[ dataPointsUnnormalized.size() ][ dataPointsUnnormalized.get( 0 ).size() ];
 		// new
@@ -1498,7 +1498,7 @@ public class OtuWrapper
 		return d;
 	}
 
-	public double[][] getAsGeoNormalizedLoggedArray( )
+	public double[][] getAsGeoNormalizedLoggedArray()
 	{
 		double[][] d = new double[ dataPointsUnnormalized.size() ][ dataPointsUnnormalized.get( 0 ).size() ];
 
@@ -1514,7 +1514,7 @@ public class OtuWrapper
 		return d;
 	}
 
-	public double[][] getNormalizedAsArray( )
+	public double[][] getNormalizedAsArray()
 	{
 		double[][] d = new double[ dataPointsNormalized.size() ][ dataPointsNormalized.get( 0 ).size() ];
 
@@ -1525,7 +1525,7 @@ public class OtuWrapper
 		return d;
 	}
 
-	public double[][] getCubeRootNormalizedAsArray( )
+	public double[][] getCubeRootNormalizedAsArray()
 	{
 		double[][] d = new double[ dataPointsNormalized.size() ][ dataPointsNormalized.get( 0 ).size() ];
 
@@ -1542,7 +1542,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : otuNames )
+		for( String s: otuNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1567,7 +1567,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : otuNames )
+		for( String s: otuNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1597,7 +1597,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : otuNames )
+		for( String s: otuNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1622,7 +1622,7 @@ public class OtuWrapper
 
 		writer.write( "sample" );
 
-		for( String s : otuNames )
+		for( String s: otuNames )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1641,7 +1641,7 @@ public class OtuWrapper
 		writer.close();
 	}
 
-	public HashMap<String, Double> getNormalizedDataAsMap( ) throws Exception
+	public HashMap<String, Double> getNormalizedDataAsMap() throws Exception
 	{
 		HashMap<String, Double> map = new HashMap<String, Double>();
 
@@ -1664,7 +1664,7 @@ public class OtuWrapper
 		return map;
 	}
 
-	public HashMap<String, Double> getLoggedNormalizedDataAsMap( ) throws Exception
+	public HashMap<String, Double> getLoggedNormalizedDataAsMap() throws Exception
 	{
 		HashMap<String, Double> map = new HashMap<String, Double>();
 
@@ -1687,7 +1687,7 @@ public class OtuWrapper
 		return map;
 	}
 
-	public int getTotalCounts( ) throws Exception
+	public int getTotalCounts() throws Exception
 	{
 		int sum = 0;
 
@@ -1781,7 +1781,7 @@ public class OtuWrapper
 		if( excludedTaxa == null )
 			return true;
 
-		for( String s : excludedTaxa )
+		for( String s: excludedTaxa )
 			if( s.equalsIgnoreCase( taxaName ) )
 				return true;
 
@@ -1851,7 +1851,7 @@ public class OtuWrapper
 
 		writer.write( "taxa" );
 
-		for( String s : this.getOtuNames() )
+		for( String s: this.getOtuNames() )
 			writer.write( "\t" + s );
 
 		writer.write( "\n" );
@@ -1899,7 +1899,7 @@ public class OtuWrapper
 
 		Integer[] returnVals = new Integer[ this.getDataPointsUnnormalized().get( sampleIndex ).size() ];
 
-		for( RankHolder rh : rankedList )
+		for( RankHolder rh: rankedList )
 			returnVals[rh.originalIndex] = (int) ( rh.rank + 0.001 );
 
 		return returnVals;
@@ -1965,12 +1965,12 @@ public class OtuWrapper
 			}
 		}
 
-		for( RankHolder rh : rankedList )
+		for( RankHolder rh: rankedList )
 			rh.rank = rankMap.get( (int) ( rh.rank + 0.001 ) );
 
 		Integer[] returnVals = new Integer[ this.getDataPointsUnnormalized().get( sampleIndex ).size() ];
 
-		for( RankHolder rh : rankedList )
+		for( RankHolder rh: rankedList )
 			returnVals[rh.originalIndex] = (int) ( rh.rank + 0.001 );
 
 		return returnVals;
@@ -2024,7 +2024,7 @@ public class OtuWrapper
 			boolean includeSample = true;
 
 			if( excludedSamples != null )
-				for( String s : excludedSamples )
+				for( String s: excludedSamples )
 					if( sampleName.equals( s ) )
 						includeSample = false;
 
@@ -2084,7 +2084,7 @@ public class OtuWrapper
 			List<Double> unnormalizedInnerList = dataPointsUnnormalized.get( x );
 			double sum = 0;
 
-			for( Double d : unnormalizedInnerList )
+			for( Double d: unnormalizedInnerList )
 				sum += d;
 
 			List<Double> normalizedInnerList = dataPointsNormalized.get( x );
@@ -2125,7 +2125,7 @@ public class OtuWrapper
 			{
 				double sum = 0;
 
-				for( Double d : dataPointsUnnormalized.get( x ) )
+				for( Double d: dataPointsUnnormalized.get( x ) )
 					sum += d;
 
 				if( sum == 0 )

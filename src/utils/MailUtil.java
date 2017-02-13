@@ -70,7 +70,7 @@ public class MailUtil
 		// Get the Session object.
 		Session session = Session.getInstance( props, new javax.mail.Authenticator()
 		{
-			protected PasswordAuthentication getPasswordAuthentication( )
+			protected PasswordAuthentication getPasswordAuthentication()
 			{
 				return new PasswordAuthentication( user, password );
 			}
@@ -103,7 +103,7 @@ public class MailUtil
 		log.info( "Sent message successfully...." );
 	}
 
-	protected static String getMessage( ) throws Exception
+	protected static String getMessage() throws Exception
 	{
 		return " BioLockJ job complete.  Review attached log file for details. " + "\n\n Regards, \n BioLockJ Admin";
 	}

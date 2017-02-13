@@ -74,7 +74,7 @@ public class HitScores implements Comparable<HitScores>
 
 		HitScores returnVal = null;
 
-		for( HitScores hs : list )
+		for( HitScores hs: list )
 		{
 			if( returnVal == null || hs.getBitScore() > returnVal.getBitScore() )
 				returnVal = hs;
@@ -116,12 +116,12 @@ public class HitScores implements Comparable<HitScores>
 			throw new Exception( "Parsing error" );
 	}
 
-	public OrderedSequenceRange getTargetRange( )
+	public OrderedSequenceRange getTargetRange()
 	{
 		return new OrderedSequenceRange( this.targetStart, this.targetEnd );
 	}
 
-	public OrderedSequenceRange getQueryRange( )
+	public OrderedSequenceRange getQueryRange()
 	{
 		return new OrderedSequenceRange( this.queryStart, this.queryEnd );
 	}
@@ -129,7 +129,7 @@ public class HitScores implements Comparable<HitScores>
 	/*
 	 * Returns the gi identifier the gi identifier ( e.g. 119668705 ) 
 	 */
-	public String getTargetGenbankId( )
+	public String getTargetGenbankId()
 	{
 		String returnString = getTargetId();
 		returnString = returnString.substring( 3 );
@@ -141,7 +141,7 @@ public class HitScores implements Comparable<HitScores>
 	{
 		HashSet<String> set = new HashSet<String>();
 
-		for( HitScores hs : c )
+		for( HitScores hs: c )
 			set.add( hs.getTargetGenbankId() );
 
 		return set;
@@ -198,7 +198,7 @@ public class HitScores implements Comparable<HitScores>
 		writer.write( targetEnd + "\t" );
 		writer.write( eScore + "\t" );
 		writer.write( "" + bitScore );
-		writer.write( endWithNewline ? "\n" : "\t" );
+		writer.write( endWithNewline ? "\n": "\t" );
 	}
 
 	public static List<HitScores> getAsList( File file, boolean gzipped, int minQueryAlignmentLength ) throws Exception
@@ -243,7 +243,7 @@ public class HitScores implements Comparable<HitScores>
 		if( writeHeader )
 			writeHeader( writer, true );
 
-		for( HitScores hs : scores )
+		for( HitScores hs: scores )
 			hs.writeALine( writer, true );
 
 		writer.flush();
@@ -255,7 +255,7 @@ public class HitScores implements Comparable<HitScores>
 	{
 		HashSet<HitScores> returnSet = new HashSet<HitScores>();
 
-		for( HitScores hs : scores )
+		for( HitScores hs: scores )
 			if( hs.getEScore() <= eScore && hs.getQueryAlignmentLength() >= length )
 				returnSet.add( hs );
 
@@ -351,7 +351,7 @@ public class HitScores implements Comparable<HitScores>
 		HashMap<String, HitScores> map = new LinkedHashMap<String, HitScores>();
 		List<HitScores> returnList = new ArrayList<HitScores>();
 
-		for( HitScores hs : inHits )
+		for( HitScores hs: inHits )
 		{
 			HitScores oldScore = map.get( hs.getQueryId() );
 
@@ -359,7 +359,7 @@ public class HitScores implements Comparable<HitScores>
 				map.put( hs.getQueryId(), hs );
 		}
 
-		for( String s : map.keySet() )
+		for( String s: map.keySet() )
 			returnList.add( map.get( s ) );
 
 		return returnList;
@@ -369,7 +369,7 @@ public class HitScores implements Comparable<HitScores>
 	{
 		HashSet<String> returnSet = new HashSet<String>();
 
-		for( HitScores hs : collection )
+		for( HitScores hs: collection )
 			returnSet.add( hs.getQueryId() );
 
 		return returnSet;
@@ -383,7 +383,7 @@ public class HitScores implements Comparable<HitScores>
 		writer.write( "gapOpenings\tqueryStart\tqueryEnd\t" );
 		writer.write( "targetStart\ttargetEnd\teValue\tbitScore" );
 
-		writer.write( endWithNewline ? "\n" : "\t" );
+		writer.write( endWithNewline ? "\n": "\t" );
 	}
 
 	public void writeALine( BufferedWriter writer, boolean endWithNewline ) throws Exception
@@ -400,7 +400,7 @@ public class HitScores implements Comparable<HitScores>
 		writer.write( targetEnd + "\t" );
 		writer.write( eScore + "\t" );
 		writer.write( "" + bitScore );
-		writer.write( endWithNewline ? "\n" : "\t" );
+		writer.write( endWithNewline ? "\n": "\t" );
 	}
 
 	public static HashSet<String> getQueryIds( File file, double cutoffEScore, int cutoffSequenceLength )
@@ -491,7 +491,7 @@ public class HitScores implements Comparable<HitScores>
 	{
 		HashSet<String> returnSet = new HashSet<String>();
 
-		for( HitScores hs : map.values() )
+		for( HitScores hs: map.values() )
 			if( hs.getEScore() <= maxEScore && hs.getQueryAlignmentLength() >= minAlignmentLength )
 				returnSet.add( hs.getQueryId() );
 
@@ -530,22 +530,22 @@ public class HitScores implements Comparable<HitScores>
 		return list;
 	}
 
-	public int getNumMismatches( )
+	public int getNumMismatches()
 	{
 		return numMismatches;
 	}
 
-	public float getPercentIdentity( )
+	public float getPercentIdentity()
 	{
 		return percentIdentity;
 	}
 
-	public double getEScore( )
+	public double getEScore()
 	{
 		return eScore;
 	}
 
-	public String getTargetId( )
+	public String getTargetId()
 	{
 		return targetId;
 	}
@@ -555,47 +555,47 @@ public class HitScores implements Comparable<HitScores>
 		return Double.compare( this.eScore, other.eScore );
 	}
 
-	public String getQueryId( )
+	public String getQueryId()
 	{
 		return queryId;
 	}
 
-	public int getQueryEnd( )
+	public int getQueryEnd()
 	{
 		return queryEnd;
 	}
 
-	public int getQueryStart( )
+	public int getQueryStart()
 	{
 		return queryStart;
 	}
 
-	public int getTargetEnd( )
+	public int getTargetEnd()
 	{
 		return targetEnd;
 	}
 
-	public int getTargetStart( )
+	public int getTargetStart()
 	{
 		return targetStart;
 	}
 
-	public int getAlignmentLength( )
+	public int getAlignmentLength()
 	{
 		return alignmentLength;
 	}
 
-	public int getQueryAlignmentLength( )
+	public int getQueryAlignmentLength()
 	{
 		return Math.abs( queryEnd - queryStart );
 	}
 
-	public float getBitScore( )
+	public float getBitScore()
 	{
 		return bitScore;
 	}
 
-	public int getGapOpenings( )
+	public int getGapOpenings()
 	{
 		return gapOpenings;
 	}

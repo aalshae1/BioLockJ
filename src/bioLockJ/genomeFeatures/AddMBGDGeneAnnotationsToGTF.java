@@ -35,7 +35,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 	protected static final Logger log = LoggerFactory.getLogger( AddMBGDGeneAnnotationsToGTF.class );
 
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.INPUT_GTF_FILE );
 		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.MBGD_EXTENDED_PATH );
@@ -161,7 +161,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 				HashSet<Integer> set = fileLineMap.get( protKey );
 
 				if( set != null )
-					for( Integer i : set )
+					for( Integer i: set )
 						description.append( lineDescriptions.get( i ) + ";" );
 
 			}
@@ -221,7 +221,7 @@ public class AddMBGDGeneAnnotationsToGTF extends BioLockJExecutor
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		File inputFile = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.INPUT_GTF_FILE );
 		File mbdgFile = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.MBGD_EXTENDED_PATH );

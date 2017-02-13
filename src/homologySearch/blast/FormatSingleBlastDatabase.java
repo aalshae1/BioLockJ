@@ -34,7 +34,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 	 */
 
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
 		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.FASTA_FILE_TO_FORMAT_FOR_BLAST_DB );
@@ -42,7 +42,7 @@ public class FormatSingleBlastDatabase extends BioLockJExecutor
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		String blastBinDir = BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_BINARY_DIR );
 		File fastaFileToFormat = BioLockJUtils.requireExistingFile( getConfig(),

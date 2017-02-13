@@ -27,7 +27,7 @@ import parsers.FastaSequence;
 public class GC_Content extends BioLockJExecutor
 {
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.REFERENCE_GENOME );
 		BioLockJUtils.requireString( getConfig(), ConfigReader.GC_CONTENT_IGV_OUTPUT_FILE );
@@ -60,7 +60,7 @@ public class GC_Content extends BioLockJExecutor
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		File referenceGenome = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.REFERENCE_GENOME );
 		File outputFile = new File(
@@ -73,7 +73,7 @@ public class GC_Content extends BioLockJExecutor
 		BufferedWriter writer = new BufferedWriter( new FileWriter( outputFile ) );
 		writer.write( "Chromosome\tStart\tEnd\tFeature\tgcContent\n" );
 
-		for( FastaSequence fs : list )
+		for( FastaSequence fs: list )
 		{
 			String seq = fs.getSequence().toUpperCase();
 			String chr = fs.getFirstTokenOfHeader();

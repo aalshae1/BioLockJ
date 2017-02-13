@@ -38,7 +38,7 @@ public class MapResiduesToIndex
 		return residues[i];
 	}
 
-	public static char getRandomChar( ) throws Exception
+	public static char getRandomChar() throws Exception
 	{
 		return residues[random.nextInt( residues.length )];
 	}

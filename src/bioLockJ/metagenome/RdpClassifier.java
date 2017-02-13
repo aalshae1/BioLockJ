@@ -30,14 +30,14 @@ public class RdpClassifier extends BioLockJExecutor
 {
 
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.getExistingDirectories( getConfig(), ConfigReader.INPUT_DIRS, true );
 		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.PATH_TO_RDP_JAR );
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		File rdpBinary = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.PATH_TO_RDP_JAR );
 
@@ -47,7 +47,7 @@ public class RdpClassifier extends BioLockJExecutor
 		log.info( "Number of input files to add to RDP scripts: " + files.size() );
 
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for( File file : files )
+		for( File file: files )
 		{
 			String rdpOutFile = getOutputDir().getAbsolutePath() + File.separator + file.getName() + "toRDP.txt";
 

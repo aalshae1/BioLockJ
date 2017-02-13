@@ -169,10 +169,10 @@ public class BioLockJ
 	{
 		List<BioLockJExecutor> list = getListToRun( cReader );
 
-		for( BioLockJExecutor e : list )
+		for( BioLockJExecutor e: list )
 			e.checkDependencies();
 
-		for( BioLockJExecutor e : list )
+		for( BioLockJExecutor e: list )
 		{
 			BioLockJUtils.noteStartToLogWriter( e );
 			executeAndWaitForScriptsIfAny( e );
@@ -209,7 +209,7 @@ public class BioLockJ
 		if( chmod != null )
 		{
 			File[] listOfFiles = scriptDir.listFiles();
-			for( File file : listOfFiles )
+			for( File file: listOfFiles )
 			{
 				if( !file.getName().startsWith( "." ) )
 				{
@@ -239,7 +239,7 @@ public class BioLockJ
 		int numSuccess = 0;
 		int numFailed = 0;
 
-		for( File f : scriptFiles )
+		for( File f: scriptFiles )
 		{
 			File testSuccess = new File( f.getAbsolutePath() + BashScriptBuilder.SCRIPT_SUCCEEDED );
 

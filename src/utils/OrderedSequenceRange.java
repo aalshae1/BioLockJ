@@ -54,27 +54,27 @@ public class OrderedSequenceRange
 		return false;
 	}
 
-	public int getEndPosition( )
+	public int getEndPosition()
 	{
 		return endPosition;
 	}
 
-	public int getStartPosition( )
+	public int getStartPosition()
 	{
 		return startPosition;
 	}
 
-	public String toString( )
+	public String toString()
 	{
 		return "Start: " + this.startPosition + " End: " + this.endPosition;
 	}
 
-	public boolean isOriginallyForward( )
+	public boolean isOriginallyForward()
 	{
 		return originallyForward;
 	}
 
-	public int getLength( )
+	public int getLength()
 	{
 		return this.endPosition - this.startPosition;
 	}

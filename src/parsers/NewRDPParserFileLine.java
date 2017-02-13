@@ -61,7 +61,7 @@ public class NewRDPParserFileLine
 	{
 		NewRDPNode returnNode = null;
 
-		for( NewRDPNode node : this.taxaMap.values() )
+		for( NewRDPNode node: this.taxaMap.values() )
 			if( node.getScore() >= threshold )
 				returnNode = node;
 
@@ -72,7 +72,7 @@ public class NewRDPParserFileLine
 	{
 		String returnNode = null;
 
-		for( String rank : this.taxaMap.keySet() )
+		for( String rank: this.taxaMap.keySet() )
 			if( this.taxaMap.get( rank ).getScore() >= threshold )
 				returnNode = rank;
 
@@ -138,7 +138,7 @@ public class NewRDPParserFileLine
 		return map;
 	}
 
-	private NewRDPParserFileLine( )
+	private NewRDPParserFileLine()
 	{
 
 	}
@@ -148,7 +148,7 @@ public class NewRDPParserFileLine
 	{
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 
-		for( NewRDPParserFileLine fileLine : list )
+		for( NewRDPParserFileLine fileLine: list )
 		{
 			NewRDPNode node = fileLine.getTaxaMap().get( level );
 			if( node != null && node.getScore() >= threshold )
@@ -224,7 +224,7 @@ public class NewRDPParserFileLine
 		{
 			HashMap<String, Integer> countMap = new LinkedHashMap<String, Integer>();
 
-			for( NewRDPParserFileLine fileLine : list )
+			for( NewRDPParserFileLine fileLine: list )
 			{
 				NewRDPNode rdpNode = fileLine.getTaxaMap().get( TAXA_ARRAY[x] );
 
@@ -271,12 +271,12 @@ public class NewRDPParserFileLine
 		return inString;
 	}
 
-	public String getSequenceId( )
+	public String getSequenceId()
 	{
 		return sequenceId;
 	}
 
-	public Map<String, NewRDPNode> getTaxaMap( )
+	public Map<String, NewRDPNode> getTaxaMap()
 	{
 		return taxaMap;
 	}
@@ -331,7 +331,7 @@ public class NewRDPParserFileLine
 		//single threaded
 		List<NewRDPParserFileLine> returnList = new ArrayList<NewRDPParserFileLine>();
 
-		for( SubFileParser sfp : workers )
+		for( SubFileParser sfp: workers )
 		{
 			if( sfp.returnException != null )
 				throw new Exception( sfp.returnException );
@@ -383,7 +383,7 @@ public class NewRDPParserFileLine
 		{
 			int assignedCount = 0;
 
-			for( SubFileParser sfp : subList )
+			for( SubFileParser sfp: subList )
 				assignedCount += sfp.listSize;
 
 			if( assignedCount > numAdded )
@@ -399,7 +399,7 @@ public class NewRDPParserFileLine
 			}
 		}
 
-		for( Thread t : startedThreads )
+		for( Thread t: startedThreads )
 			t.interrupt();
 
 		return subList;
@@ -416,7 +416,7 @@ public class NewRDPParserFileLine
 
 		List<NewRDPParserFileLine> list = getRdpListSingleThread( rdpFile );
 
-		for( NewRDPParserFileLine rdp : list )
+		for( NewRDPParserFileLine rdp: list )
 		{
 			String key = rdp.sequenceId;
 
@@ -446,7 +446,7 @@ public class NewRDPParserFileLine
 			this.blockingQueue = blockingQueue;
 		}
 
-		public void run( )
+		public void run()
 		{
 			try
 			{
@@ -477,7 +477,7 @@ public class NewRDPParserFileLine
 		}
 	}
 
-	public String getSummaryString( )
+	public String getSummaryString()
 	{
 		StringBuffer buff = new StringBuffer();
 

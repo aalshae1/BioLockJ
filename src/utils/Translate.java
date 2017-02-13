@@ -58,7 +58,7 @@ public class Translate
 
 	}
 
-	public static Collection<String> getKeySet( ) throws Exception
+	public static Collection<String> getKeySet() throws Exception
 	{
 		return Collections.unmodifiableCollection( translationMap.keySet() );
 	}
@@ -166,12 +166,12 @@ public class Translate
 		return frame;
 	}
 
-	public static String getRandomCodon( ) throws Exception
+	public static String getRandomCodon() throws Exception
 	{
 		return "" + getRandomNucleotide() + getRandomNucleotide() + getRandomNucleotide();
 	}
 
-	public static char getRandomNucleotide( ) throws Exception
+	public static char getRandomNucleotide() throws Exception
 	{
 		int randomInt = random.nextInt( 4 );
 

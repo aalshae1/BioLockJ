@@ -27,12 +27,12 @@ public class TabReader
 		this.inString = inString;
 	}
 
-	public String nextToken( )
+	public String nextToken()
 	{
 		return getNext();
 	}
 
-	public String getNext( )
+	public String getNext()
 	{
 		if( inString == null )
 			throw new RuntimeException( "Error!  No more to get" );
@@ -68,7 +68,7 @@ public class TabReader
 		return returnString;
 	}
 
-	public boolean hasMore( )
+	public boolean hasMore()
 	{
 		return this.inString != null;
 	}

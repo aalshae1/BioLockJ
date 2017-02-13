@@ -68,7 +68,7 @@ public class BashScriptBuilder
 		boolean scriptOpen = false;
 		boolean exitOnError = BioLockJUtils.getBoolean( blje.getConfig(), ConfigReader.EXIT_ON_ERROR_FLAG, false );
 
-		for( ArrayList<String> lines : data )
+		for( ArrayList<String> lines: data )
 		{
 			if( subScript == null || needNewScript( numToDo, numJobsPerCore ) )
 			{
@@ -125,7 +125,7 @@ public class BashScriptBuilder
 
 		BufferedWriter writer = new BufferedWriter( new FileWriter( script ) );
 		String clusterParams = blje.getConfig().getAProperty( ConfigReader.CLUSTER_PARAMS );
-		writer.write( clusterParams == null ? "" : clusterParams + "\n" );
+		writer.write( clusterParams == null ? "": clusterParams + "\n" );
 		writer.write( ERROR_DETECTED + "=false \n" );
 		writer.write( FAILURE_CODE + "=0 \n" );
 		writer.flush();
@@ -134,7 +134,7 @@ public class BashScriptBuilder
 		allWriter.write( "if [[ $" + ERROR_DETECTED + " == false ]]; then \n" );
 
 		String clusterCommand = blje.getConfig().getAProperty( ConfigReader.CLUSTER_BATCH_COMMAND );
-		String executeCommand = ( clusterCommand == null ? "" : clusterCommand + " " ) + script.getAbsolutePath();
+		String executeCommand = ( clusterCommand == null ? "": clusterCommand + " " ) + script.getAbsolutePath();
 		allWriter.write( INDENT + executeCommand + "\n" );
 		allWriter.write( INDENT + "exitCode=$? \n" );
 		allWriter.write( INDENT + "if [[ $exitCode != \"0\" ]]; then \n" );
@@ -172,7 +172,7 @@ public class BashScriptBuilder
 			if( exitOnError )
 			{
 				indent = true;
-				writer.write( "if [[ " + ( firstLine ? "" : "$" + ERROR_ON_PREVIOUS_LINE + " == false && " ) + "$"
+				writer.write( "if [[ " + ( firstLine ? "": "$" + ERROR_ON_PREVIOUS_LINE + " == false && " ) + "$"
 						+ ERROR_DETECTED + " == false ]]; then \n" );
 			}
 			else if( !firstLine )
@@ -181,16 +181,16 @@ public class BashScriptBuilder
 				writer.write( "if [[ $" + ERROR_ON_PREVIOUS_LINE + " == false ]]; then \n" );
 			}
 
-			writer.write( ( indent ? INDENT : "" ) + it.next() + "\n" );
-			writer.write( ( indent ? INDENT : "" ) + "exitCode=$? \n" );
-			writer.write( ( indent ? INDENT : "" ) + "if [[ $exitCode != \"0\" ]]; then \n" );
-			writer.write( ( indent ? INDENT : "" ) + INDENT + ERROR_ON_PREVIOUS_LINE + "=true \n" );
-			writer.write( ( indent ? INDENT : "" ) + INDENT + ERROR_DETECTED + "=true \n" );
-			writer.write( ( indent ? INDENT : "" ) + INDENT + FAILURE_CODE + "=$exitCode \n" );
-			writer.write( ( indent ? INDENT : "" ) + INDENT + "touch " + fileName + SCRIPT_FAILED
+			writer.write( ( indent ? INDENT: "" ) + it.next() + "\n" );
+			writer.write( ( indent ? INDENT: "" ) + "exitCode=$? \n" );
+			writer.write( ( indent ? INDENT: "" ) + "if [[ $exitCode != \"0\" ]]; then \n" );
+			writer.write( ( indent ? INDENT: "" ) + INDENT + ERROR_ON_PREVIOUS_LINE + "=true \n" );
+			writer.write( ( indent ? INDENT: "" ) + INDENT + ERROR_DETECTED + "=true \n" );
+			writer.write( ( indent ? INDENT: "" ) + INDENT + FAILURE_CODE + "=$exitCode \n" );
+			writer.write( ( indent ? INDENT: "" ) + INDENT + "touch " + fileName + SCRIPT_FAILED
 					+ "_exitCode_$exitCode  \n" );
-			writer.write( ( indent ? INDENT : "" ) + "fi \n" );
-			writer.write( indent ? "fi \n" : "" );
+			writer.write( ( indent ? INDENT: "" ) + "fi \n" );
+			writer.write( indent ? "fi \n": "" );
 			firstLine = false;
 		}
 	}

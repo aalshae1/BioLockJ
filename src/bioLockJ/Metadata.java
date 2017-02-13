@@ -187,22 +187,22 @@ public class Metadata
 		return cReader.getResourcesDir() + "metadata" + File.separator + prop;
 	}
 
-	public String getMetadataPath( )
+	public String getMetadataPath()
 	{
 		return metadataPath;
 	}
 
-	public String getDescriptorPath( )
+	public String getDescriptorPath()
 	{
 		return descriptorPath;
 	}
 
-	public ArrayList<String> getAttributeNames( )
+	public ArrayList<String> getAttributeNames()
 	{
 		return attributeNames;
 	}
 
-	public Set<String> getFileNames( )
+	public Set<String> getFileNames()
 	{
 		return metadataMap.keySet();
 	}
@@ -279,7 +279,7 @@ public class Metadata
 		}
 	}
 
-	private ArrayList<String> getFormattedRow( ArrayList<String> row )
+	protected ArrayList<String> getFormattedRow( ArrayList<String> row )
 	{
 		ArrayList<String> formattedRow = new ArrayList<String>();
 		Iterator<String> it = row.iterator();

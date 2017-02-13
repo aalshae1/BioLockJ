@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 import bioLockJ.BioLockJExecutor;
+import bioLockJ.BioLockJUtils;
+import bioLockJ.ConfigReader;
 
 public class GatherKrakenResults extends BioLockJExecutor
 {
@@ -31,16 +33,16 @@ public class GatherKrakenResults extends BioLockJExecutor
 	public static final String THREE_COL_SUFFIX = "_SparseThreeCol.txt";
 
 	@Override //as required by abstract class
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		for( int x = 0; x < KRAKEN_TAXONOMY.length; x++ )
 		{
-			HashMap<String, HashMap<String, Integer>> map = getAllSamples( x + 2 );
+			HashMap<String, HashMap<String, Integer>> map = getAllSamples( x );
 			File summaryFile = new File(
 					getOutputDir().getAbsolutePath() + File.separator + "kraken_" + KRAKEN_TAXONOMY[x] + ".txt" );
 			GatherRDPResults.writeResults( map, summaryFile.getAbsolutePath() );
@@ -50,18 +52,19 @@ public class GatherKrakenResults extends BioLockJExecutor
 	private HashMap<String, HashMap<String, Integer>> getAllSamples( int parseLevel ) throws Exception
 	{
 		HashMap<String, HashMap<String, Integer>> map = new HashMap<String, HashMap<String, Integer>>();
-		setInputFiles( getInputDir() );
+		boolean mpaFormat = BioLockJUtils.getBoolean( getConfig(), ConfigReader.MPA_FORMAT, false );
+
 		ArrayList<File> inputFiles = getInputFiles();
-		for( File file : inputFiles )
+		for( File file: inputFiles )
 		{
 			if( file.getName().endsWith( "toKrakenTranslate.txt" ) )
 			{
 				File inFile = new File( file.getAbsolutePath() );
-				HashMap<String, Integer> innerMap = getCounts( inFile, parseLevel );
+				HashMap<String, Integer> innerMap = getCounts( inFile, parseLevel, mpaFormat );
 
 				long sum = 0;
 
-				for( Integer i : innerMap.values() )
+				for( Integer i: innerMap.values() )
 					sum += i;
 
 				if( sum > 0 )
@@ -72,9 +75,19 @@ public class GatherKrakenResults extends BioLockJExecutor
 		return map;
 	}
 
-	private static HashMap<String, Integer> getCounts( File inFile, int parseNum ) throws Exception
+	private static HashMap<String, Integer> getCounts( File inFile, int parseNum, boolean mpaFormat ) throws Exception
 	{
 		log.info( "GatherKrakenResults.getCounts from file: " + inFile.getAbsolutePath() );
+		String delim = ";";
+		if( mpaFormat )
+		{
+			delim = "\\|";
+		}
+		else
+		{
+			parseNum = parseNum + 2;
+		}
+
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		BufferedReader reader = new BufferedReader( new FileReader( inFile ) );
 		for( String s = reader.readLine(); s != null; s = reader.readLine() )
@@ -82,7 +95,7 @@ public class GatherKrakenResults extends BioLockJExecutor
 			StringTokenizer sToken = new StringTokenizer( s, "\t" );
 			sToken.nextToken();
 
-			String[] splits = sToken.nextToken().split( ";" );
+			String[] splits = sToken.nextToken().split( delim );
 
 			if( splits.length - 1 >= parseNum )
 			{
@@ -93,7 +106,7 @@ public class GatherKrakenResults extends BioLockJExecutor
 
 				val++;
 
-				map.put( new String( splits[parseNum] ), val );
+				map.put( splits[parseNum], val );
 			}
 		}
 

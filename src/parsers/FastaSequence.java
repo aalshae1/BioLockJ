@@ -57,7 +57,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 		this.sequence = sequence;
 	}
 
-	public String getHeader( )
+	public String getHeader()
 	{
 		return header;
 	}
@@ -82,7 +82,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 
 		HashMap<String, FastaSequence> map = new LinkedHashMap<String, FastaSequence>();
 
-		for( FastaSequence fs : list )
+		for( FastaSequence fs: list )
 		{
 			String key = new StringTokenizer( fs.getHeader() ).nextToken();
 
@@ -98,9 +98,9 @@ public class FastaSequence implements Comparable<FastaSequence>
 		return map;
 	}
 
-	public boolean isOnlyACGT( )
+	public boolean isOnlyACGT()
 	{
-		for( char c : this.sequence.toString().toCharArray() )
+		for( char c: this.sequence.toString().toCharArray() )
 		{
 			if( c != 'A' && c != 'C' && c != 'G' && c != 'T' )
 				return false;
@@ -109,7 +109,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 		return true;
 	}
 
-	public String getSecondTokenOfHeader( )
+	public String getSecondTokenOfHeader()
 	{
 		StringTokenizer sToken = new StringTokenizer( header );
 
@@ -119,7 +119,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 		return s;
 	}
 
-	public String getFirstTokenOfHeader( )
+	public String getFirstTokenOfHeader()
 	{
 		StringTokenizer sToken = new StringTokenizer( header );
 
@@ -136,7 +136,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 		List<FastaSequence> list = FastaSequence.readFastaFile( filePath );
 		HashSet<String> set = new HashSet<String>();
 
-		for( FastaSequence fs : list )
+		for( FastaSequence fs: list )
 			set.add( fs.getSequence() );
 
 		return set;
@@ -157,12 +157,12 @@ public class FastaSequence implements Comparable<FastaSequence>
 		return buff.toString();
 	}
 
-	public FastaSequence( )
+	public FastaSequence()
 	{
 
 	}
 
-	public String getSequence( )
+	public String getSequence()
 	{
 		return sequence.toString();
 	}
@@ -284,7 +284,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 	{
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
 
-		for( File f : fastaFiles )
+		for( File f: fastaFiles )
 		{
 			BufferedReader reader = new BufferedReader( new FileReader( f ) );
 
@@ -408,7 +408,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 	 *   
 	 *   Returns the number of {G,C} over all other characters.
 	 */
-	public float getGCRatio( ) throws Exception
+	public float getGCRatio() throws Exception
 	{
 		float numGC = 0;
 
@@ -425,7 +425,7 @@ public class FastaSequence implements Comparable<FastaSequence>
 		return numGC / testString.length();
 	}
 
-	public float getRatioValidForDNA( ) throws Exception
+	public float getRatioValidForDNA() throws Exception
 	{
 		float numValid = 0;
 

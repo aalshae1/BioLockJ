@@ -39,7 +39,7 @@ public class GatherBlastHits extends BioLockJExecutor
 	{
 		List<HitScores> list = new ArrayList<HitScores>();
 
-		for( String s : blastOutputDir.list() )
+		for( String s: blastOutputDir.list() )
 		{
 			File f = new File( blastOutputDir.getAbsolutePath() + File.separator + s );
 
@@ -57,7 +57,7 @@ public class GatherBlastHits extends BioLockJExecutor
 	{
 		BufferedWriter writer = new BufferedWriter( new FileWriter( outFile ) );
 
-		for( HitScores hs : list )
+		for( HitScores hs: list )
 		{
 			writer.write( hs.getTargetId() + "\tblast\t" + hs.getQueryId() + "\t" );
 
@@ -79,7 +79,7 @@ public class GatherBlastHits extends BioLockJExecutor
 
 		writer.write( "queryID\ttargetID\ttargetStart\ttargetEnd\tqueryStart\tqueryEnd\tbitScore\teScore\n" );
 
-		for( HitScores hs : list )
+		for( HitScores hs: list )
 		{
 			writer.write( hs.getQueryId() + "\t" + hs.getTargetId() + "\t" + hs.getTargetStart() + "\t"
 					+ hs.getTargetEnd() + "\t" + hs.getQueryStart() + "\t" + hs.getQueryEnd() + "\t" + hs.getBitScore()
@@ -91,13 +91,13 @@ public class GatherBlastHits extends BioLockJExecutor
 	}
 
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.requireString( getConfig(), ConfigReader.BLAST_GATHERED_TOP_HITS_FILE );
 		BioLockJUtils.getBoolean( getConfig(), ConfigReader.OUTPUT_QUERY_COORDINATES_TO_GTF, true );
 	}
 
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 
 		File topHitsFile = new File(

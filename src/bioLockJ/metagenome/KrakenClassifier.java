@@ -31,7 +31,7 @@ public class KrakenClassifier extends BioLockJExecutor
 {
 
 	@Override
-	public void checkDependencies( ) throws Exception
+	public void checkDependencies() throws Exception
 	{
 		BioLockJUtils.getExistingDirectories( getConfig(), ConfigReader.INPUT_DIRS, true );
 		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.PATH_TO_KRAKEN_BINARY );
@@ -40,7 +40,7 @@ public class KrakenClassifier extends BioLockJExecutor
 	}
 
 	@Override
-	public void executeProjectFile( ) throws Exception
+	public void executeProjectFile() throws Exception
 	{
 		File krakenBinary = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.PATH_TO_KRAKEN_BINARY );
 		File krakenDatabase = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.PATH_TO_KRAKEN_DATABASE );
@@ -51,7 +51,7 @@ public class KrakenClassifier extends BioLockJExecutor
 		log.info( "Number of input files to add to Kraken scripts: " + files.size() );
 
 		ArrayList<ArrayList<String>> data = new ArrayList<ArrayList<String>>();
-		for( File file : files )
+		for( File file: files )
 		{
 			String krakenOutput = getOutputDir().getAbsolutePath() + File.separator + file.getName() + "_toKraken.txt";
 			String krakenTranslate = getOutputDir().getAbsolutePath() + File.separator + file.getName()
@@ -61,7 +61,7 @@ public class KrakenClassifier extends BioLockJExecutor
 					+ " --output " + krakenOutput + getKrakenSwitches() + file.getAbsolutePath();
 
 			String nextLine = krakenBinary.getAbsolutePath() + "-translate --db " + krakenDatabase.getAbsolutePath()
-					+ ( mpaFormat ? " --mpa-format " : " " ) + krakenOutput + " > " + krakenTranslate;
+					+ ( mpaFormat ? " --mpa-format ": " " ) + krakenOutput + " > " + krakenTranslate;
 
 			ArrayList<String> lines = new ArrayList<String>( 2 );
 			lines.add( firstLine );
@@ -72,7 +72,7 @@ public class KrakenClassifier extends BioLockJExecutor
 		BashScriptBuilder.buildScripts( this, data, files );
 	}
 
-	protected String getKrakenSwitches( ) throws Exception
+	protected String getKrakenSwitches() throws Exception
 	{
 		String formattedSwitches = " ";
 		ArrayList<String> switches = getConfig().getPropertyAsList( ConfigReader.KRAKEN_SWITCHES );
