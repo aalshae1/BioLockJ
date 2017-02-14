@@ -34,15 +34,16 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 {
 	public static final String NEW_SUFFIX = "PART.fasta";
 
-	private static void breakUpSequences( File inFile, File outFile, int numClusters ) throws Exception
+	private void breakUpSequences( int numClusters ) throws Exception
 	{
 		HashMap<Integer, BufferedWriter> writers = new HashMap<Integer, BufferedWriter>();
+		File inFile = getInputFiles().get( 0 );
 
 		for( int x = 0; x < numClusters; x++ )
 		{
-			BufferedWriter writer = new BufferedWriter(
-					new FileWriter( new File( outFile.getAbsolutePath() + File.separator
-							+ inFile.getName().replace( "fasta", "" ).replace( "FASTA", "" ).replaceAll( " ", "_" )
+			BufferedWriter writer = new BufferedWriter( 
+					new FileWriter( new File( getOutputDir().getAbsolutePath() + File.separator
+							+ inFile.getName() .replace( "fasta", "" ).replace( "FASTA", "" ).replaceAll( " ", "_" )
 							+ "_" + x + "_" + NEW_SUFFIX ) ) );
 
 			writers.put( x, writer );
@@ -74,18 +75,16 @@ public class BreakUpFastaSequence extends BioLockJExecutor
 	@Override
 	public void checkDependencies() throws Exception
 	{
-		BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.SPLIT_FASTA_DIR );
-		BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.FASTA_TO_SPLIT_PATH );
+		BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.INPUT_DIRS );
 		BioLockJUtils.requirePositiveInteger( getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE );
 	}
 
 	@Override
 	public void executeProjectFile() throws Exception
 	{
-		File outputDir = BioLockJUtils.requireExistingDirectory( getConfig(), ConfigReader.SPLIT_FASTA_DIR );
-		File fileToParse = BioLockJUtils.requireExistingFile( getConfig(), ConfigReader.FASTA_TO_SPLIT_PATH );
+		log.warn( "TEST" );
+		
 		int numChunks = BioLockJUtils.requirePositiveInteger( getConfig(), ConfigReader.NUMBER_OF_JOBS_PER_CORE );
-
-		breakUpSequences( fileToParse, outputDir, numChunks );
+		breakUpSequences( numChunks );
 	}
 }

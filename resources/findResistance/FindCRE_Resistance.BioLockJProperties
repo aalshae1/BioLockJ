@@ -1,7 +1,7 @@
 #RUN_BIOLOCK_J homologySearch.BreakUpFastaSequence 
-#RUN_BIOLOCK_J homologySearch.blast.FormatSingleBlastDatabase
-#RUN_BIOLOCK_J homologySearch.blast.MultipleQueriesToOneBlastDB
-#RUN_BIOLOCK_J homologySearch.blast.GatherBlastHits
+##RUN_BIOLOC#K_J homologySearch.blast.FormatSingleBlastDatabase
+##RUN_BIOLOCK#_J homologySearch.blast.MultipleQueriesToOneBlastDB
+##RUN_BIOLOCK_#J homologySearch.blast.GatherBlastHits
 
 
 # this properties file maps reference genome 11 to the CARDS database
@@ -10,7 +10,7 @@
 
 # these are for all BLAST jobs (formatting and searching)
 BLAST_PRELIMINARY_STRING = module load blast
-BLAST_BINARY_DIR=/apps/pkg/ncbi-blast-2.2.29+/rhel7_u2-x86_64/gnu/bin/
+BLAST_BINARY_DIR=/usr/local/ncbi/blast/bin/
 
 # executed before running script files on the cluster
 CHMOD_STRING = chmod 744
@@ -25,12 +25,8 @@ CLUSTER_PARAMS = #PBS -l procs=1,mem=8GB
 # the query file to split into NUMBER_CLUSTER query files
 # the cards database was downloaded on June 15,2016
 # and this file was created with cat nucleotide_fasta*.fasta > all_nucleotide_fasta.fasta
-FASTA_TO_SPLIT_PATH=/nobackup/afodor_research/card/all_nucleotide_fasta.fasta
+INPUT_DIRS=/Users/msioda/input
 
-# where the split FASTA_TO_SPLIT_PATH files will live 
-# once created, these files will serve as the blast query (defined by BLAST_QUERY_DIRECTORY)
-SPLIT_FASTA_DIR=/nobackup/afodor_research/card/allFastaSplits
-INPUT_DIRS=$SPLIT_FASTA_DIR
 
 # our target database
 FASTA_FILE_TO_FORMAT_FOR_BLAST_DB = /nobackup/afodor_research/bioLockJProjects/resistantAnnotation/refGenome/klebsiella_pneumoniae_chs_11.0.scaffolds.fasta
